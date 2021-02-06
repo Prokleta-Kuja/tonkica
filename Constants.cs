@@ -9,6 +9,8 @@ namespace tonkica
         {
             public const string Root = "/";
             public const string Invoices = "/invoices";
+            public const string Invoice = "/invoices/{Id:int}";
+            public static string InvoiceFor(int id) => $"{Invoices}/{id}";
             public const string Clients = "/clients";
             public const string Issuers = "/issuers";
         }

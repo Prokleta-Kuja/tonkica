@@ -14,7 +14,7 @@ namespace tonkica.Data
         public int CurrencyId { get; set; }
         public int DisplayCurrencyId { get; set; }
         public int IssuerCurrencyId { get; set; }
-        public decimal DispalyRate { get; set; }
+        public decimal DisplayRate { get; set; }
         public decimal IssuerRate { get; set; }
         public decimal Total { get; set; }
         public decimal DisplayTotal { get; set; }

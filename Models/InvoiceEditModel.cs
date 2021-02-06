@@ -1,14 +1,35 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using tonkica.Data;
+using tonkica.Enums;
 
 namespace tonkica.Models
 {
-    public class InvoiceCreateModel
+    public class InvoiceEditModel
     {
         public string? Subject { get; set; }
         public int IssuerId { get; set; }
         public int ClientId { get; set; }
+        public int CurrencyId { get; set; }
+        public int DisplayCurrencyId { get; set; }
+        public int IssuerCurrencyId { get; set; }
+        public DateTimeOffset? Published { get; set; }
+        public int Status { get; set; }
         public string? Note { get; set; }
+
+        public InvoiceEditModel(Invoice i)
+        {
+            Subject = i.Subject;
+            IssuerId = i.IssuerId;
+            ClientId = i.ClientId;
+            CurrencyId = i.CurrencyId;
+            DisplayCurrencyId = i.DisplayCurrencyId;
+            IssuerCurrencyId = i.IssuerCurrencyId;
+            Published = i.Published;
+            Status = (int)i.Status;
+            Note = i.Note;
+        }
 
         public Dictionary<string, string>? Validate()
         {

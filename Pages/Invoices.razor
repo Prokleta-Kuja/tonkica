@@ -26,13 +26,13 @@
                     <td>@invoice.Subject</td>
                     <td>
                         @invoice.Total @invoice.Currency?.Tag <br />
-                        @invoice.DisplayTotal (@invoice.DispalyRate) @invoice.DisplayCurrency?.Tag <br />
-                        @invoice.IssuerTotal (@invoice.IssuerRate) @invoice.IssuerCurrency?.Tag
+                        <small>@invoice.DisplayTotal (@invoice.DisplayRate) @invoice.DisplayCurrency?.Tag <br /></small>
+                        <small>@invoice.IssuerTotal (@invoice.IssuerRate) @invoice.IssuerCurrency?.Tag</small>
                     </td>
                     <td>@(invoice.Published.HasValue ? invoice.Published : "-")</td>
                     <td>@invoice.Note</td>
                     <td>
-                        <button class="btn btn-sm btn-outline-secondary">Edit ...</button>
+                        <a class="btn btn-sm btn-outline-secondary" href="@C.Routes.InvoiceFor(invoice.Id)">Edit</a>
                     </td>
                 </tr>
             }
@@ -40,7 +40,7 @@
     </table>
 </div>
 
-@if (_item != null)
+@if (_create != null)
 {
     <div class="modal-backdrop fade show"></div>
     <div class="modal fade show" style="display: block;" @onclick="CancelClicked">
@@ -52,13 +52,13 @@
                         <button type="button" class="btn-close" @onclick="CancelClicked"></button>
                     </div>
                     <div class="modal-body">
-                        <Dropdown For=@nameof(Invoice.IssuerId) Label=Issuer @bind-Value=_item.IssuerId Errors=_errors
+                        <Dropdown For=@nameof(InvoiceCreateModel.IssuerId) Label=Issuer @bind-Value=_create.IssuerId Errors=_errors
                             Required Items=_issuersD />
-                        <Dropdown For=@nameof(Invoice.ClientId) Label=Client @bind-Value=_item.ClientId Errors=_errors
+                        <Dropdown For=@nameof(InvoiceCreateModel.ClientId) Label=Client @bind-Value=_create.ClientId Errors=_errors
                             Required Items=_clientsD />
-                        <TextBox For=@nameof(Invoice.Subject) Label=Subject @bind-Value=_item.Subject Errors=_errors
+                        <TextBox For=@nameof(InvoiceCreateModel.Subject) Label=Subject @bind-Value=_create.Subject Errors=_errors
                             Required />
-                        <TextBox For=@nameof(Invoice.Note) Label=Note @bind-Value=_item.Note Errors=_errors Lines=3 />
+                        <TextBox For=@nameof(InvoiceCreateModel.Note) Label=Note @bind-Value=_create.Note Errors=_errors Lines=3 />
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>

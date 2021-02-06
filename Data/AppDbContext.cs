@@ -122,7 +122,7 @@ namespace tonkica.Data
                 IssuerCurrencyId = issuer1.CurrencyId,
                 Note = client1.DefaultInvoiceNote,
                 Status = Enums.InvoiceStatus.Draft,
-                DispalyRate = 7.556M,
+                DisplayRate = 7.556M,
                 IssuerRate = 1.3M
             };
 

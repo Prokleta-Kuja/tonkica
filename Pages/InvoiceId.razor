@@ -1,0 +1,32 @@
+@attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Invoice)]
+
+<h1>Invoice @Id</h1>
+@if (_edit != null)
+{
+    <form @onsubmit=SaveClicked>
+    <div class="modal-body">
+        <Dropdown For=@nameof(InvoiceEditModel.IssuerId) Label=Issuer @bind-Value=_edit.IssuerId Errors=_errors Required
+            Items=_issuersD />
+        <Dropdown For=@nameof(InvoiceEditModel.ClientId) Label=Client @bind-Value=_edit.ClientId Errors=_errors Required
+            Items=_clientsD />
+        <TextBox For=@nameof(InvoiceEditModel.Subject) Label=Subject @bind-Value=_edit.Subject Errors=_errors
+            Required />
+        <Dropdown For=@nameof(InvoiceEditModel.CurrencyId) Label="Invoice Currency" @bind-Value=_edit.CurrencyId
+            Errors=_errors Required Items=_currenciesD />
+        <Dropdown For=@nameof(InvoiceEditModel.DisplayCurrencyId) Label="Display Currency"
+            @bind-Value=_edit.DisplayCurrencyId Errors=_errors Required Items=_currenciesD />
+        <Dropdown For=@nameof(InvoiceEditModel.IssuerCurrencyId) Label="Issuer Currency"
+            @bind-Value=_edit.IssuerCurrencyId Errors=_errors Required Items=_currenciesD />
+        <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=3 />
+        <Dropdown For=@nameof(InvoiceEditModel.Status) Label="Status" @bind-Value=_edit.Status Errors=_errors Required
+            Items=_statusesD />
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+}
+else
+{
+    <h4>Not found.</h4>
+}

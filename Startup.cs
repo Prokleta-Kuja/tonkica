@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using tonkica.Data;
+using tonkica.Services;
 
 namespace tonkica
 {
@@ -28,6 +29,8 @@ namespace tonkica
                  builder.UseSqlite(C.Settings.AppDbConnectionString);
                  builder.EnableSensitiveDataLogging(System.Diagnostics.Debugger.IsAttached);
              });
+            services.AddHttpClient();
+            services.AddTransient<CurrencyRatesClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,26 +6,38 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
 using tonkica.Models;
+using tonkica.Services;
 
 namespace tonkica.Pages
 {
     public partial class Invoices
     {
         [Inject] private AppDbContext _db { get; set; } = null!;
+        [Inject] private CurrencyRatesClient _rates { get; set; } = null!;
+        [Inject] private NavigationManager _navigator { get; set; } = null!;
         private IList<Currency> _currencies = new List<Currency>();
+        private Dictionary<int, string> _currenciesD = new Dictionary<int, string>();
+        private IList<Issuer> _issuers = new List<Issuer>();
         private Dictionary<int, string> _issuersD = new Dictionary<int, string>();
+        private IList<Client> _clients = new List<Client>();
         private Dictionary<int, string> _clientsD = new Dictionary<int, string>();
-        private IList<Invoice> _list = new List<Invoice>();
-        private InvoiceCreateModel? _item;
+        private List<Invoice> _list = new List<Invoice>();
+        private InvoiceCreateModel? _create;
         private Dictionary<string, string>? _errors;
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
             _currencies = await _db.Currencies.ToListAsync();
-            _list = await _db.Invoices
-                .Include(i => i.Client)
-                .ToListAsync();
+            _currenciesD = _currencies.ToDictionary(x => x.Id, x => x.Tag);
+
+            _issuers = await _db.Issuers.ToListAsync();
+            _issuersD = _issuers.ToDictionary(x => x.Id, x => x.Name);
+
+            _clients = await _db.Clients.ToListAsync();
+            _clientsD = _clients.ToDictionary(x => x.Id, x => x.Name);
+
+            _list = await _db.Invoices.ToListAsync();
         }
         private async Task AddClicked()
         {
@@ -34,45 +46,41 @@ namespace tonkica.Pages
             if (!_clientsD.Any())
                 _clientsD = await _db.Clients.ToDictionaryAsync(i => i.Id, i => i.Name);
 
-            _item = new InvoiceCreateModel();
+            _create = new InvoiceCreateModel();
 
-            _item.CurrencyId = _currencies.First().Id;
-            _item.IssuerId = _issuersD.FirstOrDefault().Key;
-            _item.ClientId = _clientsD.FirstOrDefault().Key;
+            _create.IssuerId = _issuersD.FirstOrDefault().Key;
+            _create.ClientId = _clientsD.FirstOrDefault().Key;
         }
-        private void CancelClicked() { _item = null; _errors = null; }
+        private void CancelClicked() { _create = null; _errors = null; }
         private async Task<EventCallback<EventArgs>> SaveClicked()
         {
-            _errors = _item!.Validate();
+            if (_create == null)
+                return default;
 
-            await Task.CompletedTask;
+            _errors = _create!.Validate();
+            if (_errors != null)
+                return default;
 
-            // if (_item == null)
-            //     throw new System.ArgumentNullException(nameof(_item));
+            var issuer = _issuers.Single(x => x.Id == _create.IssuerId);
+            var client = _clients.Single(x => x.Id == _create.ClientId);
 
-            // var adding = _item.Id <= 0;
-            // if (adding)
-            //     _db.Invoices.Add(_item);
-            // else
-            // {
-            //     var existing = _list.Single(i => i.Id == _item.Id);
-            //     existing.Subject = _item.Subject;
-            //     existing.IssuerId = _item.IssuerId;
-            //     existing.ClientId = _item.ClientId;
-            //     existing.CurrencyId = _item.CurrencyId;
-            //     existing.DisplayCurrencyId = _item.DisplayCurrencyId;
-            //     existing.Published = _item.Published;
-            //     existing.Status = _item.Status;
-            //     existing.Note = _item.Note;
-            // }
+            var invoice = new Invoice();
+            invoice.Subject = _create.Subject!;
+            invoice.IssuerId = _create.IssuerId;
+            invoice.ClientId = _create.ClientId;
+            invoice.Note = _create.Note;
 
-            // await _db.SaveChangesAsync();
+            invoice.Currency = client.ContractCurrency;
+            invoice.DisplayCurrency = client.DisplayCurrency;
+            invoice.IssuerCurrency = issuer.Currency;
 
-            // if (adding)
-            //     _list.Insert(0, _item);
+            await _rates.CalculateRates(invoice);
 
-            // _formShown = false;
+            _db.Invoices.Add(invoice);
+            await _db.SaveChangesAsync();
+            _create = null;
 
+            _navigator.NavigateTo(C.Routes.InvoiceFor(invoice.Id));
             return default;
         }
     }
