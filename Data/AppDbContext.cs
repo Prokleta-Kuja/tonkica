@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -14,10 +15,16 @@ namespace tonkica.Data
         public DbSet<Client> Clients { get; set; } = null!;
         public DbSet<Invoice> Invoices { get; set; } = null!;
         public DbSet<InvoiceItem> InvoiceItems { get; set; } = null!;
+        public DbSet<Issuer> Issuers { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<Issuer>(e =>
+            {
+                e.HasOne(p => p.Currency).WithMany(p => p!.Issuers).HasForeignKey(p => p.CurrencyId);
+            });
 
             builder.Entity<Client>(e =>
             {
@@ -34,6 +41,23 @@ namespace tonkica.Data
                 e.HasMany(p => p.Items).WithOne(p => p!.Invoice!).HasForeignKey(p => p.InvoiceId);
             });
 
+            builder.Entity<Currency>().HasData(
+                new Currency("HRK", "kn", false) { Id = 1 },
+                new Currency("EUR", "€", false) { Id = 2 },
+                new Currency("USD", "$", true) { Id = 3 },
+                new Currency("GBP", "ł", false) { Id = 4 },
+                new Currency("AUD", "$", true) { Id = 5 },
+                new Currency("CAD", "$", true) { Id = 6 },
+                new Currency("CZK", "Kč", false) { Id = 7 },
+                new Currency("DKK", "kr.", false) { Id = 8 },
+                new Currency("HUF", "Ft", false) { Id = 9 },
+                new Currency("JPY", "¥", true) { Id = 10 },
+                new Currency("NOK", "kr", false) { Id = 11 },
+                new Currency("SEK", "kr", false) { Id = 12 },
+                new Currency("CHF", "francs", false) { Id = 13 },
+                new Currency("BAM", "KM", false) { Id = 14 },
+                new Currency("PLN", "zł", false) { Id = 15 }
+            );
 
             foreach (var entityType in builder.Model.GetEntityTypes())
             {
@@ -78,8 +102,47 @@ namespace tonkica.Data
             Currencies.AddRange(hrk, eur, usd, gbp, aud, cad, czk, dkk, huf, jpy, nok, sek, chf, bam, pln);
             await SaveChangesAsync();
 
-            var client1 = new Client("Klijent", "Klijent d.o.o.\nUlica Pere Kvržice 3\n10 000 Zagreb", eur.Id, usd.Id);
+            var client1 = new Client("Klijent", "Ulica Pere Kvržice 3\n10 000 Zagreb\nHrvatska", eur.Id, usd.Id)
+            {
+                DefaultInvoiceNote = "Plaćanje po ugovoru xxx"
+            };
             Clients.AddRange(client1);
+
+            var issuer1 = new Issuer("Moja tvrtka", "Ulica izdavača 7\n10 000 Zagreb\nHrvatska", hrk.Id);
+            Issuers.AddRange(issuer1);
+            await SaveChangesAsync();
+
+            var invoice1 = new Invoice
+            {
+                Subject = "Usluge obavljene u siječnju",
+                ClientId = client1.Id,
+                IssuerId = issuer1.Id,
+                CurrencyId = client1.ContractCurrencyId,
+                DisplayCurrencyId = client1.DisplayCurrencyId,
+                IssuerCurrencyId = issuer1.CurrencyId,
+                Note = client1.DefaultInvoiceNote,
+                Status = Enums.InvoiceStatus.Draft,
+                DispalyRate = 7.556M,
+                IssuerRate = 1.3M
+            };
+
+            invoice1.Items = new List<InvoiceItem>();
+            invoice1.Items.Add(new InvoiceItem("Stavka 1")
+            {
+                Price = 26,
+                Quantity = 140,
+                Total = 26 * 140,
+            });
+            invoice1.Items.Add(new InvoiceItem("Stavka 2")
+            {
+                Price = 26,
+                Quantity = 20,
+                Total = 26 * 20,
+            });
+
+            // TODO: calculate currencies and totals
+
+            Invoices.Add(invoice1);
             await SaveChangesAsync();
         }
     }

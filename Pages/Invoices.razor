@@ -1,0 +1,71 @@
+@attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Invoices)]
+
+<h1>Invoices</h1>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Seq #</td>
+                <td>Client</td>
+                <td>Subject</td>
+                <td>Total</td>
+                <td>Published</td>
+                <td>Note</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var invoice in _list)
+            {
+                <tr @key=invoice.Id>
+                    <td>@invoice.SequenceNumber</td>
+                    <td>@invoice.Client?.Name</td>
+                    <td>@invoice.Subject</td>
+                    <td>
+                        @invoice.Total @invoice.Currency?.Tag <br />
+                        @invoice.DisplayTotal (@invoice.DispalyRate) @invoice.DisplayCurrency?.Tag <br />
+                        @invoice.IssuerTotal (@invoice.IssuerRate) @invoice.IssuerCurrency?.Tag
+                    </td>
+                    <td>@(invoice.Published.HasValue ? invoice.Published : "-")</td>
+                    <td>@invoice.Note</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-secondary">Edit ...</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (_item != null)
+{
+    <div class="modal-backdrop fade show"></div>
+    <div class="modal fade show" style="display: block;" @onclick="CancelClicked">
+        <div class="modal-dialog" @onclick:stopPropagation>
+            <form @onsubmit=SaveClicked>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add new invoice</h5>
+                        <button type="button" class="btn-close" @onclick="CancelClicked"></button>
+                    </div>
+                    <div class="modal-body">
+                        <Dropdown For=@nameof(Invoice.IssuerId) Label=Issuer @bind-Value=_item.IssuerId Errors=_errors
+                            Required Items=_issuersD />
+                        <Dropdown For=@nameof(Invoice.ClientId) Label=Client @bind-Value=_item.ClientId Errors=_errors
+                            Required Items=_clientsD />
+                        <TextBox For=@nameof(Invoice.Subject) Label=Subject @bind-Value=_item.Subject Errors=_errors
+                            Required />
+                        <TextBox For=@nameof(Invoice.Note) Label=Note @bind-Value=_item.Note Errors=_errors Lines=3 />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}

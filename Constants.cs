@@ -8,7 +8,9 @@ namespace tonkica
         public static class Routes
         {
             public const string Root = "/";
-            public const string Currencies = "/currencies";
+            public const string Invoices = "/invoices";
+            public const string Clients = "/clients";
+            public const string Issuers = "/issuers";
         }
         public static class Settings
         {

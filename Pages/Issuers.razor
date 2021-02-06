@@ -1,0 +1,70 @@
+@attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Issuers)]
+
+<h1>Issuers</h1>
+
+<div class="row">
+    <div class="col">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Contact Info</td>
+                        <td>Currency</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var issuer in _list)
+                    {
+                        <tr @key=issuer.Id>
+                            <td>@issuer.Name</td>
+                            <td>@issuer.ContactInfo</td>
+                            <td>@issuer.Currency?.Tag</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                    @onclick="()=>EditClicked(issuer)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col">
+        @if (_create != null)
+        {
+            <legend>Add Issuer</legend>
+            <form @onsubmit=SaveCreateClicked>
+                <TextBox For=@nameof(ClientCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
+                <TextBox For=@nameof(ClientCreateModel.ContactInfo) Label="Contact Info" @bind-Value=_create.ContactInfo
+                    Errors=_errors Lines=3 Required />
+                <Dropdown For=@nameof(ClientCreateModel.ContractCurrencyId) Label="Contract Currency"
+                    @bind-Value=_create.CurrencyId Errors=_errors Required Items=_currenciesD />
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+            </form>
+        }
+        else if (_edit != null)
+        {
+            <legend>Edit @_edit.Name</legend>
+            <form @onsubmit=SaveEditClicked>
+                <TextBox For=@nameof(ClientCreateModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
+                <TextBox For=@nameof(ClientCreateModel.ContactInfo) Label="Contact Info" @bind-Value=_edit.ContactInfo
+                    Errors=_errors Lines=3 Required />
+                <Dropdown For=@nameof(ClientCreateModel.ContractCurrencyId) Label="Contract Currency"
+                    @bind-Value=_edit.CurrencyId Errors=_errors Required Items=_currenciesD />
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-info">Select Issuer to edit or add.</div>
+        }
+    </div>
+</div>

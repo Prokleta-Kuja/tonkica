@@ -16,6 +16,7 @@ namespace tonkica.Data
         public string Symbol { get; set; }
         public bool IsPrefix { get; set; }
 
+        public ICollection<Issuer>? Issuers { get; set; }
         public ICollection<Client>? ContractClients { get; set; }
         public ICollection<Client>? DisplayClients { get; set; }
         public ICollection<Invoice>? Invoices { get; set; }
