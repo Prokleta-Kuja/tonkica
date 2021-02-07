@@ -3,28 +3,109 @@
 <h1>Invoice @Id</h1>
 @if (_edit != null)
 {
-    <form @onsubmit=SaveClicked>
-    <div class="modal-body">
-        <Dropdown For=@nameof(InvoiceEditModel.IssuerId) Label=Issuer @bind-Value=_edit.IssuerId Errors=_errors Required
-            Items=_issuersD />
-        <Dropdown For=@nameof(InvoiceEditModel.ClientId) Label=Client @bind-Value=_edit.ClientId Errors=_errors Required
-            Items=_clientsD />
-        <TextBox For=@nameof(InvoiceEditModel.Subject) Label=Subject @bind-Value=_edit.Subject Errors=_errors
-            Required />
-        <Dropdown For=@nameof(InvoiceEditModel.CurrencyId) Label="Invoice Currency" @bind-Value=_edit.CurrencyId
-            Errors=_errors Required Items=_currenciesD />
-        <Dropdown For=@nameof(InvoiceEditModel.DisplayCurrencyId) Label="Display Currency"
-            @bind-Value=_edit.DisplayCurrencyId Errors=_errors Required Items=_currenciesD />
-        <Dropdown For=@nameof(InvoiceEditModel.IssuerCurrencyId) Label="Issuer Currency"
-            @bind-Value=_edit.IssuerCurrencyId Errors=_errors Required Items=_currenciesD />
-        <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=3 />
-        <Dropdown For=@nameof(InvoiceEditModel.Status) Label="Status" @bind-Value=_edit.Status Errors=_errors Required
-            Items=_statusesD />
+    <div class=row>
+    <div class=col>
+        <form @onsubmit=SaveClicked>
+            <div class="modal-body">
+                <Dropdown For=@nameof(InvoiceEditModel.IssuerId) Label=Issuer @bind-Value=_edit.IssuerId Errors=_errors
+                    Required Items=_issuersD />
+                <Dropdown For=@nameof(InvoiceEditModel.ClientId) Label=Client @bind-Value=_edit.ClientId Errors=_errors
+                    Required Items=_clientsD />
+                <TextBox For=@nameof(InvoiceEditModel.Subject) Label=Subject @bind-Value=_edit.Subject Errors=_errors
+                    Required />
+                <Dropdown For=@nameof(InvoiceEditModel.CurrencyId) Label="Invoice Currency" @bind-Value=_edit.CurrencyId
+                    Errors=_errors Required Items=_currenciesD />
+                <Dropdown For=@nameof(InvoiceEditModel.DisplayCurrencyId) Label="Display Currency"
+                    @bind-Value=_edit.DisplayCurrencyId Errors=_errors Required Items=_currenciesD />
+                <Dropdown For=@nameof(InvoiceEditModel.IssuerCurrencyId) Label="Issuer Currency"
+                    @bind-Value=_edit.IssuerCurrencyId Errors=_errors Required Items=_currenciesD />
+                <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=3 />
+                <Dropdown For=@nameof(InvoiceEditModel.Status) Label="Status" @bind-Value=_edit.Status Errors=_errors
+                    Required Items=_statusesD />
+            </div>
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary" @onclick=SaveClicked>Save</button>
+            </div>
+        </form>
     </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <div class=col-md-7>
+        <div class=table-responsive>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td>Title</td>
+                        <td class=text-end>Qty</td>
+                        <td class=text-end>Price</td>
+                        <td class=text-end>Total</td>
+                        <td class=d-grid>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=SaveItemsClicked>
+                                Save
+                            </button>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in _invoice!.Items!)
+                        {
+                            <tr>
+                                <td>
+                                    <input class="form-control form-control-sm" @bind=item.Title placeholder="Title" />
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm text-end" @bind=item.Quantity
+                                        placeholder="Qty" />
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm text-end" @bind=item.Price placeholder="Price" />
+                                </td>
+                                <td>
+                                    <input class="form-control form-control-sm text-end" @bind=item.Total placeholder="Total"
+                                        disabled />
+                                </td>
+                                <td class=d-grid>
+                                    <button class="btn btn-sm btn-outline-danger" @onclick="()=>RemoveItemClicked(item)">
+                                        Remove
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr class=table-info>
+                            <td colspan=5 class=text-end>
+                                @_invoice.Total @_invoice.Currency?.Tag <br />
+                                <small>@_invoice.DisplayTotal (@_invoice.DisplayRate) @_invoice.DisplayCurrency?.Tag
+                                    <br /></small>
+                                <small>@_invoice.IssuerTotal (@_invoice.IssuerRate) @_invoice.IssuerCurrency?.Tag</small>
+                            </td>
+                        </tr>
+                        <tr class=table-primary>
+                            <td>
+                                <input class="form-control form-control-sm" @bind=_item.Title placeholder="Title" />
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm text-end" @bind=_item.Quantity
+                                    placeholder="Qty" />
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm text-end" @bind=_item.Price
+                                    placeholder="Price" />
+                            </td>
+                            <td>
+                                <input class="form-control form-control-sm text-end" @bind=_item.Total placeholder="Total"
+                                    disabled />
+                            </td>
+                            <td class=d-grid>
+                                <button class="btn btn-sm btn-outline-success" @onclick=AddItemClicked>
+                                    Add
+                                </button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     </div>
-</form>
 }
 else
 {

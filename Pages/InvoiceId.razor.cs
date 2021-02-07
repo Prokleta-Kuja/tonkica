@@ -7,21 +7,25 @@ using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
 using tonkica.Enums;
 using tonkica.Models;
+using tonkica.Services;
 
 namespace tonkica.Pages
 {
     public partial class InvoiceId
     {
         [Inject] private AppDbContext _db { get; set; } = null!;
+        [Inject] private CurrencyRatesClient _rates { get; set; } = null!;
         [Parameter] public int Id { get; set; }
         private IList<Currency> _currencies = new List<Currency>();
         private Dictionary<int, string> _currenciesD = new Dictionary<int, string>();
+        private IList<Issuer> _issuers = new List<Issuer>();
         private Dictionary<int, string> _issuersD = new Dictionary<int, string>();
+        private IList<Client> _clients = new List<Client>();
         private Dictionary<int, string> _clientsD = new Dictionary<int, string>();
         private Dictionary<int, string> _statusesD = new Dictionary<int, string>();
-        private IList<Invoice> _list = new List<Invoice>();
-        private Invoice? _item;
+        private Invoice? _invoice;
         private InvoiceEditModel? _edit;
+        private InvoiceItem _item = null!;
         private Dictionary<string, string>? _errors;
 
         protected override async Task OnInitializedAsync()
@@ -34,52 +38,96 @@ namespace tonkica.Pages
             _currencies = await _db.Currencies.ToListAsync();
             _currenciesD = _currencies.ToDictionary(x => x.Id, x => x.Tag);
 
-            var issuers = await _db.Issuers.ToListAsync();
-            _issuersD = issuers.ToDictionary(x => x.Id, x => x.Name);
+            _issuers = await _db.Issuers.ToListAsync();
+            _issuersD = _issuers.ToDictionary(x => x.Id, x => x.Name);
 
-            var clients = await _db.Clients.ToListAsync();
-            _clientsD = clients.ToDictionary(x => x.Id, x => x.Name);
+            _clients = await _db.Clients.ToListAsync();
+            _clientsD = _clients.ToDictionary(x => x.Id, x => x.Name);
 
-            _item = await _db.Invoices
+            _invoice = await _db.Invoices
                 .Include(x => x.Items)
                 .SingleOrDefaultAsync(x => x.Id == Id);
 
-            if (_item != null)
-                _edit = new InvoiceEditModel(_item);
+            if (_invoice != null)
+            {
+                _edit = new InvoiceEditModel(_invoice);
+                _item = new InvoiceItem(string.Empty)
+                {
+                    InvoiceId = _invoice.Id
+                };
+            }
         }
         private async Task<EventCallback<EventArgs>> SaveClicked()
         {
+            if (_edit == null || _invoice == null)
+                return default;
+
             _errors = _edit!.Validate();
+            if (_errors != null)
+                return default;
 
-            await Task.CompletedTask;
+            var issuer = _issuers.Single(x => x.Id == _edit.IssuerId);
+            var client = _clients.Single(x => x.Id == _edit.ClientId);
 
-            // if (_item == null)
-            //     throw new System.ArgumentNullException(nameof(_item));
+            _invoice.Subject = _edit.Subject!;
+            _invoice.IssuerId = _edit.IssuerId;
+            _invoice.ClientId = _edit.ClientId;
+            _invoice.Note = _edit.Note;
 
-            // var adding = _item.Id <= 0;
-            // if (adding)
-            //     _db.Invoices.Add(_item);
-            // else
-            // {
-            //     var existing = _list.Single(i => i.Id == _item.Id);
-            //     existing.Subject = _item.Subject;
-            //     existing.IssuerId = _item.IssuerId;
-            //     existing.ClientId = _item.ClientId;
-            //     existing.CurrencyId = _item.CurrencyId;
-            //     existing.DisplayCurrencyId = _item.DisplayCurrencyId;
-            //     existing.Published = _item.Published;
-            //     existing.Status = _item.Status;
-            //     existing.Note = _item.Note;
-            // }
+            _invoice.Currency = client.ContractCurrency;
+            _invoice.DisplayCurrency = client.DisplayCurrency;
+            _invoice.IssuerCurrency = issuer.Currency;
 
-            // await _db.SaveChangesAsync();
+            await _rates.CalculateRates(_invoice);
 
-            // if (adding)
-            //     _list.Insert(0, _item);
-
-            // _formShown = false;
+            await _db.SaveChangesAsync();
 
             return default;
+        }
+        private async Task<EventCallback<EventArgs>> SaveItemsClicked()
+        {
+            await SaveInvoiceItems();
+
+            return default;
+        }
+
+        private async Task SaveInvoiceItems()
+        {
+            if (_invoice == null || _invoice.Items == null)
+                return;
+
+            foreach (var item in _invoice.Items)
+                item.Total = item.Price * item.Quantity;
+
+            _invoice.Total = _invoice.Items.Sum(i => i.Total);
+            _invoice.DisplayTotal = _invoice.Total * _invoice.DisplayRate;
+            _invoice.IssuerTotal = _invoice.Total * _invoice.IssuerRate;
+
+            await _db.SaveChangesAsync();
+        }
+
+        private async Task<EventCallback<EventArgs>> AddItemClicked()
+        {
+            if (_invoice == null || _invoice.Items == null)
+                return default;
+
+            _invoice.Items.Add(_item);
+            await SaveInvoiceItems();
+
+            _item = new InvoiceItem(string.Empty)
+            {
+                InvoiceId = _invoice.Id
+            };
+
+            return default;
+        }
+        private async void RemoveItemClicked(InvoiceItem item)
+        {
+            if (_invoice == null || _invoice.Items == null)
+                return;
+
+            _invoice.Items.Remove(item);
+            await SaveInvoiceItems();
         }
     }
 }
