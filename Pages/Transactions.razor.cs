@@ -51,7 +51,7 @@ namespace tonkica.Pages
             var transaction = new Transaction();
             transaction.AccountId = _create.AccountId;
             transaction.Amount = _create.Amount!.Value;
-            transaction.Date = _create.Date;
+            transaction.Date = _create.Date!.Value;
             transaction.Note = _create.Note;
 
 
@@ -78,7 +78,7 @@ namespace tonkica.Pages
 
             transaction.AccountId = _edit.AccountId;
             transaction.Amount = _edit.Amount!.Value;
-            transaction.Date = _edit.Date;
+            transaction.Date = _edit.Date!.Value;
             transaction.Note = _edit.Note;
 
             await _db.SaveChangesAsync();

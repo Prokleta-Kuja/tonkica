@@ -68,6 +68,7 @@ namespace tonkica.Pages
                 return default;
 
             _invoice.SequenceNumber = _edit.SequenceNumber;
+            _invoice.Published = _edit.Published;
             _invoice.Status = (InvoiceStatus)_edit.Status;
             if (!_invoice.Published.HasValue && _invoice.Status == InvoiceStatus.Issued)
                 _invoice.Published = DateTimeOffset.UtcNow;

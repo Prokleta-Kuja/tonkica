@@ -46,6 +46,9 @@ namespace tonkica.Models
             if (ClientId <= 0)
                 errors.Add(nameof(ClientId), "Required");
 
+            if (Published.HasValue && Published.Value > DateTimeOffset.UtcNow)
+                errors.Add(nameof(Published), "Cannot be in the future");
+
             if (errors.Any())
                 return errors;
 

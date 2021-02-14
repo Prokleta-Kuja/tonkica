@@ -8,21 +8,22 @@
         <form @onsubmit=SaveClicked>
                 <TextBox For=@nameof(InvoiceEditModel.SequenceNumber) Label=Sequence @bind-Value=_edit.SequenceNumber Errors=_errors
                     Required />
+                <TextBox For=@nameof(InvoiceEditModel.Subject) Label=Subject @bind-Value=_edit.Subject Errors=_errors
+                    Required />
                 <Dropdown For=@nameof(InvoiceEditModel.IssuerId) Label=Issuer @bind-Value=_edit.IssuerId Errors=_errors
                     Required Items=_issuersD />
                 <Dropdown For=@nameof(InvoiceEditModel.ClientId) Label=Client @bind-Value=_edit.ClientId Errors=_errors
                     Required Items=_clientsD />
-                <TextBox For=@nameof(InvoiceEditModel.Subject) Label=Subject @bind-Value=_edit.Subject Errors=_errors
-                    Required />
                 <Dropdown For=@nameof(InvoiceEditModel.CurrencyId) Label="Invoice Currency" @bind-Value=_edit.CurrencyId
                     Errors=_errors Required Items=_currenciesD />
                 <Dropdown For=@nameof(InvoiceEditModel.DisplayCurrencyId) Label="Display Currency"
                     @bind-Value=_edit.DisplayCurrencyId Errors=_errors Required Items=_currenciesD />
                 <Dropdown For=@nameof(InvoiceEditModel.IssuerCurrencyId) Label="Issuer Currency"
                     @bind-Value=_edit.IssuerCurrencyId Errors=_errors Required Items=_currenciesD />
-                <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=3 />
                 <Dropdown For=@nameof(InvoiceEditModel.Status) Label="Status" @bind-Value=_edit.Status Errors=_errors
-                    Required Items=_statusesD />
+                    Required Items=_statusesD />                
+                <DateTimeBox For=@nameof(InvoiceEditModel.Published) Label=Published @bind-Value=_edit.Published Errors=_errors Required />
+                <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=3 />
                 <div class="float-end">                    
                     <button type="submit" class="btn btn-primary">Save</button>
                     @if(_invoice!.Status != (int)Enums.InvoiceStatus.Draft)

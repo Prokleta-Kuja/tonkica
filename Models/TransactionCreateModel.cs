@@ -8,7 +8,7 @@ namespace tonkica.Models
     {
         public int AccountId { get; set; }
         public decimal? Amount { get; set; }
-        public DateTimeOffset Date { get; set; }
+        public DateTimeOffset? Date { get; set; }
         public string? Note { get; set; }
 
         public Dictionary<string, string>? Validate()
@@ -20,6 +20,9 @@ namespace tonkica.Models
 
             if (!Amount.HasValue)
                 errors.Add(nameof(Amount), "Required");
+
+            if (!Date.HasValue)
+                errors.Add(nameof(Date), "Required");
 
             if (errors.Any())
                 return errors;

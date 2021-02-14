@@ -43,7 +43,7 @@
                 <Dropdown For=@nameof(TransactionCreateModel.AccountId) Label="Account"
                     @bind-Value=_create.AccountId Errors=_errors Required Items=_accountsD />
                 <NumBox For=@nameof(TransactionCreateModel.Amount) Label=Amount @bind-Value=_create.Amount Errors=_errors Required />
-                @* <TextBox For=@nameof(TransactionCreateModel.Date) Label=Date @bind-Value=_create.Date Errors=_errors Required /> *@
+                <DateTimeBox For=@nameof(TransactionCreateModel.Date) Label=Date @bind-Value=_create.Date Errors=_errors Required />
                 <TextBox For=@nameof(TransactionCreateModel.Note) Label="Note" @bind-Value=_create.Note
                     Errors=_errors Lines=3 Required />
 
@@ -58,7 +58,7 @@
                 <Dropdown For=@nameof(TransactionEditModel.AccountId) Label="Account"
                     @bind-Value=_edit.AccountId Errors=_errors Required Items=_accountsD />
                 <NumBox For=@nameof(TransactionEditModel.Amount) Label=Amount @bind-Value=_edit.Amount Errors=_errors Required />
-                @* <TextBox For=@nameof(TransactionEditModel.Date) Label=Date @bind-Value=_edit.Date Errors=_errors Required /> *@
+                <DateTimeBox For=@nameof(TransactionEditModel.Date) Label=Date @bind-Value=_edit.Date Errors=_errors Required />
                 <TextBox For=@nameof(TransactionEditModel.Note) Label="Contact Info" @bind-Value=_edit.Note
                     Errors=_errors Lines=3 Required />
 
