@@ -94,6 +94,7 @@ namespace tonkica.Pages
             _invoice.IssuerTotal = _invoice.Total * _invoice.IssuerRate;
 
             await _db.SaveChangesAsync();
+            _edit = new InvoiceEditModel(_invoice);
             return default;
         }
         private async Task ClockifyClicked()

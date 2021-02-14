@@ -8,3 +8,9 @@ Roba za inozemne klijente 	Oslobođeno PDV-a temeljem članka 90. st. 2 Zakona o
 Usluge za inozemne klijente 	Oslobođeno PDV-a temeljem članka 17. st. 1 Zakona o PDV-u - reverse charge  -> Exempt from VAT pursuant to Article 17, paragraph 1 of the Croatian VAT Act.
 
 mamlaz123
+
+# Misc
+```
+dotnet outdated
+dotnet ef migrations add -o Data/Migrations --no-build Initial
+```
