@@ -35,7 +35,7 @@ namespace tonkica.Services
             var tags = new HashSet<string> { i.Currency.Tag, i.DisplayCurrency.Tag, i.IssuerCurrency.Tag, };
 
             var rates = i.Published.HasValue
-                ? await GetRatesForDateAsync(i.Published.Value.Year, i.Published.Value.Month, i.Published.Value.Day, tags)
+                ? await GetRatesForDateAsync(i.Published.Value, tags)
                 : await GetLatestRatesAsync(tags);
 
             var contractRate = rates.FirstOrDefault(x => x.Currency == i.Currency.Tag);
@@ -64,26 +64,40 @@ namespace tonkica.Services
                     i.IssuerRate = (contractRate.AverageRate / contractRate.Unit) / (issuerRate.AverageRate / issuerRate.Unit);
             }
         }
-        public async Task<IEnumerable<CurrencyRate>> GetLatestRatesAsync(IEnumerable<string> currencies, CancellationToken cancellationToken = default)
+        public Task<IEnumerable<CurrencyRate>> GetLatestRatesAsync(IEnumerable<string> currencies, CancellationToken cancellationToken = default)
         {
             var sb = new StringBuilder("?");
             foreach (var currency in currencies)
                 sb.Append($"&valuta={currency}");
 
             var query = sb.ToString();
-            var result = await GetRatesAsync(query, currencies, cancellationToken);
-            return result;
+            return GetRatesAsync(query, currencies, cancellationToken);
         }
 
-        public async Task<IEnumerable<CurrencyRate>> GetRatesForDateAsync(int year, int month, int day, IEnumerable<string> currencies, CancellationToken cancellationToken = default)
+        public Task<IEnumerable<CurrencyRate>> GetRatesForDateAsync(DateTimeOffset dt, IEnumerable<string> currencies, CancellationToken cancellationToken = default)
+            => GetRatesForDateAsync(dt.Year, dt.Month, dt.Day, currencies, cancellationToken);
+        public Task<IEnumerable<CurrencyRate>> GetRatesForDateAsync(DateTime dt, IEnumerable<string> currencies, CancellationToken cancellationToken = default)
+            => GetRatesForDateAsync(dt.Year, dt.Month, dt.Day, currencies, cancellationToken);
+
+        public Task<IEnumerable<CurrencyRate>> GetRatesForDateAsync(int year, int month, int day, IEnumerable<string> currencies, CancellationToken cancellationToken = default)
         {
             var sb = new StringBuilder($"?datum-primjene={year}-{month}-{day}");
             foreach (var currency in currencies)
                 sb.Append($"&valuta={currency}");
 
             var query = sb.ToString();
-            var result = await GetRatesAsync(query, currencies, cancellationToken);
-            return result;
+            return GetRatesAsync(query, currencies, cancellationToken);
+        }
+        public Task<IEnumerable<CurrencyRate>> GetRatesForPeriodAsync(DateTimeOffset from, DateTimeOffset to, IEnumerable<string> currencies, CancellationToken cancellationToken = default)
+            => GetRatesForPeriodAsync(from.UtcDateTime, to.UtcDateTime, currencies, cancellationToken);
+        public Task<IEnumerable<CurrencyRate>> GetRatesForPeriodAsync(DateTime from, DateTime to, IEnumerable<string> currencies, CancellationToken cancellationToken = default)
+        {
+            var sb = new StringBuilder($"?datum-primjene-od={from.Year}-{from.Month}-{from.Day}&datum-primjene-do={to.Year}-{to.Month}-{to.Day}");
+            foreach (var currency in currencies)
+                sb.Append($"&valuta={currency}");
+
+            var query = sb.ToString();
+            return GetRatesAsync(query, currencies, cancellationToken);
         }
         private async Task<IEnumerable<CurrencyRate>> GetRatesAsync(string query, IEnumerable<string> currencies, CancellationToken cancellationToken = default)
         {

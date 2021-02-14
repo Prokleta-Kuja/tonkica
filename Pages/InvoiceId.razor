@@ -6,7 +6,8 @@
     <div class=row>
     <div class=col>
         <form @onsubmit=SaveClicked>
-            <div class="modal-body">
+                <TextBox For=@nameof(InvoiceEditModel.SequenceNumber) Label=Sequence @bind-Value=_edit.SequenceNumber Errors=_errors
+                    Required />
                 <Dropdown For=@nameof(InvoiceEditModel.IssuerId) Label=Issuer @bind-Value=_edit.IssuerId Errors=_errors
                     Required Items=_issuersD />
                 <Dropdown For=@nameof(InvoiceEditModel.ClientId) Label=Client @bind-Value=_edit.ClientId Errors=_errors
@@ -22,10 +23,14 @@
                 <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=3 />
                 <Dropdown For=@nameof(InvoiceEditModel.Status) Label="Status" @bind-Value=_edit.Status Errors=_errors
                     Required Items=_statusesD />
-            </div>
-            <div class="text-end">
-                <button type="submit" class="btn btn-primary" @onclick=SaveClicked>Save</button>
-            </div>
+                <div class="float-end">                    
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    @if(_invoice!.Status != (int)Enums.InvoiceStatus.Draft)
+                    {
+                        <a href=@C.Routes.InvoicePrintFor(_invoice!.Id) class="btn btn-outline-secondary">Print</a>
+                    }
+                </div>
+                <button type="button" class="btn btn-danger" @onclick=ClockifyClicked>Load clockify</button>
         </form>
     </div>
     <div class=col-md-7>
@@ -33,12 +38,12 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <td>Title</td>
+                        <td class="text-center">Title</td>
                         <td class=text-end>Qty</td>
                         <td class=text-end>Price</td>
                         <td class=text-end>Total</td>
                         <td class=d-grid>
-                            <button class="btn btn-sm btn-outline-primary" @onclick=SaveItemsClicked>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=SaveInvoiceItems>
                                 Save
                             </button>
                         </td>
@@ -72,13 +77,32 @@
                     </tbody>
                     <tfoot>
                         <tr class=table-info>
-                            <td colspan=5 class=text-end>
-                                @_invoice.Total @_invoice.Currency?.Tag <br />
-                                <small>@_invoice.DisplayTotal (@_invoice.DisplayRate) @_invoice.DisplayCurrency?.Tag
-                                    <br /></small>
-                                <small>@_invoice.IssuerTotal (@_invoice.IssuerRate) @_invoice.IssuerCurrency?.Tag</small>
-                            </td>
+                            <td></td>
+                            <td class="text-end">@C.Formats.AsDecimal(_invoice.QuantityTotal,2)</td>
+                            <td class=text-end>@C.Formats.AsDecimal(1)</td>
+                            <td class=text-end>@C.Formats.AsDecimal(_invoice.Total,2)</td>
+                            <td class=text-end>@_invoice.Currency?.Tag</td>
                         </tr>
+                        @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
+                        {
+                            <tr class=table-info>
+                                <td></td>
+                                <td class="text-end"></td>
+                                <td class=text-end>@C.Formats.AsDecimal(_invoice.DisplayRate)</td>
+                                <td class=text-end>@C.Formats.AsDecimal(_invoice.DisplayTotal,2)</td>
+                                <td class=text-end>@_invoice.DisplayCurrency?.Tag</td>
+                            </tr>
+                        }
+                        @if (_invoice.IssuerCurrencyId != _invoice.DisplayCurrencyId)
+                        {
+                            <tr class=table-info>
+                                <td></td>
+                                <td class="text-end"></td>
+                                <td class=text-end>@C.Formats.AsDecimal(_invoice.IssuerRate)</td>
+                                <td class=text-end>@C.Formats.AsDecimal(_invoice.IssuerTotal,2)</td>
+                                <td class=text-end>@_invoice.IssuerCurrency?.Tag</td>
+                            </tr>
+                        }
                         <tr class=table-primary>
                             <td>
                                 <input class="form-control form-control-sm" @bind=_item.Title placeholder="Title" />

@@ -21,6 +21,7 @@ namespace tonkica.Pages
         private Dictionary<int, string> _issuersD = new Dictionary<int, string>();
         private IList<Client> _clients = new List<Client>();
         private Dictionary<int, string> _clientsD = new Dictionary<int, string>();
+        private IList<Account> _accounts = new List<Account>();
         private List<Invoice> _list = new List<Invoice>();
         private InvoiceCreateModel? _create;
         private Dictionary<string, string>? _errors;
@@ -36,6 +37,8 @@ namespace tonkica.Pages
 
             _clients = await _db.Clients.ToListAsync();
             _clientsD = _clients.ToDictionary(x => x.Id, x => x.Name);
+
+            _accounts = await _db.Accounts.ToListAsync();
 
             _list = await _db.Invoices.ToListAsync();
         }
@@ -61,18 +64,37 @@ namespace tonkica.Pages
             if (_errors != null)
                 return default;
 
-            var issuer = _issuers.Single(x => x.Id == _create.IssuerId);
-            var client = _clients.Single(x => x.Id == _create.ClientId);
-
             var invoice = new Invoice();
+            invoice.SequenceNumber = _create.SequenceNumber;
             invoice.Subject = _create.Subject!;
             invoice.IssuerId = _create.IssuerId;
             invoice.ClientId = _create.ClientId;
-            invoice.Note = _create.Note;
+
+            var issuer = _issuers.Single(x => x.Id == _create.IssuerId);
+            var client = _clients.Single(x => x.Id == _create.ClientId);
 
             invoice.Currency = client.ContractCurrency;
             invoice.DisplayCurrency = client.DisplayCurrency;
             invoice.IssuerCurrency = issuer.Currency;
+            invoice.Note = client.DefaultInvoiceNote;
+
+            var displayAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.DisplayCurrencyId);
+            if (displayAccount != null)
+                invoice.Account = displayAccount;
+            else
+            {
+                var contractAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.CurrencyId);
+                if (contractAccount != null)
+                    invoice.Account = contractAccount;
+                else
+                {
+                    var issuerAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.IssuerCurrencyId);
+                    if (issuerAccount != null)
+                        invoice.Account = issuerAccount;
+                    else
+                        invoice.Account = _accounts.First();
+                }
+            }
 
             await _rates.CalculateRates(invoice);
 

@@ -6,9 +6,9 @@ namespace tonkica.Models
     public class InvoiceCreateModel
     {
         public string? Subject { get; set; }
+        public string? SequenceNumber { get; set; }
         public int IssuerId { get; set; }
         public int ClientId { get; set; }
-        public string? Note { get; set; }
 
         public Dictionary<string, string>? Validate()
         {

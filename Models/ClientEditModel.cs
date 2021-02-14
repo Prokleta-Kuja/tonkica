@@ -10,6 +10,7 @@ namespace tonkica.Models
         public string? Name { get; set; }
         public string? ContactInfo { get; set; }
         public int ContractCurrencyId { get; set; }
+        public decimal? ContractRate { get; set; }
         public int DisplayCurrencyId { get; set; }
         public string? DefaultInvoiceNote { get; set; }
 
@@ -19,6 +20,7 @@ namespace tonkica.Models
             Name = c.Name;
             ContactInfo = c.ContactInfo;
             ContractCurrencyId = c.ContractCurrencyId;
+            ContractRate = c.ContractRate;
             DisplayCurrencyId = c.DisplayCurrencyId;
             DefaultInvoiceNote = c.DefaultInvoiceNote;
         }
@@ -35,6 +37,9 @@ namespace tonkica.Models
 
             if (ContractCurrencyId <= 0)
                 errors.Add(nameof(ContractCurrencyId), "Required");
+
+            if (!ContractRate.HasValue)
+                errors.Add(nameof(ContractRate), "Required");
 
             if (DisplayCurrencyId <= 0)
                 errors.Add(nameof(DisplayCurrencyId), "Required");

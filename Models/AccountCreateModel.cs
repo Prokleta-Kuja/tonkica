@@ -3,11 +3,10 @@ using System.Linq;
 
 namespace tonkica.Models
 {
-    public class IssuerCreateModel
+    public class AccountCreateModel
     {
         public string? Name { get; set; }
-        public string? ContactInfo { get; set; }
-        public string? ClockifyUrl { get; set; }
+        public string? Info { get; set; }
         public int CurrencyId { get; set; }
 
         public Dictionary<string, string>? Validate()
@@ -17,8 +16,8 @@ namespace tonkica.Models
             if (string.IsNullOrWhiteSpace(Name))
                 errors.Add(nameof(Name), "Required");
 
-            if (string.IsNullOrWhiteSpace(ContactInfo))
-                errors.Add(nameof(ContactInfo), "Required");
+            if (string.IsNullOrWhiteSpace(Info))
+                errors.Add(nameof(Info), "Required");
 
             if (CurrencyId <= 0)
                 errors.Add(nameof(CurrencyId), "Required");

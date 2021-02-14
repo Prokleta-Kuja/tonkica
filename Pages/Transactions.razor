@@ -1,0 +1,74 @@
+@attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Transactions)]
+
+<h1>Transactions</h1>
+
+<div class="row">
+    <div class="col">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Account</td>
+                        <td>Amount</td>
+                        <td>Date</td>
+                        <td>Note</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var transaction in _list)
+                    {
+                        <tr @key=transaction.Id>
+                            <td>@transaction.Account?.Name</td>
+                            <td>@transaction.Amount</td>
+                            <td>@transaction.Date</td>
+                            <td>@transaction.Note</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                    @onclick="()=>EditClicked(transaction)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col">
+        @if (_create != null)
+        {
+            <legend>Add Issuer</legend>
+            <form @onsubmit=SaveCreateClicked>
+                <Dropdown For=@nameof(TransactionCreateModel.AccountId) Label="Account"
+                    @bind-Value=_create.AccountId Errors=_errors Required Items=_accountsD />
+                <NumBox For=@nameof(TransactionCreateModel.Amount) Label=Amount @bind-Value=_create.Amount Errors=_errors Required />
+                @* <TextBox For=@nameof(TransactionCreateModel.Date) Label=Date @bind-Value=_create.Date Errors=_errors Required /> *@
+                <TextBox For=@nameof(TransactionCreateModel.Note) Label="Note" @bind-Value=_create.Note
+                    Errors=_errors Lines=3 Required />
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+            </form>
+        }
+        else if (_edit != null)
+        {
+            <legend>Edit @_edit.Id</legend>
+            <form @onsubmit=SaveEditClicked>
+                <Dropdown For=@nameof(TransactionEditModel.AccountId) Label="Account"
+                    @bind-Value=_edit.AccountId Errors=_errors Required Items=_accountsD />
+                <NumBox For=@nameof(TransactionEditModel.Amount) Label=Amount @bind-Value=_edit.Amount Errors=_errors Required />
+                @* <TextBox For=@nameof(TransactionEditModel.Date) Label=Date @bind-Value=_edit.Date Errors=_errors Required /> *@
+                <TextBox For=@nameof(TransactionEditModel.Note) Label="Contact Info" @bind-Value=_edit.Note
+                    Errors=_errors Lines=3 Required />
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-info">Select Issuer to edit or add.</div>
+        }
+    </div>
+</div>

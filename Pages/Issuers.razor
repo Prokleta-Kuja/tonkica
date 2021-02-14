@@ -38,11 +38,13 @@
         {
             <legend>Add Issuer</legend>
             <form @onsubmit=SaveCreateClicked>
-                <TextBox For=@nameof(ClientCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
-                <TextBox For=@nameof(ClientCreateModel.ContactInfo) Label="Contact Info" @bind-Value=_create.ContactInfo
+                <TextBox For=@nameof(IssuerCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
+                <TextBox For=@nameof(IssuerCreateModel.ContactInfo) Label="Contact Info" @bind-Value=_create.ContactInfo
                     Errors=_errors Lines=3 Required />
-                <Dropdown For=@nameof(ClientCreateModel.ContractCurrencyId) Label="Contract Currency"
-                    @bind-Value=_create.CurrencyId Errors=_errors Required Items=_currenciesD />
+                <Dropdown For=@nameof(IssuerCreateModel.CurrencyId) Label="Currency" @bind-Value=_create.CurrencyId
+                    Errors=_errors Required Items=_currenciesD />
+                <TextBox For=@nameof(IssuerCreateModel.ClockifyUrl) Label="Clockify detailed url" @bind-Value=_create.ClockifyUrl
+                    Errors=_errors Required />
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
@@ -52,11 +54,13 @@
         {
             <legend>Edit @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
-                <TextBox For=@nameof(ClientCreateModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
-                <TextBox For=@nameof(ClientCreateModel.ContactInfo) Label="Contact Info" @bind-Value=_edit.ContactInfo
+                <TextBox For=@nameof(IssuerEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
+                <TextBox For=@nameof(IssuerEditModel.ContactInfo) Label="Contact Info" @bind-Value=_edit.ContactInfo
                     Errors=_errors Lines=3 Required />
-                <Dropdown For=@nameof(ClientCreateModel.ContractCurrencyId) Label="Contract Currency"
-                    @bind-Value=_edit.CurrencyId Errors=_errors Required Items=_currenciesD />
+                <Dropdown For=@nameof(IssuerEditModel.CurrencyId) Label="Currency" @bind-Value=_edit.CurrencyId
+                    Errors=_errors Required Items=_currenciesD />
+                <TextBox For=@nameof(IssuerEditModel.ClockifyUrl) Label="Clockify detailed url" @bind-Value=_edit.ClockifyUrl
+                    Errors=_errors Required />
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>

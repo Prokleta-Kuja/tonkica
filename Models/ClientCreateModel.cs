@@ -8,6 +8,7 @@ namespace tonkica.Models
         public string? Name { get; set; }
         public string? ContactInfo { get; set; }
         public int ContractCurrencyId { get; set; }
+        public decimal? ContractRate { get; set; }
         public int DisplayCurrencyId { get; set; }
         public string? DefaultInvoiceNote { get; set; }
 

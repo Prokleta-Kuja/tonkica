@@ -11,19 +11,21 @@ namespace tonkica.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Currency> Currencies { get; set; } = null!;
+        public DbSet<Account> Accounts { get; set; } = null!;
         public DbSet<Client> Clients { get; set; } = null!;
+        public DbSet<Currency> Currencies { get; set; } = null!;
         public DbSet<Invoice> Invoices { get; set; } = null!;
         public DbSet<InvoiceItem> InvoiceItems { get; set; } = null!;
         public DbSet<Issuer> Issuers { get; set; } = null!;
+        public DbSet<Transaction> Transactions { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Issuer>(e =>
+            builder.Entity<Account>(e =>
             {
-                e.HasOne(p => p.Currency).WithMany(p => p!.Issuers).HasForeignKey(p => p.CurrencyId);
+                e.HasOne(p => p.Currency).WithMany(p => p!.Accounts).HasForeignKey(p => p.CurrencyId);
             });
 
             builder.Entity<Client>(e =>
@@ -34,11 +36,27 @@ namespace tonkica.Data
 
             builder.Entity<Invoice>(e =>
             {
+                e.HasOne(p => p.Issuer).WithMany(p => p!.Invoices).HasForeignKey(p => p.IssuerId);
                 e.HasOne(p => p.Client).WithMany(p => p!.Invoices).HasForeignKey(p => p.ClientId);
+                e.HasOne(p => p.Account).WithMany(p => p!.Invoices).HasForeignKey(p => p.AccountId);
                 e.HasOne(p => p.Currency).WithMany(p => p!.Invoices).HasForeignKey(p => p.CurrencyId);
                 e.HasOne(p => p.DisplayCurrency).WithMany(p => p!.DisplayInvoices).HasForeignKey(p => p.DisplayCurrencyId);
                 e.HasOne(p => p.IssuerCurrency).WithMany(p => p!.IssuerInvoices).HasForeignKey(p => p.IssuerCurrencyId);
-                e.HasMany(p => p.Items).WithOne(p => p!.Invoice!).HasForeignKey(p => p.InvoiceId);
+            });
+
+            builder.Entity<InvoiceItem>(e =>
+            {
+                e.HasOne(p => p.Invoice).WithMany(p => p!.Items).HasForeignKey(p => p.InvoiceId);
+            });
+
+            builder.Entity<Issuer>(e =>
+            {
+                e.HasOne(p => p.Currency).WithMany(p => p!.Issuers).HasForeignKey(p => p.CurrencyId);
+            });
+
+            builder.Entity<Transaction>(e =>
+            {
+                e.HasOne(p => p.Account).WithMany(p => p!.Transactions).HasForeignKey(p => p.AccountId);
             });
 
             builder.Entity<Currency>().HasData(
@@ -83,32 +101,20 @@ namespace tonkica.Data
 
         public async Task ProvisionDemoAsync()
         {
-            var hrk = new Currency("HRK", "kn", false);
-            var eur = new Currency("EUR", "€", false);
-            var usd = new Currency("USD", "$", true);
-            var gbp = new Currency("GBP", "ł", false);
-            var aud = new Currency("AUD", "$", true);
-            var cad = new Currency("CAD", "$", true);
-            var czk = new Currency("CZK", "Kč", false);
-            var dkk = new Currency("DKK", "kr.", false);
-            var huf = new Currency("HUF", "Ft", false);
-            var jpy = new Currency("JPY", "¥", true);
-            var nok = new Currency("NOK", "kr", false);
-            var sek = new Currency("SEK", "kr", false);
-            var chf = new Currency("CHF", "francs", false);
-            var bam = new Currency("BAM", "KM", false);
-            var pln = new Currency("PLN", "zł", false);
+            var hrk = 1;
+            var eur = 2;
+            var usd = 3;
 
-            Currencies.AddRange(hrk, eur, usd, gbp, aud, cad, czk, dkk, huf, jpy, nok, sek, chf, bam, pln);
-            await SaveChangesAsync();
+            var account1 = new Account("TransferWise USD", "Routing number: 123123123\nAccount number: 123123123123123", usd);
+            Accounts.AddRange(account1);
 
-            var client1 = new Client("Klijent", "Ulica Pere Kvržice 3\n10 000 Zagreb\nHrvatska", eur.Id, usd.Id)
+            var client1 = new Client("Klijent", "Ulica Pere Kvržice 3\n10 000 Zagreb\nHrvatska", eur, usd)
             {
-                DefaultInvoiceNote = "Plaćanje po ugovoru xxx"
+                DefaultInvoiceNote = "Calculated at the middle exchange rate of the Croatian National Bank.\nExempt from VAT pursuant to Article 17, paragraph 1 of the Croatian VAT Act."
             };
             Clients.AddRange(client1);
 
-            var issuer1 = new Issuer("Moja tvrtka", "Ulica izdavača 7\n10 000 Zagreb\nHrvatska", hrk.Id);
+            var issuer1 = new Issuer("Moja tvrtka", "Ulica izdavača 7\n10 000 Zagreb\nHrvatska", hrk);
             Issuers.AddRange(issuer1);
             await SaveChangesAsync();
 
@@ -117,6 +123,7 @@ namespace tonkica.Data
                 Subject = "Usluge obavljene u siječnju",
                 ClientId = client1.Id,
                 IssuerId = issuer1.Id,
+                AccountId = account1.Id,
                 CurrencyId = client1.ContractCurrencyId,
                 DisplayCurrencyId = client1.DisplayCurrencyId,
                 IssuerCurrencyId = issuer1.CurrencyId,

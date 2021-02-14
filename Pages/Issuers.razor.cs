@@ -52,6 +52,7 @@ namespace tonkica.Pages
             issuer.Name = _create.Name!;
             issuer.ContactInfo = _create.ContactInfo!;
             issuer.CurrencyId = _create.CurrencyId;
+            issuer.ClockifyUrl = _create.ClockifyUrl;
 
             _db.Issuers.Add(issuer);
             await _db.SaveChangesAsync();
@@ -77,6 +78,7 @@ namespace tonkica.Pages
             issuer.Name = _edit.Name!;
             issuer.ContactInfo = _edit.ContactInfo!;
             issuer.CurrencyId = _edit.CurrencyId;
+            issuer.ClockifyUrl = _edit.ClockifyUrl;
 
             await _db.SaveChangesAsync();
             _edit = null;

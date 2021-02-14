@@ -1,0 +1,70 @@
+@attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Accounts)]
+
+<h1>Accounts</h1>
+
+<div class="row">
+    <div class="col">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Info</td>
+                        <td>Currency</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var account in _list)
+                    {
+                        <tr @key=account.Id>
+                            <td>@account.Name</td>
+                            <td>@account.Info</td>
+                            <td>@account.Currency?.Tag</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                    @onclick="()=>EditClicked(account)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col">
+        @if (_create != null)
+        {
+            <legend>Add Account</legend>
+            <form @onsubmit=SaveCreateClicked>
+                <TextBox For=@nameof(AccountCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
+                <TextBox For=@nameof(AccountCreateModel.Info) Label="Info" @bind-Value=_create.Info
+                    Errors=_errors Lines=3 Required />
+                <Dropdown For=@nameof(AccountCreateModel.CurrencyId) Label="Currency"
+                    @bind-Value=_create.CurrencyId Errors=_errors Required Items=_currenciesD />
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+            </form>
+        }
+        else if (_edit != null)
+        {
+            <legend>Edit @_edit.Name</legend>
+            <form @onsubmit=SaveEditClicked>
+                <TextBox For=@nameof(AccountEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
+                <TextBox For=@nameof(AccountEditModel.Info) Label="Contact Info" @bind-Value=_edit.Info
+                    Errors=_errors Lines=3 Required />
+                <Dropdown For=@nameof(AccountEditModel.CurrencyId) Label="Currency"
+                    @bind-Value=_edit.CurrencyId Errors=_errors Required Items=_currenciesD />
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+            </form>
+        }
+        else
+        {
+            <div class="alert alert-info">Select Account to edit or add.</div>
+        }
+    </div>
+</div>

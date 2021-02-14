@@ -11,6 +11,7 @@ namespace tonkica.Data
         public string Subject { get; set; } = null!;
         public int IssuerId { get; set; }
         public int ClientId { get; set; }
+        public int AccountId { get; set; }
         public int CurrencyId { get; set; }
         public int DisplayCurrencyId { get; set; }
         public int IssuerCurrencyId { get; set; }
@@ -19,12 +20,14 @@ namespace tonkica.Data
         public decimal Total { get; set; }
         public decimal DisplayTotal { get; set; }
         public decimal IssuerTotal { get; set; }
+        public decimal QuantityTotal { get; set; }
         public DateTimeOffset? Published { get; set; }
         public InvoiceStatus Status { get; set; }
         public string? Note { get; set; }
 
         public Issuer? Issuer { get; set; }
         public Client? Client { get; set; }
+        public Account? Account { get; set; }
         public Currency? Currency { get; set; }
         public Currency? DisplayCurrency { get; set; }
         public Currency? IssuerCurrency { get; set; }

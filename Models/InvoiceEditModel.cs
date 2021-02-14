@@ -9,6 +9,7 @@ namespace tonkica.Models
     public class InvoiceEditModel
     {
         public string? Subject { get; set; }
+        public string? SequenceNumber { get; set; }
         public int IssuerId { get; set; }
         public int ClientId { get; set; }
         public int CurrencyId { get; set; }
@@ -20,6 +21,7 @@ namespace tonkica.Models
 
         public InvoiceEditModel(Invoice i)
         {
+            SequenceNumber = i.SequenceNumber;
             Subject = i.Subject;
             IssuerId = i.IssuerId;
             ClientId = i.ClientId;

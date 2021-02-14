@@ -9,6 +9,7 @@ namespace tonkica.Models
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? ContactInfo { get; set; }
+        public string? ClockifyUrl { get; set; }
         public int CurrencyId { get; set; }
 
         public IssuerEditModel(Issuer i)
@@ -17,6 +18,7 @@ namespace tonkica.Models
             Name = i.Name;
             ContactInfo = i.ContactInfo;
             CurrencyId = i.CurrencyId;
+            ClockifyUrl = i.ClockifyUrl;
         }
 
         public Dictionary<string, string>? Validate()

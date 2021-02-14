@@ -22,5 +22,6 @@ namespace tonkica.Data
         public ICollection<Invoice>? Invoices { get; set; }
         public ICollection<Invoice>? DisplayInvoices { get; set; }
         public ICollection<Invoice>? IssuerInvoices { get; set; }
+        public ICollection<Account>? Accounts { get; set; }
     }
 }

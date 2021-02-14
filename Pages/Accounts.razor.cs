@@ -9,14 +9,15 @@ using tonkica.Models;
 
 namespace tonkica.Pages
 {
-    public partial class Clients
+    public partial class Accounts
     {
         [Inject] private AppDbContext _db { get; set; } = null!;
         private IList<Currency> _currencies = new List<Currency>();
         private Dictionary<int, string> _currenciesD = new Dictionary<int, string>();
-        private IList<Client> _list = new List<Client>();
-        private ClientCreateModel? _create;
-        private ClientEditModel? _edit;
+        private IList<Account> _list = new List<Account>();
+        private Account _item = new Account();
+        private AccountCreateModel? _create;
+        private AccountEditModel? _edit;
         private Dictionary<string, string>? _errors;
 
         protected override async Task OnInitializedAsync()
@@ -24,19 +25,18 @@ namespace tonkica.Pages
             await base.OnInitializedAsync();
             _currencies = await _db.Currencies.ToListAsync();
             _currenciesD = _currencies.ToDictionary(x => x.Id, x => x.Tag);
-            _list = await _db.Clients.ToListAsync();
+            _list = await _db.Accounts.ToListAsync();
         }
         private void AddClicked()
         {
             _edit = null;
-            _create = new ClientCreateModel();
-            _create.DisplayCurrencyId = _currenciesD.FirstOrDefault().Key;
-            _create.ContractCurrencyId = _currenciesD.FirstOrDefault().Key;
+            _create = new AccountCreateModel();
+            _create.CurrencyId = _currenciesD.FirstOrDefault().Key;
         }
-        private void EditClicked(Client item)
+        private void EditClicked(Account item)
         {
             _create = null;
-            _edit = new ClientEditModel(item);
+            _edit = new AccountEditModel(item);
         }
         private void CancelClicked() { _create = null; _edit = null; }
         private async Task<EventCallback<EventArgs>> SaveCreateClicked()
@@ -48,18 +48,15 @@ namespace tonkica.Pages
             if (_errors != null)
                 return default;
 
-            var client = new Client();
-            client.Name = _create.Name!;
-            client.ContactInfo = _create.ContactInfo!;
-            client.ContractCurrencyId = _create.ContractCurrencyId;
-            client.ContractRate = _create.ContractRate ?? 0;
-            client.DisplayCurrencyId = _create.DisplayCurrencyId;
-            client.DefaultInvoiceNote = _create.DefaultInvoiceNote;
+            var Account = new Account();
+            Account.Name = _create.Name!;
+            Account.Info = _create.Info!;
+            Account.CurrencyId = _create.CurrencyId;
 
-            _db.Clients.Add(client);
+            _db.Accounts.Add(Account);
             await _db.SaveChangesAsync();
 
-            _list.Insert(0, client);
+            _list.Insert(0, Account);
             _create = null;
 
             return default;
@@ -73,16 +70,13 @@ namespace tonkica.Pages
             if (_errors != null)
                 return default;
 
-            var client = _list.SingleOrDefault(x => x.Id == _edit.Id);
-            if (client == null)
+            var Account = _list.SingleOrDefault(x => x.Id == _edit.Id);
+            if (Account == null)
                 return default;
 
-            client.Name = _edit.Name!;
-            client.ContactInfo = _edit.ContactInfo!;
-            client.ContractCurrencyId = _edit.ContractCurrencyId;
-            client.ContractRate = _edit.ContractRate ?? 0;
-            client.DisplayCurrencyId = _edit.DisplayCurrencyId;
-            client.DefaultInvoiceNote = _edit.DefaultInvoiceNote;
+            Account.Name = _edit.Name!;
+            Account.Info = _edit.Info!;
+            Account.CurrencyId = _edit.CurrencyId;
 
             await _db.SaveChangesAsync();
             _edit = null;

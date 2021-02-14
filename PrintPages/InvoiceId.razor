@@ -1,0 +1,94 @@
+@attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.InvoicePrint)]
+@layout PrintLayout
+
+@if (_invoice == null)
+{
+    <h4>Not found.</h4>
+}
+else
+{
+    <div class="row justify-content-between">
+    <div class="col">
+        <h4>Invoice</h4>
+        <p>
+            Invoice number: @_invoice.SequenceNumber <br>
+            Invice date: @_invoice.Published
+        </p>
+    </div>
+    <div class="col-auto">
+        <img class=float-right src="images/logo.svg">
+    </div>
+</div>
+    <div class="row mt-4">
+    <div class="col">
+        <h6>@_invoice.Client?.Name</h6>
+        <p class="multiline">@_invoice.Client?.ContactInfo</p>
+    </div>
+    <div class="col">
+        <h6>@_invoice.Issuer?.Name</h6>
+        <p class="multiline">@_invoice.Issuer?.ContactInfo</p>
+    </div>
+    <div class="col-auto">
+        <p class=multiline>@_invoice.Account?.Info</p>
+    </div>
+</div>
+    <table class="table table-print mt-3">
+    <thead>
+        <tr>
+            <td>Description</td>
+            <td class="text-end">Cost</td>
+            <td class="text-end">QTY</td>
+            <td class="text-end">Amount</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in _invoice?.Items!)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td class="text-end">@C.Formats.AsDecimal(item.Price,2)</td>
+                    <td class="text-end">@C.Formats.AsDecimal(item.Quantity,2)</td>
+                    <td class="text-end">@C.Formats.AsDecimal(item.Total,2)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="row mt-4">
+    <div class="col"></div>
+    <div class="col-5">
+        <table class="table table-print">
+            <thead>
+                <tr>
+                    <td class="text-center">Currency</td>
+                    <td class="text-end">Rate</td>
+                    <td class="text-end">Total</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">@_invoice.Currency?.Tag</td>
+                    <td class="text-end">@C.Formats.AsDecimal(1)</td>
+                    <td class="text-end">@C.Formats.AsDecimal(_invoice.Total,2)</td>
+                </tr>
+                @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
+                    {
+                        <tr>
+                            <td class="text-center">@_invoice.DisplayCurrency?.Tag</td>
+                            <td class="text-end">@C.Formats.AsDecimal(_invoice.DisplayRate)</td>
+                            <td class="text-end">@C.Formats.AsDecimal(_invoice.DisplayTotal,2)</td>
+                        </tr>
+                    }
+                    @if (_invoice.IssuerCurrencyId != _invoice.DisplayCurrencyId)
+                    {
+                        <tr>
+                            <td class="text-center">@_invoice.IssuerCurrency?.Tag</td>
+                            <td class="text-end">@C.Formats.AsDecimal(_invoice.IssuerRate)</td>
+                            <td class="text-end">@C.Formats.AsDecimal(_invoice.IssuerTotal,2)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class=multiline><b>Note: </b>@_invoice.Note</div>
+}
