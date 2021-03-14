@@ -10,6 +10,7 @@ namespace tonkica.Models
         public string? Name { get; set; }
         public string? Info { get; set; }
         public int CurrencyId { get; set; }
+        public int IssuerId { get; set; }
 
         public AccountEditModel(Account a)
         {
@@ -17,6 +18,7 @@ namespace tonkica.Models
             Name = a.Name;
             Info = a.Info;
             CurrencyId = a.CurrencyId;
+            IssuerId = a.IssuerId;
         }
 
         public Dictionary<string, string>? Validate()
@@ -31,6 +33,9 @@ namespace tonkica.Models
 
             if (CurrencyId <= 0)
                 errors.Add(nameof(CurrencyId), "Required");
+
+            if (IssuerId <= 0)
+                errors.Add(nameof(IssuerId), "Required");
 
 
             if (errors.Any())

@@ -27,8 +27,6 @@ namespace tonkica
         {
             var dbFile = new FileInfo(C.Settings.DataPath("app.db"));
             dbFile.Directory?.Create();
-            if (dbFile.Exists)
-                return;
 
             var opt = new DbContextOptionsBuilder<AppDbContext>();
             opt.UseSqlite(C.Settings.AppDbConnectionString);
@@ -40,7 +38,7 @@ namespace tonkica
                 await db.Database.EnsureCreatedAsync();
 
             // Seed
-            if (Debugger.IsAttached)
+            if (Debugger.IsAttached && !db.Accounts.Any())
             {
                 await db.ProvisionDemoAsync();
             }

@@ -35,6 +35,9 @@ namespace tonkica.Models
             if (!Date.HasValue)
                 errors.Add(nameof(Date), "Required");
 
+            if (Date.HasValue && Date.Value > DateTimeOffset.Now)
+                errors.Add(nameof(Date), "Cannot be in the future");
+
 
             if (errors.Any())
                 return errors;

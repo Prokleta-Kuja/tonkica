@@ -27,6 +27,34 @@ namespace tonkica.Services
             _client.BaseAddress = new Uri("http://api.hnb.hr/tecajn/v2");
         }
 
+        public async Task CalculateRates(Transaction t)
+        {
+            if (t.Account?.Currency == null || t.Account?.Issuer?.Currency == null)
+                throw new ArgumentNullException(nameof(Currency));
+
+            var tags = new HashSet<string> { t.Account.Currency.Tag, t.Account.Issuer.Currency.Tag, };
+
+            if (tags.Count == 1)
+            {
+                t.IssuerRate = 1;
+                return;
+            }
+
+            var rates = await GetRatesForDateAsync(t.Date, tags);
+
+            var accountRate = rates.FirstOrDefault(x => x.Currency == t.Account.Currency.Tag);
+            var issuerRate = rates.FirstOrDefault(x => x.Currency == t.Account.Issuer.Currency.Tag);
+
+
+            if (issuerRate == null && accountRate != null) // Issuer is in HRK and Transaction/Account is not HRK
+                t.IssuerRate = accountRate.AverageRate / accountRate.Unit;
+            else if (accountRate == null && issuerRate != null) // Transaction/Account is in HRK and Issuer is not HRK
+                t.IssuerRate = 1 / (issuerRate.AverageRate / issuerRate.Unit);
+            else // Nothing is in HRK
+                t.IssuerRate = (accountRate!.AverageRate / accountRate.Unit) / (issuerRate!.AverageRate / issuerRate.Unit);
+
+        }
+
         public async Task CalculateRates(Invoice i)
         {
             if (i.Currency == null || i.DisplayCurrency == null || i.IssuerCurrency == null)

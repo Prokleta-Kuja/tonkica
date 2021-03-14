@@ -20,8 +20,10 @@ namespace tonkica.Data
         public string Name { get; set; }
         public string Info { get; set; }
         public int CurrencyId { get; set; }
+        public int IssuerId { get; set; }
 
         public Currency? Currency { get; set; }
+        public Issuer? Issuer { get; set; }
         public ICollection<Invoice>? Invoices { get; set; }
         public ICollection<Transaction>? Transactions { get; set; }
     }

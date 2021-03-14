@@ -14,6 +14,8 @@ namespace tonkica.Pages
         [Inject] private AppDbContext _db { get; set; } = null!;
         private IList<Currency> _currencies = new List<Currency>();
         private Dictionary<int, string> _currenciesD = new Dictionary<int, string>();
+        private IList<Issuer> _issuers = new List<Issuer>();
+        private Dictionary<int, string> _issuersD = new Dictionary<int, string>();
         private IList<Account> _list = new List<Account>();
         private Account _item = new Account();
         private AccountCreateModel? _create;
@@ -25,6 +27,8 @@ namespace tonkica.Pages
             await base.OnInitializedAsync();
             _currencies = await _db.Currencies.ToListAsync();
             _currenciesD = _currencies.ToDictionary(x => x.Id, x => x.Tag);
+            _issuers = await _db.Issuers.ToListAsync();
+            _issuersD = _issuers.ToDictionary(x => x.Id, x => x.Name);
             _list = await _db.Accounts.ToListAsync();
         }
         private void AddClicked()
@@ -52,6 +56,7 @@ namespace tonkica.Pages
             Account.Name = _create.Name!;
             Account.Info = _create.Info!;
             Account.CurrencyId = _create.CurrencyId;
+            Account.IssuerId = _create.IssuerId;
 
             _db.Accounts.Add(Account);
             await _db.SaveChangesAsync();
@@ -77,6 +82,7 @@ namespace tonkica.Pages
             Account.Name = _edit.Name!;
             Account.Info = _edit.Info!;
             Account.CurrencyId = _edit.CurrencyId;
+            Account.IssuerId = _edit.IssuerId;
 
             await _db.SaveChangesAsync();
             _edit = null;

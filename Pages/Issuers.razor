@@ -43,8 +43,8 @@
                     Errors=_errors Lines=3 Required />
                 <Dropdown For=@nameof(IssuerCreateModel.CurrencyId) Label="Currency" @bind-Value=_create.CurrencyId
                     Errors=_errors Required Items=_currenciesD />
-                <TextBox For=@nameof(IssuerCreateModel.ClockifyUrl) Label="Clockify detailed url" @bind-Value=_create.ClockifyUrl
-                    Errors=_errors Required />
+                <TextBox For=@nameof(IssuerCreateModel.ClockifyUrl) Label="Clockify detailed url"
+                    @bind-Value=_create.ClockifyUrl Errors=_errors />
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
@@ -59,8 +59,8 @@
                     Errors=_errors Lines=3 Required />
                 <Dropdown For=@nameof(IssuerEditModel.CurrencyId) Label="Currency" @bind-Value=_edit.CurrencyId
                     Errors=_errors Required Items=_currenciesD />
-                <TextBox For=@nameof(IssuerEditModel.ClockifyUrl) Label="Clockify detailed url" @bind-Value=_edit.ClockifyUrl
-                    Errors=_errors Required />
+                <TextBox For=@nameof(IssuerEditModel.ClockifyUrl) Label="Clockify detailed url"
+                    @bind-Value=_edit.ClockifyUrl Errors=_errors />
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>

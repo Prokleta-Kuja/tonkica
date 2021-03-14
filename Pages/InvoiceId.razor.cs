@@ -28,6 +28,7 @@ namespace tonkica.Pages
         private InvoiceEditModel? _edit;
         private InvoiceItem _item = null!;
         private Dictionary<string, string>? _errors;
+        private bool IsDraft { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -51,6 +52,7 @@ namespace tonkica.Pages
 
             if (_invoice != null)
             {
+                IsDraft = _invoice.Status == (int)InvoiceStatus.Draft;
                 _edit = new InvoiceEditModel(_invoice);
                 _item = new InvoiceItem(string.Empty)
                 {
@@ -95,6 +97,7 @@ namespace tonkica.Pages
 
             await _db.SaveChangesAsync();
             _edit = new InvoiceEditModel(_invoice);
+            IsDraft = _invoice.Status == (int)InvoiceStatus.Draft;
             return default;
         }
         private async Task ClockifyClicked()

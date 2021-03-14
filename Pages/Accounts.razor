@@ -39,6 +39,8 @@
             <legend>Add Account</legend>
             <form @onsubmit=SaveCreateClicked>
                 <TextBox For=@nameof(AccountCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
+                <Dropdown For=@nameof(AccountCreateModel.IssuerId) Label="Issuer"
+                    @bind-Value=_create.IssuerId Errors=_errors Required Items=_issuersD />
                 <TextBox For=@nameof(AccountCreateModel.Info) Label="Info" @bind-Value=_create.Info
                     Errors=_errors Lines=3 Required />
                 <Dropdown For=@nameof(AccountCreateModel.CurrencyId) Label="Currency"
@@ -53,6 +55,8 @@
             <legend>Edit @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
                 <TextBox For=@nameof(AccountEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
+                <Dropdown For=@nameof(AccountEditModel.IssuerId) Label="Issuer"
+                    @bind-Value=_edit.IssuerId Errors=_errors Required Items=_issuersD />
                 <TextBox For=@nameof(AccountEditModel.Info) Label="Contact Info" @bind-Value=_edit.Info
                     Errors=_errors Lines=3 Required />
                 <Dropdown For=@nameof(AccountEditModel.CurrencyId) Label="Currency"

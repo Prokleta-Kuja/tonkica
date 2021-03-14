@@ -25,9 +25,9 @@
                     <td>@invoice.Client?.Name</td>
                     <td>@invoice.Subject</td>
                     <td>
-                        @invoice.Total @invoice.Currency?.Tag <br />
-                        <small>@invoice.DisplayTotal (@invoice.DisplayRate) @invoice.DisplayCurrency?.Tag <br /></small>
-                        <small>@invoice.IssuerTotal (@invoice.IssuerRate) @invoice.IssuerCurrency?.Tag</small>
+                        @C.Formats.AsDecimal(invoice.Total,2) @invoice.Currency?.Tag <br />
+                        <small>@C.Formats.AsDecimal(invoice.DisplayTotal,2)&nbsp;(@C.Formats.AsDecimal(invoice.DisplayRate))&nbsp;@invoice.DisplayCurrency?.Tag <br /></small>
+                        <small>@C.Formats.AsDecimal(invoice.IssuerTotal,2)&nbsp;(@C.Formats.AsDecimal(invoice.IssuerRate))&nbsp;@invoice.IssuerCurrency?.Tag</small>
                     </td>
                     <td>@(invoice.Published.HasValue ? invoice.Published : "-")</td>
                     <td>@invoice.Note</td>

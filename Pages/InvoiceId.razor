@@ -22,19 +22,22 @@
                     @bind-Value=_edit.IssuerCurrencyId Errors=_errors Required Items=_currenciesD />
                 <Dropdown For=@nameof(InvoiceEditModel.Status) Label="Status" @bind-Value=_edit.Status Errors=_errors
                     Required Items=_statusesD />   
-                @if(_invoice!.Status != (int)Enums.InvoiceStatus.Draft)
+                @if(!IsDraft)
                 {
                     <DateTimeBox For=@nameof(InvoiceEditModel.Published) Label=Published @bind-Value=_edit.Published Errors=_errors Required/>
                 }               
                 <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=3 />
                 <div class="float-end">                    
                     <button type="submit" class="btn btn-primary">Save</button>
-                    @if(_invoice!.Status != (int)Enums.InvoiceStatus.Draft)
-                    {
-                        <a href=@C.Routes.InvoicePrintFor(_invoice!.Id) class="btn btn-outline-secondary">Print</a>
-                    }
                 </div>
-                <button type="button" class="btn btn-danger" @onclick=ClockifyClicked>Load clockify</button>
+                @if(!IsDraft)
+                {
+                    <a href=@C.Routes.InvoicePrintFor(_invoice!.Id) class="btn btn-outline-secondary">Print</a>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-danger" @onclick=ClockifyClicked>Load clockify</button>
+                }
         </form>
     </div>
     <div class=col-md-7>
@@ -47,7 +50,7 @@
                         <td class=text-end>Price</td>
                         <td class=text-end>Total</td>
                         <td class=d-grid>
-                            <button class="btn btn-sm btn-outline-primary" @onclick=SaveInvoiceItems>
+                            <button class="btn btn-sm btn-outline-primary" disabled=@(!IsDraft) @onclick=SaveInvoiceItems>
                                 Save
                             </button>
                         </td>
@@ -72,7 +75,7 @@
                                         disabled />
                                 </td>
                                 <td class=d-grid>
-                                    <button class="btn btn-sm btn-outline-danger" @onclick="()=>RemoveItemClicked(item)">
+                                    <button class="btn btn-sm btn-outline-danger" disabled=@(!IsDraft) @onclick="()=>RemoveItemClicked(item)">
                                         Remove
                                     </button>
                                 </td>
@@ -109,22 +112,22 @@
                         }
                         <tr class=table-primary>
                             <td>
-                                <input class="form-control form-control-sm" @bind=_item.Title placeholder="Title" />
+                                <input class="form-control form-control-sm" disabled=@(!IsDraft) @bind=_item.Title placeholder="Title" />
                             </td>
                             <td>
                                 <input class="form-control form-control-sm text-end" @bind=_item.Quantity
-                                    placeholder="Qty" />
+                                    placeholder="Qty" disabled=@(!IsDraft) />
                             </td>
                             <td>
                                 <input class="form-control form-control-sm text-end" @bind=_item.Price
-                                    placeholder="Price" />
+                                    placeholder="Price" disabled=@(!IsDraft) />
                             </td>
                             <td>
                                 <input class="form-control form-control-sm text-end" @bind=_item.Total placeholder="Total"
                                     disabled />
                             </td>
                             <td class=d-grid>
-                                <button class="btn btn-sm btn-outline-success" @onclick=AddItemClicked>
+                                <button class="btn btn-sm btn-outline-success" disabled=@(!IsDraft) @onclick=AddItemClicked>
                                     Add
                                 </button>
                             </td>

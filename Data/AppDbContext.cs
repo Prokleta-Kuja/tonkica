@@ -26,6 +26,7 @@ namespace tonkica.Data
             builder.Entity<Account>(e =>
             {
                 e.HasOne(p => p.Currency).WithMany(p => p!.Accounts).HasForeignKey(p => p.CurrencyId);
+                e.HasOne(p => p.Issuer).WithMany(p => p!.Accounts).HasForeignKey(p => p.IssuerId);
             });
 
             builder.Entity<Client>(e =>
@@ -57,6 +58,7 @@ namespace tonkica.Data
             builder.Entity<Transaction>(e =>
             {
                 e.HasOne(p => p.Account).WithMany(p => p!.Transactions).HasForeignKey(p => p.AccountId);
+                e.HasOne(p => p.IssuerCurrency).WithMany(p => p!.Transactions).HasForeignKey(p => p.IssuerCurrencyId);
             });
 
             builder.Entity<Currency>().HasData(

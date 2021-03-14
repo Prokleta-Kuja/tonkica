@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
 using tonkica.Models;
+using tonkica.Services;
 
 namespace tonkica.Pages
 {
     public partial class Transactions
     {
         [Inject] private AppDbContext _db { get; set; } = null!;
+        [Inject] private CurrencyRatesClient _rates { get; set; } = null!;
         private IList<Account> _accounts = new List<Account>();
         private Dictionary<int, string> _accountsD = new Dictionary<int, string>();
         private IList<Transaction> _list = new List<Transaction>();
@@ -23,14 +25,17 @@ namespace tonkica.Pages
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _accounts = await _db.Accounts.ToListAsync();
+            _accounts = await _db.Accounts
+                .Include(a => a.Currency)
+                .Include(a => a.Issuer)
+                .ToListAsync();
             _accountsD = _accounts.ToDictionary(x => x.Id, x => x.Name);
             _list = await _db.Transactions.ToListAsync();
         }
         private void AddClicked()
         {
             _edit = null;
-            _create = new TransactionCreateModel();
+            _create = new TransactionCreateModel { Date = DateTimeOffset.Now };
             _create.AccountId = _accountsD.FirstOrDefault().Key;
         }
         private void EditClicked(Transaction item)
@@ -48,12 +53,18 @@ namespace tonkica.Pages
             if (_errors != null)
                 return default;
 
+            var account = _accounts.Single(a => a.Id == _create.AccountId);
+
             var transaction = new Transaction();
-            transaction.AccountId = _create.AccountId;
+            transaction.AccountId = account.Id;
+            transaction.Account = account;
+            transaction.IssuerCurrencyId = account.Issuer!.CurrencyId;
             transaction.Amount = _create.Amount!.Value;
             transaction.Date = _create.Date!.Value;
             transaction.Note = _create.Note;
 
+            await _rates.CalculateRates(transaction);
+            transaction.IssuerAmount = transaction.Amount * transaction.IssuerRate;
 
             _db.Transactions.Add(transaction);
             await _db.SaveChangesAsync();
@@ -76,10 +87,16 @@ namespace tonkica.Pages
             if (transaction == null)
                 return default;
 
-            transaction.AccountId = _edit.AccountId;
+            var account = _accounts.Single(a => a.Id == _edit.AccountId);
+            transaction.AccountId = account.Id;
+            transaction.Account = account;
+            transaction.IssuerCurrencyId = account.Issuer!.CurrencyId;
             transaction.Amount = _edit.Amount!.Value;
             transaction.Date = _edit.Date!.Value;
             transaction.Note = _edit.Note;
+
+            await _rates.CalculateRates(transaction);
+            transaction.IssuerAmount = transaction.Amount * transaction.IssuerRate;
 
             await _db.SaveChangesAsync();
             _edit = null;
