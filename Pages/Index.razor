@@ -2,4 +2,37 @@
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+@foreach (var issuer in _issuers)
+{
+    <h4>@issuer.Value.Name</h4>
+    <div class="row">
+    @if (_transactionSums.ContainsKey(issuer.Key))
+        {
+            var sum = _transactionSums[issuer.Key];
+            <div class="col">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Total Income</h5>
+                        <h1>@C.Formats.AsDecimal(sum.Income, 2)</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-body text-center">
+                @if (sum.Expense != 0)
+                        {
+                            <h5 class="card-title">Total Expenses</h5>
+                            <h1>@C.Formats.AsDecimal(sum.Expense, 2)</h1>
+                        }
+                        else
+                        {
+                            <h5 class="card-title">No Expenses</h5>
+                            <h1>-</h1>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
