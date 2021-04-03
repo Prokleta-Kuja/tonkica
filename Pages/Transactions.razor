@@ -8,19 +8,21 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <td>Account</td>
-                        <td>Amount</td>
-                        <td>Date</td>
-                        <td>Note</td>
-                        <td>
+                        <th>Category</th>
+                        <th>Account</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Note</th>
+                        <th>
                             <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
-                        </td>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var transaction in _list)
                     {
                         <tr @key=transaction.Id>
+                            <td>@transaction.Category?.Name</td>
                             <td>@transaction.Account?.Name</td>
                             <td>
                                 @C.Formats.AsDecimal(transaction.Amount,2)&nbsp;@transaction.Account?.Currency?.Tag <br>
@@ -45,6 +47,8 @@
             <form @onsubmit=SaveCreateClicked>
                 <Dropdown For=@nameof(TransactionCreateModel.AccountId) Label="Account"
                     @bind-Value=_create.AccountId Errors=_errors Required Items=_accountsD />
+                <Dropdown For=@nameof(TransactionCreateModel.CategoryId) Label="Category"
+                    @bind-Value=_create.CategoryId Errors=_errors Required Items=_categoriesD />
                 <NumBox For=@nameof(TransactionCreateModel.Amount) Label=Amount @bind-Value=_create.Amount Errors=_errors Required />
                 <DateTimeBox For=@nameof(TransactionCreateModel.Date) Label=Date @bind-Value=_create.Date Errors=_errors Required />
                 <TextBox For=@nameof(TransactionCreateModel.Note) Label="Note" @bind-Value=_create.Note
@@ -60,6 +64,8 @@
             <form @onsubmit=SaveEditClicked>
                 <Dropdown For=@nameof(TransactionEditModel.AccountId) Label="Account"
                     @bind-Value=_edit.AccountId Errors=_errors Required Items=_accountsD />
+                <Dropdown For=@nameof(TransactionCreateModel.CategoryId) Label="Category"
+                    @bind-Value=_edit.CategoryId Errors=_errors Required Items=_categoriesD />
                 <NumBox For=@nameof(TransactionEditModel.Amount) Label=Amount @bind-Value=_edit.Amount Errors=_errors Required />
                 <DateTimeBox For=@nameof(TransactionEditModel.Date) Label=Date @bind-Value=_edit.Date Errors=_errors Required />
                 <TextBox For=@nameof(TransactionEditModel.Note) Label="Contact Info" @bind-Value=_edit.Note
@@ -72,6 +78,58 @@
         else
         {
             <div class="alert alert-info">Select Transaction to edit or add.</div>
+
+            <button type="button" class="btn btn-outline-secondary w-100" data-bs-toggle="modal" data-bs-target="#categories">
+            Edit Categories
+            </button>
         }
+    </div>
+</div>
+
+<!-- Categories Modal -->
+<div class="modal fade" id="categories" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Transaction categories</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <table class="table table-striped">
+                <tbody>
+                    @foreach (var category in _categories)
+                    {
+                        <tr>
+                            <td>
+                                <input class="form-control form-control-sm" @bind=category.Name placeholder="Name" />
+                            </td>
+                            <td class=d-grid>
+                                <button class="btn btn-sm btn-outline-danger" @onclick="()=>RemoveCategory(category)">
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            <input class="form-control form-control-sm" @bind=_newCategory placeholder="Name" />
+                        </td>
+                        <td class=d-grid>
+                            <button class="btn btn-sm btn-outline-success" @onclick=AddCategory>
+                                Add
+                            </button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" @onclick=SaveCategories>Save changes</button>
+        </div>
+        </div>
     </div>
 </div>

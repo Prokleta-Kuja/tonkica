@@ -7,6 +7,7 @@ namespace tonkica.Models
     public class TransactionCreateModel
     {
         public int AccountId { get; set; }
+        public int CategoryId { get; set; }
         public decimal? Amount { get; set; }
         public DateTimeOffset? Date { get; set; }
         public string? Note { get; set; }
@@ -17,6 +18,9 @@ namespace tonkica.Models
 
             if (AccountId <= 0)
                 errors.Add(nameof(AccountId), "Required");
+
+            if (CategoryId <= 0)
+                errors.Add(nameof(CategoryId), "Required");
 
             if (!Amount.HasValue)
                 errors.Add(nameof(Amount), "Required");

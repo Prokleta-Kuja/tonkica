@@ -13,17 +13,17 @@
                 <div class="card text-white bg-success mb-3">
                     <div class="card-body text-center">
                         <h5 class="card-title">Total Income</h5>
-                        <h1>@C.Formats.AsDecimal(sum.Income, 2)</h1>
+                        <h1>@C.Formats.AsDecimal(sum.Income, 2) @issuer.Value.Currency?.Tag</h1>
                     </div>
                 </div>
             </div>
             <div class="col">
-        <div class="card text-white bg-danger mb-3">
-            <div class="card-body text-center">
-                @if (sum.Expense != 0)
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body text-center">
+                        @if (sum.Expense != 0)
                         {
                             <h5 class="card-title">Total Expenses</h5>
-                            <h1>@C.Formats.AsDecimal(sum.Expense, 2)</h1>
+                            <h1>@C.Formats.AsDecimal(sum.Expense, 2) @issuer.Value.Currency?.Tag</h1>
                         }
                         else
                         {

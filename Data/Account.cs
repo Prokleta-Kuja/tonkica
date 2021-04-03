@@ -9,11 +9,12 @@ namespace tonkica.Data
             Name = string.Empty;
             Info = string.Empty;
         }
-        public Account(string name, string info, int currencyId)
+        public Account(string name, string info, int currencyId, int issuerId)
         {
             Name = name;
             Info = info;
             CurrencyId = currencyId;
+            IssuerId = issuerId;
         }
 
         public int Id { get; set; }

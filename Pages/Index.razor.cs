@@ -17,7 +17,9 @@ namespace tonkica.Pages
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _issuers = await _db.Issuers.ToDictionaryAsync(i => i.Id);
+            _issuers = await _db.Issuers
+                .Include(i => i.Currency)
+                .ToDictionaryAsync(i => i.Id);
             await ChangeYear(DateTime.UtcNow.Year);
         }
         private async Task ChangeYear(int year)

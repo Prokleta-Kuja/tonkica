@@ -40,7 +40,7 @@ namespace tonkica.Pages
 
             _accounts = await _db.Accounts.ToListAsync();
 
-            _list = await _db.Invoices.ToListAsync();
+            _list = await _db.Invoices.OrderByDescending(i => i.Published).ToListAsync();
         }
         private async Task AddClicked()
         {

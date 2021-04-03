@@ -9,6 +9,7 @@ namespace tonkica.Models
     {
         public int Id { get; set; }
         public int AccountId { get; set; }
+        public int CategoryId { get; set; }
         public decimal? Amount { get; set; }
         public DateTimeOffset? Date { get; set; }
         public string? Note { get; set; }
@@ -17,6 +18,7 @@ namespace tonkica.Models
         {
             Id = t.Id;
             AccountId = t.AccountId;
+            CategoryId = t.CategoryId;
             Amount = t.Amount;
             Date = t.Date;
             Note = t.Note;
@@ -28,6 +30,9 @@ namespace tonkica.Models
 
             if (AccountId <= 0)
                 errors.Add(nameof(AccountId), "Required");
+
+            if (CategoryId <= 0)
+                errors.Add(nameof(CategoryId), "Required");
 
             if (!Amount.HasValue)
                 errors.Add(nameof(Amount), "Required");

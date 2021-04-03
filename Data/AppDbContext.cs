@@ -18,6 +18,7 @@ namespace tonkica.Data
         public DbSet<InvoiceItem> InvoiceItems { get; set; } = null!;
         public DbSet<Issuer> Issuers { get; set; } = null!;
         public DbSet<Transaction> Transactions { get; set; } = null!;
+        public DbSet<TransactionCategory> TransactionCategories { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -57,6 +58,7 @@ namespace tonkica.Data
 
             builder.Entity<Transaction>(e =>
             {
+                e.HasOne(p => p.Category).WithMany(p => p!.Transactions).HasForeignKey(p => p.CategoryId);
                 e.HasOne(p => p.Account).WithMany(p => p!.Transactions).HasForeignKey(p => p.AccountId);
                 e.HasOne(p => p.IssuerCurrency).WithMany(p => p!.Transactions).HasForeignKey(p => p.IssuerCurrencyId);
             });
@@ -107,9 +109,6 @@ namespace tonkica.Data
             var eur = 2;
             var usd = 3;
 
-            var account1 = new Account("TransferWise USD", "Routing number: 123123123\nAccount number: 123123123123123", usd);
-            Accounts.AddRange(account1);
-
             var client1 = new Client("Klijent", "Ulica Pere Kvržice 3\n10 000 Zagreb\nHrvatska", eur, usd)
             {
                 DefaultInvoiceNote = "Calculated at the middle exchange rate of the Croatian National Bank.\nExempt from VAT pursuant to Article 17, paragraph 1 of the Croatian VAT Act."
@@ -118,6 +117,10 @@ namespace tonkica.Data
 
             var issuer1 = new Issuer("Moja tvrtka", "Ulica izdavača 7\n10 000 Zagreb\nHrvatska", hrk);
             Issuers.AddRange(issuer1);
+            await SaveChangesAsync();
+
+            var account1 = new Account("TransferWise USD", "Routing number: 123123123\nAccount number: 123123123123123", usd, issuer1.Id);
+            Accounts.AddRange(account1);
             await SaveChangesAsync();
 
             var invoice1 = new Invoice
@@ -152,6 +155,15 @@ namespace tonkica.Data
             // TODO: calculate currencies and totals
 
             Invoices.Add(invoice1);
+
+            var categories = new List<TransactionCategory>
+            {
+                new TransactionCategory { Name = "Invoices" },
+                new TransactionCategory { Name = "Bank fees" },
+                new TransactionCategory { Name = "Taxes" },
+            };
+            TransactionCategories.AddRange(categories);
+
             await SaveChangesAsync();
         }
     }
