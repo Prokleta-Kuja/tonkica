@@ -19,22 +19,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var transaction in _list)
-                    {
-                        <tr @key=transaction.Id>
-                            <td>@transaction.Category?.Name</td>
-                            <td>@transaction.Account?.Name</td>
-                            <td>
-                                @C.Formats.AsDecimal(transaction.Amount,2)&nbsp;@transaction.Account?.Currency?.Tag <br>
-                                <small>@C.Formats.AsDecimal(transaction.IssuerAmount,2)&nbsp;(@C.Formats.AsDecimal(transaction.IssuerRate))&nbsp;@transaction.Account?.Issuer?.Currency?.Tag</small>                            
-                            </td>
-                            <td>@transaction.Date</td>
-                            <td>@transaction.Note</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-secondary"
-                                    @onclick="()=>EditClicked(transaction)">Edit</button>
-                            </td>
-                        </tr>
+                    @{
+                        static string RowClass(decimal amount) => amount > 0 ? "table-success" : "table-danger";
+                        foreach (var transaction in _list)
+                        {
+                            <tr @key=transaction.Id class=@RowClass(transaction.Amount)>
+                                <td>@transaction.Category?.Name</td>
+                                <td>@transaction.Account?.Name</td>
+                                <td>
+                                    @C.Formats.AsDecimal(transaction.Amount,2)&nbsp;@transaction.Account?.Currency?.Tag <br>
+                                    <small>@C.Formats.AsDecimal(transaction.IssuerAmount,2)&nbsp;(@C.Formats.AsDecimal(transaction.IssuerRate))&nbsp;@transaction.Account?.Issuer?.Currency?.Tag</small>                            
+                                </td>
+                                <td>@transaction.Date</td>
+                                <td>@transaction.Note</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary"
+                                        @onclick="()=>EditClicked(transaction)">Edit</button>
+                                </td>
+                            </tr>
+                        }
                     }
                 </tbody>
             </table>
