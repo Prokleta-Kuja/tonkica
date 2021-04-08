@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
 using tonkica.Models;
 using tonkica.Services;
+using tonkica.Shared;
 
 namespace tonkica.Pages
 {
@@ -14,6 +16,14 @@ namespace tonkica.Pages
     {
         [Inject] private AppDbContext _db { get; set; } = null!;
         [Inject] private CurrencyRatesClient _rates { get; set; } = null!;
+        [Inject] private NavigationManager _navManager { get; set; } = null!;
+        private const string QUERY_YEAR = "year";
+        private int _defaultYear = DateTime.UtcNow.Year;
+        private int _currentYear;
+        private const string QUERY_MONTH = "month";
+        private int _defaultMonth = DateTime.UtcNow.Month;
+        private int? _currentMonth;
+        private QueryStepper? stepperYear { get; set; }
         private IList<Account> _accounts = new List<Account>();
         private Dictionary<int, string> _accountsD = new Dictionary<int, string>();
         private IList<TransactionCategory> _categories { get; set; } = null!;
@@ -36,7 +46,61 @@ namespace tonkica.Pages
 
             _categories = await _db.TransactionCategories.ToListAsync();
             _categoriesD = _categories.ToDictionary(x => x.Id, x => x.Name);
-            _list = await _db.Transactions.OrderByDescending(t => t.Date).ToListAsync();
+
+            var uri = new Uri(_navManager.Uri);
+
+            _currentYear = _defaultYear;
+            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue(QUERY_YEAR, out var yearStr))
+                _currentYear = Convert.ToInt32(yearStr);
+
+            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue(QUERY_MONTH, out var monthStr))
+                _currentMonth = Convert.ToInt32(monthStr);
+
+            await RefreshList();
+        }
+        private async Task ChangeMonth(int? newMonth)
+        {
+            if (newMonth == _currentMonth)
+                return;
+
+            _currentMonth = newMonth;
+            await RefreshList();
+        }
+        private void YearOverflow(bool isIncrement)
+        {
+            if (stepperYear == null)
+                return;
+
+            if (isIncrement)
+                _currentYear = ++stepperYear.Value;
+            else
+                _currentYear = --stepperYear.Value;
+        }
+        private async Task ChangeYear(int? newYear)
+        {
+            var year = newYear ?? _defaultYear;
+            if (year == _currentYear)
+                return;
+
+            _currentYear = year;
+            await RefreshList();
+        }
+        private async Task RefreshList()
+        {
+            var now = DateTime.UtcNow;
+            var start = new DateTime(_currentYear, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var end = start.AddYears(1);
+
+            if (_currentMonth.HasValue)
+            {
+                start = new DateTime(_currentYear, _currentMonth.Value, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                end = start.AddMonths(1);
+            }
+
+            _list = await _db.Transactions
+                .Where(t => t.Date >= start && t.Date < end)
+                .OrderByDescending(t => t.Date)
+                .ToListAsync();
         }
         private void AddClicked()
         {

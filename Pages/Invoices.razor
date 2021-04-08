@@ -1,6 +1,12 @@
 @attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Invoices)]
 
-<h1>Invoices</h1>
+<div class="d-flex justify-content-between align-items-center">
+    <h1>Invoices</h1>
+    <div>
+        <QueryStepper @ref=stepperYear QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
+        <QueryStepper InactiveText="Month" QueryPart=@QUERY_MONTH DefaultValue=_defaultMonth OnChange=ChangeMonth Min=1 Max=12 Overflow OnOverflow=YearOverflow/>
+    </div>
+</div>
 
 <div class="table-responsive">
     <table class="table">

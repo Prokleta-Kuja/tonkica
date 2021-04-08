@@ -1,21 +1,24 @@
 @attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Root)]
 
-<h1>Hello, world!</h1>
+<div class="d-flex align-items-center justify-content-between mt-3">
+    <h1>Hello, world!</h1>
+    <QueryStepper QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
+</div>
 
 @foreach (var issuer in _issuers.Where(i => _issuerDashboards.ContainsKey(i.Key)))
 {
-    <h4>@issuer.Value.Name</h4>
+    <h4 class="mt-3">@issuer.Value.Name</h4>
     <div class="row">
     @if (_issuerDashboards.ContainsKey(issuer.Key))
         {
             var dashboard = _issuerDashboards[issuer.Key];
             <div class="col">
-                <div class="card bg-warning h-100 mb-3">
+                <div class="card text-white bg-success h-100 mb-3">
                     <div class="card-header">
                         <h5 class="card-title">Total Income</h5>
                     </div>
                     <div class="card-body text-center p-0">
-                        <table class="table table-sm table-borderless mb-0">
+                        <table class="table table-sm table-borderless text-white mb-0">
                             <tbody>
                                 @foreach (var category in dashboard.IncomeCategories)
                                 {
@@ -56,12 +59,12 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card text-white bg-success h-100 mb-3">
+                <div class="card h-100 mb-3">
                     <div class="card-header">
-                        <h5 class="card-title">Profit</h5>
+                        <h5 class="card-title">TODO: estimation + limit + profit</h5>
                     </div>
                     <div class="card-body text-center p-0">
-                        <table class="table table-sm table-borderless text-white mb-0">
+                        <table class="table table-sm table-borderless mb-0">
                             <tbody>
                                 @foreach (var quarter in dashboard.Quarters)
                                 {

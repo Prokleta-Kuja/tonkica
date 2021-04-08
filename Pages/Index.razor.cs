@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
 using tonkica.Models;
@@ -12,19 +13,36 @@ namespace tonkica.Pages
     public partial class Index
     {
         [Inject] private AppDbContext _db { get; set; } = null!;
+        [Inject] private NavigationManager _navManager { get; set; } = null!;
+        private const string QUERY_YEAR = "year";
+        private int _defaultYear = DateTime.UtcNow.Year;
+        private int _currentYear;
         private IDictionary<int, Issuer> _issuers = new Dictionary<int, Issuer>();
         private IDictionary<int, DashboardModel> _issuerDashboards = new Dictionary<int, DashboardModel>();
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
+
             _issuers = await _db.Issuers
                 .Include(i => i.Currency)
                 .ToDictionaryAsync(i => i.Id);
-            await ChangeYear(DateTime.UtcNow.Year);
+
+            var year = _defaultYear;
+            var uri = new Uri(_navManager.Uri);
+            if (QueryHelpers.ParseQuery(uri.Query).TryGetValue(QUERY_YEAR, out var yearStr))
+                year = Convert.ToInt32(yearStr);
+
+            await ChangeYear(year);
         }
-        private async Task ChangeYear(int year)
+        private async Task ChangeYear(int? newYear)
         {
+            var year = newYear ?? _defaultYear;
+            if (year == _currentYear)
+                return;
+
+            _currentYear = year;
+            _issuerDashboards = new Dictionary<int, DashboardModel>();
             var start = new DateTime(year, 1, 1, 1, 1, 1, DateTimeKind.Utc);
             var end = start.AddYears(1).AddSeconds(-1);
 
@@ -66,6 +84,8 @@ namespace tonkica.Pages
                 else
                     dash.Quarters[quarter] += transaction.IssuerAmount;
             }
+
+            StateHasChanged();
         }
     }
 }
