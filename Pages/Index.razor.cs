@@ -52,11 +52,15 @@ namespace tonkica.Pages
                 .Where(t => t.Date > start && t.Date < end)
                 .ToListAsync();
 
+            var invoices = await _db.Invoices
+                .Where(t => t.Published > start && t.Published < end || !t.Published.HasValue)
+                .ToListAsync();
+
             foreach (var transaction in transactions)
             {
                 int issuerId = transaction.Account!.IssuerId;
                 if (!_issuerDashboards.ContainsKey(issuerId))
-                    _issuerDashboards.Add(transaction.Account!.IssuerId, new DashboardModel());
+                    _issuerDashboards.Add(issuerId, new DashboardModel());
 
                 var dash = _issuerDashboards[issuerId];
                 var category = transaction.Category!.Name;
@@ -77,13 +81,20 @@ namespace tonkica.Pages
                     else
                         dash.ExpenseCategories[category] += transaction.IssuerAmount;
                 }
-
-                var quarter = (transaction.Date.Month + 2) / 3;
-                if (!dash.Quarters.ContainsKey(quarter))
-                    dash.Quarters.Add(quarter, transaction.IssuerAmount);
-                else
-                    dash.Quarters[quarter] += transaction.IssuerAmount;
             }
+
+            foreach (var invoice in invoices)
+            {
+                var issuerId = invoice.IssuerId;
+                if (!_issuerDashboards.ContainsKey(issuerId))
+                    _issuerDashboards.Add(issuerId, new DashboardModel());
+
+                var dash = _issuerDashboards[issuerId];
+                dash.Issued += invoice.IssuerTotal;
+            }
+
+            foreach (var issuer in _issuerDashboards)
+                issuer.Value.CalculateLevel();
 
             StateHasChanged();
         }

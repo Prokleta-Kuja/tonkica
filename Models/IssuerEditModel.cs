@@ -9,6 +9,7 @@ namespace tonkica.Models
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? ContactInfo { get; set; }
+        public decimal? Limit { get; set; }
         public string? ClockifyUrl { get; set; }
         public int CurrencyId { get; set; }
 
@@ -18,6 +19,7 @@ namespace tonkica.Models
             Name = i.Name;
             ContactInfo = i.ContactInfo;
             CurrencyId = i.CurrencyId;
+            Limit = i.Limit;
             ClockifyUrl = i.ClockifyUrl;
         }
 
@@ -34,6 +36,8 @@ namespace tonkica.Models
             if (CurrencyId <= 0)
                 errors.Add(nameof(CurrencyId), "Required");
 
+            if (Limit.HasValue && Limit.Value < 0)
+                errors.Add(nameof(Limit), "Cannot be lower than 0");
 
             if (errors.Any())
                 return errors;

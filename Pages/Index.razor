@@ -24,7 +24,7 @@
                                 {
                                     <tr>
                                         <td class="text-start">@category.Key</td>
-                                        <td class="text-end">@C.Formats.AsDecimal(category.Value, 2)</td>
+                                        <td class="text-end">@C.Formats.AsDecimal(category.Value, 2) @issuer.Value.Currency?.Tag</td>
                                     </tr>
                                 }
                             </tbody>
@@ -47,7 +47,7 @@
                                 {
                                     <tr>
                                         <td class="text-start">@category.Key</td>
-                                        <td class="text-end">@C.Formats.AsDecimal(category.Value, 2)</td>
+                                        <td class="text-end">@C.Formats.AsDecimal(category.Value, 2) @issuer.Value.Currency?.Tag</td>
                                     </tr>
                                 }
                             </tbody>
@@ -61,23 +61,48 @@
             <div class="col">
                 <div class="card h-100 mb-3">
                     <div class="card-header">
-                        <h5 class="card-title">TODO: estimation + limit + profit</h5>
+                        <h5 class="card-title">Summary</h5>
                     </div>
                     <div class="card-body text-center p-0">
                         <table class="table table-sm table-borderless mb-0">
                             <tbody>
-                                @foreach (var quarter in dashboard.Quarters)
-                                {
-                                    <tr>
-                                        <td class="text-start">Qtr @quarter.Key</td>
-                                        <td class="text-end">@C.Formats.AsDecimal(quarter.Value, 2)</td>
-                                    </tr>
+                                <tr>
+                                    <td class="text-start">Issued</td>
+                                    <td class="text-end">@C.Formats.AsDecimal(dashboard.Issued, 2) @issuer.Value.Currency?.Tag</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Limit</td>
+                                    <td class="text-end">
+                                        @if(issuer.Value.Limit.HasValue)
+                                        {
+                                            <text>@C.Formats.AsDecimal(issuer.Value.Limit ?? 0, 2) @issuer.Value.Currency?.Tag</text>
+                                        }
+                                        else { <text>No</text> }
+                                    </td>
+                                </tr>
+                                @{
+                                    var tillLimit = 0M;
+                                    if(issuer.Value.Limit.HasValue)
+                                        tillLimit = issuer.Value.Limit.Value - dashboard.Issued;
+
+                                    var color = tillLimit < 0 ? "table-danger" : string.Empty;
                                 }
+                                <tr class=@color>
+                                    <td class="text-start">Till limit</td>
+                                    <td class="text-end">@C.Formats.AsDecimal(tillLimit, 2) @issuer.Value.Currency?.Tag</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start">Level @dashboard.CurrentLevel</td>
+                                    <td class="text-end">Next in @C.Formats.AsDecimal(dashboard.TillNextLevel, 2) @issuer.Value.Currency?.Tag</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="card-footer text-end">
-                        <h3 class="m-0">@C.Formats.AsDecimal(dashboard.Income + dashboard.Expense, 2) @issuer.Value.Currency?.Tag</h3>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="m-0">Profit</h3>
+                            <h3 class="m-0">@C.Formats.AsDecimal(dashboard.Income + dashboard.Expense, 2) @issuer.Value.Currency?.Tag</h3>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -19,6 +19,7 @@ namespace tonkica.Data
         public int Id { get; set; }
         public string Name { get; set; }
         public string ContactInfo { get; set; }
+        public decimal? Limit { get; set; }
         public string? ClockifyUrl { get; set; }
         public int CurrencyId { get; set; }
 

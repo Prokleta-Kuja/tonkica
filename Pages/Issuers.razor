@@ -43,6 +43,7 @@
                     Errors=_errors Lines=3 Required />
                 <Dropdown For=@nameof(IssuerCreateModel.CurrencyId) Label="Currency" @bind-Value=_create.CurrencyId
                     Errors=_errors Required Items=_currenciesD />
+                <NumBox For=@nameof(IssuerCreateModel.Limit) Label=Limit @bind-Value=_create.Limit Errors=_errors />
                 <TextBox For=@nameof(IssuerCreateModel.ClockifyUrl) Label="Clockify detailed url"
                     @bind-Value=_create.ClockifyUrl Errors=_errors />
 
@@ -59,6 +60,7 @@
                     Errors=_errors Lines=3 Required />
                 <Dropdown For=@nameof(IssuerEditModel.CurrencyId) Label="Currency" @bind-Value=_edit.CurrencyId
                     Errors=_errors Required Items=_currenciesD />
+                <NumBox For=@nameof(IssuerEditModel.Limit) Label=Limit @bind-Value=_edit.Limit Errors=_errors />
                 <TextBox For=@nameof(IssuerEditModel.ClockifyUrl) Label="Clockify detailed url"
                     @bind-Value=_edit.ClockifyUrl Errors=_errors />
 
