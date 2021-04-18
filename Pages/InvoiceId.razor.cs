@@ -18,12 +18,12 @@ namespace tonkica.Pages
         [Inject] private ClockifyClient _clockify { get; set; } = null!;
         [Parameter] public int Id { get; set; }
         private IList<Currency> _currencies = new List<Currency>();
-        private Dictionary<int, string> _currenciesD = new Dictionary<int, string>();
+        private Dictionary<int, string> _currenciesD = new();
         private IList<Issuer> _issuers = new List<Issuer>();
-        private Dictionary<int, string> _issuersD = new Dictionary<int, string>();
+        private Dictionary<int, string> _issuersD = new();
         private IList<Client> _clients = new List<Client>();
-        private Dictionary<int, string> _clientsD = new Dictionary<int, string>();
-        private Dictionary<int, string> _statusesD = new Dictionary<int, string>();
+        private Dictionary<int, string> _clientsD = new();
+        private readonly Dictionary<int, string> _statusesD = new();
         private Invoice? _invoice;
         private InvoiceEditModel? _edit;
         private InvoiceItem _item = null!;
@@ -122,8 +122,6 @@ namespace tonkica.Pages
 
             await SaveInvoiceItems();
         }
-        private Task SaveItemsClicked() => SaveInvoiceItems();
-
         private async Task SaveInvoiceItems()
         {
             if (_invoice == null || _invoice.Items == null)

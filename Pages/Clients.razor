@@ -25,7 +25,7 @@
                             <td>@Client.Name</td>
                             <td>@Client.ContactInfo</td>
                             <td>@Client.ContractCurrency?.Tag</td>
-                            <td>@Client.ContractRate</td>
+                            <td>@Client.Display(Client.ContractRate)</td>
                             <td>@Client.DefaultInvoiceNote</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-secondary"
@@ -52,6 +52,8 @@
                 <NumBox For=@nameof(ClientCreateModel.ContractRate) Label=Rate @bind-Value=_create.ContractRate Errors=_errors
                     Required />
                 <TextBox For=@nameof(ClientCreateModel.DefaultInvoiceNote) Label="Default invoice note" @bind-Value=_create.DefaultInvoiceNote Errors=_errors Lines=3 />
+                <TextBox For=@nameof(ClientCreateModel.TimeZone) Label="Time Zone" @bind-Value=_create.TimeZone PlaceHolder="America/Chicago" Errors=_errors Required />
+                <TextBox For=@nameof(ClientCreateModel.Locale) Label="Locale" @bind-Value=_create.Locale PlaceHolder="en-US" Errors=_errors Required />
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
@@ -71,6 +73,8 @@
                 <Dropdown For=@nameof(ClientEditModel.DisplayCurrencyId) Label=Client @bind-Value=_edit.DisplayCurrencyId Errors=_errors
                     Required Items=_currenciesD />
                 <TextBox For=@nameof(ClientEditModel.DefaultInvoiceNote) Label="Default invoice note" @bind-Value=_edit.DefaultInvoiceNote Errors=_errors Lines=3 />
+                <TextBox For=@nameof(ClientEditModel.TimeZone) Label="Time Zone" @bind-Value=_edit.TimeZone PlaceHolder="America/Chicago" Errors=_errors Required />
+                <TextBox For=@nameof(ClientEditModel.Locale) Label="Locale" @bind-Value=_edit.Locale PlaceHolder="en-US" Errors=_errors Required />
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>

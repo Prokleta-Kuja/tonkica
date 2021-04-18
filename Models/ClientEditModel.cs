@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using tonkica.Data;
 
@@ -13,6 +15,8 @@ namespace tonkica.Models
         public decimal? ContractRate { get; set; }
         public int DisplayCurrencyId { get; set; }
         public string? DefaultInvoiceNote { get; set; }
+        public string? TimeZone { get; set; }
+        public string? Locale { get; set; }
 
         public ClientEditModel(Client c)
         {
@@ -23,6 +27,8 @@ namespace tonkica.Models
             ContractRate = c.ContractRate;
             DisplayCurrencyId = c.DisplayCurrencyId;
             DefaultInvoiceNote = c.DefaultInvoiceNote;
+            TimeZone = c.TimeZone;
+            Locale = c.Locale;
         }
 
         public Dictionary<string, string>? Validate()
@@ -43,6 +49,14 @@ namespace tonkica.Models
 
             if (DisplayCurrencyId <= 0)
                 errors.Add(nameof(DisplayCurrencyId), "Required");
+
+            if (!string.IsNullOrWhiteSpace(TimeZone))
+                try { TimeZoneInfo.FindSystemTimeZoneById(TimeZone); }
+                catch (Exception) { errors.Add(nameof(TimeZone), "Invalid"); }
+
+            if (!string.IsNullOrWhiteSpace(Locale))
+                try { CultureInfo.GetCultureInfo(Locale); }
+                catch (Exception) { errors.Add(nameof(Locale), "Invalid"); }
 
             if (errors.Any())
                 return errors;

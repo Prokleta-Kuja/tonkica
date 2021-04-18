@@ -12,12 +12,13 @@
     <table class="table">
         <thead>
             <tr>
+                <th>Issuer</th>
                 <th>Seq #</th>
                 <th>Client</th>
                 <th>Subject</th>
                 <th>Total</th>
                 <th>Published</th>
-                <th>Note</th>
+                <th>Status</th>
                 <th>
                     <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
                 </th>
@@ -27,16 +28,17 @@
             @foreach (var invoice in _list)
             {
                 <tr @key=invoice.Id>
+                    <td>@invoice.Issuer?.Name</td>
                     <td>@invoice.SequenceNumber</td>
                     <td>@invoice.Client?.Name</td>
                     <td>@invoice.Subject</td>
                     <td>
-                        @C.Formats.AsDecimal(invoice.Total,2) @invoice.Currency?.Tag <br />
-                        <small>@C.Formats.AsDecimal(invoice.DisplayTotal,2)&nbsp;(@C.Formats.AsDecimal(invoice.DisplayRate))&nbsp;@invoice.DisplayCurrency?.Tag <br /></small>
-                        <small>@C.Formats.AsDecimal(invoice.IssuerTotal,2)&nbsp;(@C.Formats.AsDecimal(invoice.IssuerRate))&nbsp;@invoice.IssuerCurrency?.Tag</small>
+                        @invoice.Issuer?.Display(invoice.Total) @invoice.Currency?.Tag <br />
+                        <small>@invoice.Issuer?.Display(invoice.DisplayTotal)&nbsp;(@invoice.Issuer?.Display(invoice.DisplayRate, 2))&nbsp;@invoice.DisplayCurrency?.Tag <br /></small>
+                        <small>@invoice.Issuer?.Display(invoice.IssuerTotal)&nbsp;(@invoice.Issuer?.Display(invoice.IssuerRate, 2))&nbsp;@invoice.IssuerCurrency?.Tag</small>
                     </td>
-                    <td>@(invoice.Published.HasValue ? invoice.Published : "-")</td>
-                    <td>@invoice.Note</td>
+                    <td>@invoice.Issuer?.Display(invoice.Published)</td>
+                    <td>@invoice.Status</td>
                     <td>
                         <a class="btn btn-sm btn-outline-secondary" href="@C.Routes.InvoiceFor(invoice.Id)">Edit</a>
                     </td>

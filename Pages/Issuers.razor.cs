@@ -30,7 +30,7 @@ namespace tonkica.Pages
         private void AddClicked()
         {
             _edit = null;
-            _create = new IssuerCreateModel();
+            _create = new();
             _create.CurrencyId = _currenciesD.FirstOrDefault().Key;
         }
         private void EditClicked(Issuer item)
@@ -54,6 +54,8 @@ namespace tonkica.Pages
             issuer.CurrencyId = _create.CurrencyId;
             issuer.Limit = _create.Limit;
             issuer.ClockifyUrl = _create.ClockifyUrl;
+            issuer.TimeZone = _create.TimeZone;
+            issuer.Locale = _create.Locale;
 
             _db.Issuers.Add(issuer);
             await _db.SaveChangesAsync();
@@ -81,6 +83,8 @@ namespace tonkica.Pages
             issuer.CurrencyId = _edit.CurrencyId;
             issuer.Limit = _edit.Limit;
             issuer.ClockifyUrl = _edit.ClockifyUrl;
+            issuer.TimeZone = _edit.TimeZone;
+            issuer.Locale = _edit.Locale;
 
             await _db.SaveChangesAsync();
             _edit = null;

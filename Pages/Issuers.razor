@@ -46,6 +46,8 @@
                 <NumBox For=@nameof(IssuerCreateModel.Limit) Label=Limit @bind-Value=_create.Limit Errors=_errors />
                 <TextBox For=@nameof(IssuerCreateModel.ClockifyUrl) Label="Clockify detailed url"
                     @bind-Value=_create.ClockifyUrl Errors=_errors />
+                <TextBox For=@nameof(IssuerCreateModel.TimeZone) Label="Time Zone" @bind-Value=_create.TimeZone PlaceHolder="Europe/Zagreb" Errors=_errors Required />
+                <TextBox For=@nameof(IssuerCreateModel.Locale) Label="Locale" @bind-Value=_create.Locale PlaceHolder="hr-HR" Errors=_errors Required />
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
@@ -63,6 +65,8 @@
                 <NumBox For=@nameof(IssuerEditModel.Limit) Label=Limit @bind-Value=_edit.Limit Errors=_errors />
                 <TextBox For=@nameof(IssuerEditModel.ClockifyUrl) Label="Clockify detailed url"
                     @bind-Value=_edit.ClockifyUrl Errors=_errors />
+                <TextBox For=@nameof(IssuerEditModel.TimeZone) Label="Time Zone" @bind-Value=_edit.TimeZone PlaceHolder="Europe/Zagreb" Errors=_errors Required />
+                <TextBox For=@nameof(IssuerEditModel.Locale) Label="Locale" @bind-Value=_edit.Locale PlaceHolder="hr-HR" Errors=_errors Required />
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>

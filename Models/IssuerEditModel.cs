@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using tonkica.Data;
 
@@ -12,6 +14,8 @@ namespace tonkica.Models
         public decimal? Limit { get; set; }
         public string? ClockifyUrl { get; set; }
         public int CurrencyId { get; set; }
+        public string? TimeZone { get; set; }
+        public string? Locale { get; set; }
 
         public IssuerEditModel(Issuer i)
         {
@@ -21,6 +25,8 @@ namespace tonkica.Models
             CurrencyId = i.CurrencyId;
             Limit = i.Limit;
             ClockifyUrl = i.ClockifyUrl;
+            TimeZone = i.TimeZone;
+            Locale = i.Locale;
         }
 
         public Dictionary<string, string>? Validate()
@@ -38,6 +44,14 @@ namespace tonkica.Models
 
             if (Limit.HasValue && Limit.Value < 0)
                 errors.Add(nameof(Limit), "Cannot be lower than 0");
+
+            if (!string.IsNullOrWhiteSpace(TimeZone))
+                try { TimeZoneInfo.FindSystemTimeZoneById(TimeZone); }
+                catch (Exception) { errors.Add(nameof(TimeZone), "Invalid"); }
+
+            if (!string.IsNullOrWhiteSpace(Locale))
+                try { CultureInfo.GetCultureInfo(Locale); }
+                catch (Exception) { errors.Add(nameof(Locale), "Invalid"); }
 
             if (errors.Any())
                 return errors;

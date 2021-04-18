@@ -24,14 +24,14 @@
                                 {
                                     <tr>
                                         <td class="text-start">@category.Key</td>
-                                        <td class="text-end">@C.Formats.AsDecimal(category.Value, 2) @issuer.Value.Currency?.Tag</td>
+                                        <td class="text-end">@issuer.Value.Display(category.Value) @issuer.Value.Currency?.Tag</td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                     <div class="card-footer text-end">
-                        <h3 class="m-0">@C.Formats.AsDecimal(dashboard.Income, 2) @issuer.Value.Currency?.Tag</h3>
+                        <h3 class="m-0">@issuer.Value.Display(dashboard.Income) @issuer.Value.Currency?.Tag</h3>
                     </div>
                 </div>
             </div>
@@ -47,14 +47,14 @@
                                 {
                                     <tr>
                                         <td class="text-start">@category.Key</td>
-                                        <td class="text-end">@C.Formats.AsDecimal(category.Value, 2) @issuer.Value.Currency?.Tag</td>
+                                        <td class="text-end">@issuer.Value.Display(category.Value) @issuer.Value.Currency?.Tag</td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                     <div class="card-footer text-end">
-                        <h3 class="m-0">@C.Formats.AsDecimal(dashboard.Expense, 2) @issuer.Value.Currency?.Tag</h3>
+                        <h3 class="m-0">@issuer.Value.Display(dashboard.Expense) @issuer.Value.Currency?.Tag</h3>
                     </div>
                 </div>
             </div>
@@ -68,14 +68,14 @@
                             <tbody>
                                 <tr>
                                     <td class="text-start">Issued</td>
-                                    <td class="text-end">@C.Formats.AsDecimal(dashboard.Issued, 2) @issuer.Value.Currency?.Tag</td>
+                                    <td class="text-end">@issuer.Value.Display(dashboard.Issued) @issuer.Value.Currency?.Tag</td>
                                 </tr>
                                 <tr>
                                     <td class="text-start">Limit</td>
                                     <td class="text-end">
                                         @if(issuer.Value.Limit.HasValue)
                                         {
-                                            <text>@C.Formats.AsDecimal(issuer.Value.Limit ?? 0, 2) @issuer.Value.Currency?.Tag</text>
+                                            <text>@issuer.Value.Display(issuer.Value.Limit ?? 0) @issuer.Value.Currency?.Tag</text>
                                         }
                                         else { <text>No</text> }
                                     </td>
@@ -89,11 +89,11 @@
                                 }
                                 <tr class=@color>
                                     <td class="text-start">Till limit</td>
-                                    <td class="text-end">@C.Formats.AsDecimal(tillLimit, 2) @issuer.Value.Currency?.Tag</td>
+                                    <td class="text-end">@issuer.Value.Display(tillLimit) @issuer.Value.Currency?.Tag</td>
                                 </tr>
                                 <tr>
                                     <td class="text-start">Level @dashboard.CurrentLevel</td>
-                                    <td class="text-end">Next in @C.Formats.AsDecimal(dashboard.TillNextLevel, 2) @issuer.Value.Currency?.Tag</td>
+                                    <td class="text-end">Next in @issuer.Value.Display(dashboard.TillNextLevel) @issuer.Value.Currency?.Tag</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -101,7 +101,7 @@
                     <div class="card-footer">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="m-0">Profit</h3>
-                            <h3 class="m-0">@C.Formats.AsDecimal(dashboard.Income + dashboard.Expense, 2) @issuer.Value.Currency?.Tag</h3>
+                            <h3 class="m-0">@issuer.Value.Display(dashboard.Income + dashboard.Expense) @issuer.Value.Currency?.Tag</h3>
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 <h1>Invoice @Id</h1>
 @if (_edit != null)
 {
+    var issuer = _issuers.Single(i => i.Id == _edit.IssuerId);
     <div class=row>
     <div class=col>
         <form @onsubmit=SaveClicked>
@@ -24,7 +25,8 @@
                     Required Items=_statusesD />   
                 @if(!IsDraft)
                 {
-                    <DateTimeBox For=@nameof(InvoiceEditModel.Published) Label=Published @bind-Value=_edit.Published Errors=_errors Required/>
+                    <DateTimeBox For=@nameof(InvoiceEditModel.Published) Label=Published @bind-Value=_edit.Published 
+                     Locale=@issuer?.Locale TimeZone=@issuer?.TimeZone Errors=_errors Required/>
                 }               
                 <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=3 />
                 <div class="float-end">                    
@@ -61,17 +63,16 @@
                         {
                             <tr>
                                 <td>
-                                    <input class="form-control form-control-sm" @bind=item.Title placeholder="Title" />
+                                    <input class="form-control form-control-sm" @bind=item.Title placeholder="Title" disabled=@(!IsDraft) />
                                 </td>
                                 <td>
-                                    <input class="form-control form-control-sm text-end" @bind=item.Quantity
-                                        placeholder="Qty" />
+                                    <input class="form-control form-control-sm text-end" @bind=item.Quantity @bind:culture=issuer?.CultureInfo placeholder="Qty" disabled=@(!IsDraft) />
                                 </td>
                                 <td>
-                                    <input class="form-control form-control-sm text-end" @bind=item.Price placeholder="Price" />
+                                    <input class="form-control form-control-sm text-end" @bind=item.Price @bind:culture=issuer?.CultureInfo placeholder="Price" disabled=@(!IsDraft) />
                                 </td>
                                 <td>
-                                    <input class="form-control form-control-sm text-end" @bind=item.Total placeholder="Total"
+                                    <input class="form-control form-control-sm text-end" @bind=item.Total @bind:culture=issuer?.CultureInfo placeholder="Total"
                                         disabled />
                                 </td>
                                 <td class=d-grid>
@@ -85,9 +86,9 @@
                     <tfoot>
                         <tr class=table-info>
                             <td></td>
-                            <td class="text-end">@C.Formats.AsDecimal(_invoice.QuantityTotal,2)</td>
-                            <td class=text-end>@C.Formats.AsDecimal(1)</td>
-                            <td class=text-end>@C.Formats.AsDecimal(_invoice.Total,2)</td>
+                            <td class="text-end">@issuer?.Display(_invoice.QuantityTotal)</td>
+                            <td class=text-end>@issuer?.Display(1,4)</td>
+                            <td class=text-end>@issuer?.Display(_invoice.Total)</td>
                             <td class=text-end>@_invoice.Currency?.Tag</td>
                         </tr>
                         @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
@@ -95,8 +96,8 @@
                             <tr class=table-info>
                                 <td></td>
                                 <td class="text-end"></td>
-                                <td class=text-end>@C.Formats.AsDecimal(_invoice.DisplayRate)</td>
-                                <td class=text-end>@C.Formats.AsDecimal(_invoice.DisplayTotal,2)</td>
+                                <td class=text-end>@issuer?.Display(_invoice.DisplayRate,4)</td>
+                                <td class=text-end>@issuer?.Display(_invoice.DisplayTotal)</td>
                                 <td class=text-end>@_invoice.DisplayCurrency?.Tag</td>
                             </tr>
                         }
@@ -105,8 +106,8 @@
                             <tr class=table-info>
                                 <td></td>
                                 <td class="text-end"></td>
-                                <td class=text-end>@C.Formats.AsDecimal(_invoice.IssuerRate)</td>
-                                <td class=text-end>@C.Formats.AsDecimal(_invoice.IssuerTotal,2)</td>
+                                <td class=text-end>@issuer?.Display(_invoice.IssuerRate,4)</td>
+                                <td class=text-end>@issuer?.Display(_invoice.IssuerTotal)</td>
                                 <td class=text-end>@_invoice.IssuerCurrency?.Tag</td>
                             </tr>
                         }
@@ -115,15 +116,15 @@
                                 <input class="form-control form-control-sm" disabled=@(!IsDraft) @bind=_item.Title placeholder="Title" />
                             </td>
                             <td>
-                                <input class="form-control form-control-sm text-end" @bind=_item.Quantity
+                                <input class="form-control form-control-sm text-end" @bind=_item.Quantity @bind:culture=issuer?.CultureInfo
                                     placeholder="Qty" disabled=@(!IsDraft) />
                             </td>
                             <td>
-                                <input class="form-control form-control-sm text-end" @bind=_item.Price
+                                <input class="form-control form-control-sm text-end" @bind=_item.Price @bind:culture=issuer?.CultureInfo
                                     placeholder="Price" disabled=@(!IsDraft) />
                             </td>
                             <td>
-                                <input class="form-control form-control-sm text-end" @bind=_item.Total placeholder="Total"
+                                <input class="form-control form-control-sm text-end" @bind=_item.Total @bind:culture=issuer?.CultureInfo placeholder="Total"
                                     disabled />
                             </td>
                             <td class=d-grid>

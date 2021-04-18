@@ -29,7 +29,7 @@ namespace tonkica.Pages
         private void AddClicked()
         {
             _edit = null;
-            _create = new ClientCreateModel();
+            _create = new();
             _create.DisplayCurrencyId = _currenciesD.FirstOrDefault().Key;
             _create.ContractCurrencyId = _currenciesD.FirstOrDefault().Key;
         }
@@ -55,6 +55,8 @@ namespace tonkica.Pages
             client.ContractRate = _create.ContractRate ?? 0;
             client.DisplayCurrencyId = _create.DisplayCurrencyId;
             client.DefaultInvoiceNote = _create.DefaultInvoiceNote;
+            client.TimeZone = _create.TimeZone;
+            client.Locale = _create.Locale;
 
             _db.Clients.Add(client);
             await _db.SaveChangesAsync();
@@ -83,6 +85,8 @@ namespace tonkica.Pages
             client.ContractRate = _edit.ContractRate ?? 0;
             client.DisplayCurrencyId = _edit.DisplayCurrencyId;
             client.DefaultInvoiceNote = _edit.DefaultInvoiceNote;
+            client.TimeZone = _edit.TimeZone;
+            client.Locale = _edit.Locale;
 
             await _db.SaveChangesAsync();
             _edit = null;
