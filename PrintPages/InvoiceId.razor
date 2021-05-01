@@ -9,10 +9,17 @@ else
 {
     <div class="row justify-content-between">
     <div class="col">
-        <h4>Invoice</h4>
+        <h4>Invoice @_invoice.SequenceNumber</h4>
         <p>
-            Invoice number: @_invoice.SequenceNumber <br>
-            Inovice date: @_invoice.Client?.Display(_invoice.Published,true,true)
+            Issued: @_invoice.Client?.Display(_invoice.Published, true, true) <br>
+            Issued by: @_invoice.Issuer?.IssuedByEmployee
+        </p>
+    </div>
+    <div class="col">
+        <h4>&nbsp;</h4>
+        <p>
+            Delivered: @_invoice.Client?.Display(_invoice.Published, false, false) <br>
+            Due by: @_invoice.Client?.Display(_invoice.Published?.AddDays((double)_invoice.Client.DueInDays), false, false)
         </p>
     </div>
     <div class="col-auto">
@@ -21,15 +28,17 @@ else
 </div>
     <div class="row mt-4">
     <div class="col">
+        <h5 class="border-bottom">Issued To</h5>
         <h6>@_invoice.Client?.Name</h6>
         <p class="multiline">@_invoice.Client?.ContactInfo</p>
     </div>
     <div class="col">
+        <h5 class="border-bottom">Issued By</h5>
         <h6>@_invoice.Issuer?.Name</h6>
         <p class="multiline">@_invoice.Issuer?.ContactInfo</p>
     </div>
     <div class="col-auto">
-        <h6>Payment details</h6>
+        <h5 class="border-bottom">Payment details</h5>
         <p class=multiline>@_invoice.Account?.Info</p>
     </div>
 </div>
@@ -37,6 +46,7 @@ else
     <table class="table table-print mt-3">
     <thead>
         <tr>
+            <td>No</td>
             <td>Description</td>
             <td class="text-end">Cost</td>
             <td class="text-end">QTY</td>
@@ -44,15 +54,17 @@ else
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in _invoice?.Items!)
-            {
-                <tr>
-                    <td>@item.Title</td>
-                    <td class="text-end">@C.Formats.AsDecimal(item.Price,2)</td>
-                    <td class="text-end">@C.Formats.AsDecimal(item.Quantity,2)</td>
-                    <td class="text-end">@C.Formats.AsDecimal(item.Total,2)</td>
-                </tr>
-            }
+        @for (int i = 0; i < _invoice?.Items!.Count; i++)
+        {
+            var item = _invoice?.Items!.ElementAt(i);
+            <tr>
+                <td>@(i + 1).</td>
+                <td>@item!.Title</td>
+                <td class="text-end">@C.Formats.AsDecimal(item!.Price,2)</td>
+                <td class="text-end">@C.Formats.AsDecimal(item!.Quantity,2)</td>
+                <td class="text-end">@C.Formats.AsDecimal(item!.Total,2)</td>
+            </tr>
+        }
         </tbody>
     </table>
     <div class="row mt-4">
@@ -68,9 +80,9 @@ else
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-center">@_invoice.Currency?.Tag</td>
+                    <td class="text-center">@_invoice!.Currency?.Tag</td>
                     <td class="text-end">@C.Formats.AsDecimal(1)</td>
-                    <td class="text-end">@C.Formats.AsDecimal(_invoice.Total,2)</td>
+                    <td class="text-end">@C.Formats.AsDecimal(_invoice!.Total,2)</td>
                 </tr>
                 @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
                     {

@@ -66,7 +66,8 @@
                             Required Items=_clientsD />
                         <TextBox For=@nameof(InvoiceCreateModel.Subject) Label=Subject @bind-Value=_create.Subject Errors=_errors
                             Required />
-                        <TextBox For=@nameof(InvoiceCreateModel.SequenceNumber) Label=Sequence @bind-Value=_create.SequenceNumber Errors=_errors />
+                        <TextBox For=@nameof(InvoiceCreateModel.SequenceNumber) Label=Sequence @bind-Value=_create.SequenceNumber Errors=_errors 
+                            Required />
                     </div>
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">Submit</button>

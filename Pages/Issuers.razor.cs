@@ -50,6 +50,7 @@ namespace tonkica.Pages
 
             var issuer = new Issuer();
             issuer.Name = _create.Name!;
+            issuer.IssuedByEmployee = _create.IssuedByEmployee!;
             issuer.ContactInfo = _create.ContactInfo!;
             issuer.CurrencyId = _create.CurrencyId;
             issuer.Limit = _create.Limit;
@@ -79,6 +80,7 @@ namespace tonkica.Pages
                 return default;
 
             issuer.Name = _edit.Name!;
+            issuer.IssuedByEmployee = _edit.IssuedByEmployee!;
             issuer.ContactInfo = _edit.ContactInfo!;
             issuer.CurrencyId = _edit.CurrencyId;
             issuer.Limit = _edit.Limit;

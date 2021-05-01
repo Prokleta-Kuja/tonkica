@@ -20,30 +20,30 @@ namespace tonkica.Models
 
         public void CalculateLevel()
         {
-            if (Issued < LEVEL_1)
+            if (Income < LEVEL_1)
             {
                 CurrentLevel = 1;
-                TillNextLevel = LEVEL_1 - Issued;
+                TillNextLevel = LEVEL_1 - Income;
             }
-            else if (Issued < LEVEL_2)
+            else if (Income < LEVEL_2)
             {
                 CurrentLevel = 2;
-                TillNextLevel = LEVEL_2 - Issued;
+                TillNextLevel = LEVEL_2 - Income;
             }
-            else if (Issued < LEVEL_3)
+            else if (Income < LEVEL_3)
             {
                 CurrentLevel = 3;
-                TillNextLevel = LEVEL_3 - Issued;
+                TillNextLevel = LEVEL_3 - Income;
             }
-            else if (Issued < LEVEL_4)
+            else if (Income < LEVEL_4)
             {
                 CurrentLevel = 4;
-                TillNextLevel = LEVEL_4 - Issued;
+                TillNextLevel = LEVEL_4 - Income;
             }
-            else if (Issued < LEVEL_5)
+            else if (Income < LEVEL_5)
             {
                 CurrentLevel = 5;
-                TillNextLevel = LEVEL_5 - Issued;
+                TillNextLevel = LEVEL_5 - Income;
             }
         }
     }

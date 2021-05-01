@@ -14,12 +14,14 @@ namespace tonkica.Data
         {
             Name = string.Empty;
             ContactInfo = string.Empty;
+            IssuedByEmployee = string.Empty;
         }
-        public Issuer(string name, string contactInfo, int currencyId)
+        public Issuer(string name, string contactInfo, int currencyId, string issueEmployee)
         {
             Name = name;
             ContactInfo = contactInfo;
             CurrencyId = currencyId;
+            IssuedByEmployee = issueEmployee;
         }
 
         public int Id { get; set; }
@@ -30,6 +32,7 @@ namespace tonkica.Data
         public int CurrencyId { get; set; }
         public string? TimeZone { get; set; }
         public string? Locale { get; set; }
+        public string IssuedByEmployee { get; set; }
 
         public Currency? Currency { get; set; }
         public ICollection<Account>? Accounts { get; set; }

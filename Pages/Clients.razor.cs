@@ -54,6 +54,7 @@ namespace tonkica.Pages
             client.ContractCurrencyId = _create.ContractCurrencyId;
             client.ContractRate = _create.ContractRate ?? 0;
             client.DisplayCurrencyId = _create.DisplayCurrencyId;
+            client.DueInDays = _create.DueInDays ?? 30;
             client.DefaultInvoiceNote = _create.DefaultInvoiceNote;
             client.TimeZone = _create.TimeZone;
             client.Locale = _create.Locale;
@@ -84,6 +85,7 @@ namespace tonkica.Pages
             client.ContractCurrencyId = _edit.ContractCurrencyId;
             client.ContractRate = _edit.ContractRate ?? 0;
             client.DisplayCurrencyId = _edit.DisplayCurrencyId;
+            client.DueInDays = _edit.DueInDays ?? 30;
             client.DefaultInvoiceNote = _edit.DefaultInvoiceNote;
             client.TimeZone = _edit.TimeZone;
             client.Locale = _edit.Locale;

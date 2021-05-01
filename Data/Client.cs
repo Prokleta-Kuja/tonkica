@@ -29,6 +29,7 @@ namespace tonkica.Data
         public int ContractCurrencyId { get; set; }
         public decimal ContractRate { get; set; }
         public int DisplayCurrencyId { get; set; }
+        public decimal DueInDays { get; set; }
         public string? DefaultInvoiceNote { get; set; }
         public string? TimeZone { get; set; }
         public string? Locale { get; set; }

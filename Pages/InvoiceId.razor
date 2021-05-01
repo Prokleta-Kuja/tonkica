@@ -7,28 +7,54 @@
     <div class=row>
     <div class=col>
         <form @onsubmit=SaveClicked>
-                <TextBox For=@nameof(InvoiceEditModel.SequenceNumber) Label=Sequence @bind-Value=_edit.SequenceNumber Errors=_errors
-                    Required />
-                <TextBox For=@nameof(InvoiceEditModel.Subject) Label=Subject @bind-Value=_edit.Subject Errors=_errors
-                    Required />
-                <Dropdown For=@nameof(InvoiceEditModel.IssuerId) Label=Issuer @bind-Value=_edit.IssuerId Errors=_errors
-                    Required Items=_issuersD />
-                <Dropdown For=@nameof(InvoiceEditModel.ClientId) Label=Client @bind-Value=_edit.ClientId Errors=_errors
-                    Required Items=_clientsD />
-                <Dropdown For=@nameof(InvoiceEditModel.CurrencyId) Label="Invoice Currency" @bind-Value=_edit.CurrencyId
-                    Errors=_errors Required Items=_currenciesD />
-                <Dropdown For=@nameof(InvoiceEditModel.DisplayCurrencyId) Label="Display Currency"
-                    @bind-Value=_edit.DisplayCurrencyId Errors=_errors Required Items=_currenciesD />
-                <Dropdown For=@nameof(InvoiceEditModel.IssuerCurrencyId) Label="Issuer Currency"
-                    @bind-Value=_edit.IssuerCurrencyId Errors=_errors Required Items=_currenciesD />
-                <Dropdown For=@nameof(InvoiceEditModel.Status) Label="Status" @bind-Value=_edit.Status Errors=_errors
-                    Required Items=_statusesD />   
-                @if(!IsDraft)
-                {
-                    <DateTimeBox For=@nameof(InvoiceEditModel.Published) Label=Published @bind-Value=_edit.Published 
-                     Locale=@issuer?.Locale TimeZone=@issuer?.TimeZone Errors=_errors Required/>
-                }               
-                <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=3 />
+                <div class="row">
+                    <div class="col">
+                        <TextBox For=@nameof(InvoiceEditModel.SequenceNumber) Label=Sequence @bind-Value=_edit.SequenceNumber Errors=_errors
+                            Required />
+                    </div>
+                    <div class="col-8">
+                        <TextBox For=@nameof(InvoiceEditModel.Subject) Label=Subject @bind-Value=_edit.Subject Errors=_errors
+                            Required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <Dropdown For=@nameof(InvoiceEditModel.IssuerId) Label=Issuer @bind-Value=_edit.IssuerId Errors=_errors
+                            Required Items=_issuersD />
+                    </div>
+                    <div class="col">
+                        <Dropdown For=@nameof(InvoiceEditModel.ClientId) Label=Client @bind-Value=_edit.ClientId Errors=_errors
+                            Required Items=_clientsD />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <Dropdown For=@nameof(InvoiceEditModel.CurrencyId) Label="Invoice Currency" @bind-Value=_edit.CurrencyId
+                            Errors=_errors Required Items=_currenciesD />
+                    </div>
+                    <div class="col">
+                        <Dropdown For=@nameof(InvoiceEditModel.DisplayCurrencyId) Label="Display Currency"
+                            @bind-Value=_edit.DisplayCurrencyId Errors=_errors Required Items=_currenciesD />
+                    </div>
+                    <div class="col">
+                        <Dropdown For=@nameof(InvoiceEditModel.IssuerCurrencyId) Label="Issuer Currency"
+                            @bind-Value=_edit.IssuerCurrencyId Errors=_errors Required Items=_currenciesD />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <Dropdown For=@nameof(InvoiceEditModel.Status) Label="Status" @bind-Value=_edit.Status Errors=_errors
+                            Required Items=_statusesD />   
+                    </div>
+                    @if(!IsDraft)
+                    {
+                        <div class="col-8">
+                            <DateTimeBox For=@nameof(InvoiceEditModel.Published) Label=Published @bind-Value=_edit.Published 
+                            Locale=@issuer?.Locale TimeZone=@issuer?.TimeZone Errors=_errors Required/>
+                        </div>
+                    }
+                </div>
+                <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=4 />
                 <div class="float-end">                    
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
@@ -47,15 +73,15 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <td class="text-center">Title</td>
-                        <td class=text-end>Qty</td>
-                        <td class=text-end>Price</td>
-                        <td class=text-end>Total</td>
-                        <td class=d-grid>
+                        <th class="text-center">Title</th>
+                        <th class="text-end qty">Qty</th>
+                        <th class="text-end price">Price</th>
+                        <th class="text-end price">Total</th>
+                        <th class=d-grid>
                             <button class="btn btn-sm btn-outline-primary" disabled=@(!IsDraft) @onclick=SaveInvoiceItems>
                                 Save
                             </button>
-                        </td>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,13 +91,13 @@
                                 <td>
                                     <input class="form-control form-control-sm" @bind=item.Title placeholder="Title" disabled=@(!IsDraft) />
                                 </td>
-                                <td>
+                                <td class="qty">
                                     <input class="form-control form-control-sm text-end" @bind=item.Quantity @bind:culture=issuer?.CultureInfo placeholder="Qty" disabled=@(!IsDraft) />
                                 </td>
-                                <td>
+                                <td class="price">
                                     <input class="form-control form-control-sm text-end" @bind=item.Price @bind:culture=issuer?.CultureInfo placeholder="Price" disabled=@(!IsDraft) />
                                 </td>
-                                <td>
+                                <td class="price">
                                     <input class="form-control form-control-sm text-end" @bind=item.Total @bind:culture=issuer?.CultureInfo placeholder="Total"
                                         disabled />
                                 </td>
@@ -94,8 +120,7 @@
                         @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
                         {
                             <tr class=table-info>
-                                <td></td>
-                                <td class="text-end"></td>
+                                <td colspan=2></td>
                                 <td class=text-end>@issuer?.Display(_invoice.DisplayRate,4)</td>
                                 <td class=text-end>@issuer?.Display(_invoice.DisplayTotal)</td>
                                 <td class=text-end>@_invoice.DisplayCurrency?.Tag</td>
@@ -104,8 +129,7 @@
                         @if (_invoice.IssuerCurrencyId != _invoice.DisplayCurrencyId)
                         {
                             <tr class=table-info>
-                                <td></td>
-                                <td class="text-end"></td>
+                                <td colspan=2></td>
                                 <td class=text-end>@issuer?.Display(_invoice.IssuerRate,4)</td>
                                 <td class=text-end>@issuer?.Display(_invoice.IssuerTotal)</td>
                                 <td class=text-end>@_invoice.IssuerCurrency?.Tag</td>
@@ -115,15 +139,15 @@
                             <td>
                                 <input class="form-control form-control-sm" disabled=@(!IsDraft) @bind=_item.Title placeholder="Title" />
                             </td>
-                            <td>
+                            <td class="qty">
                                 <input class="form-control form-control-sm text-end" @bind=_item.Quantity @bind:culture=issuer?.CultureInfo
                                     placeholder="Qty" disabled=@(!IsDraft) />
                             </td>
-                            <td>
+                            <td class="price">
                                 <input class="form-control form-control-sm text-end" @bind=_item.Price @bind:culture=issuer?.CultureInfo
                                     placeholder="Price" disabled=@(!IsDraft) />
                             </td>
-                            <td>
+                            <td class="price">
                                 <input class="form-control form-control-sm text-end" @bind=_item.Total @bind:culture=issuer?.CultureInfo placeholder="Total"
                                     disabled />
                             </td>

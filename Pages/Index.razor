@@ -71,6 +71,10 @@
                                     <td class="text-end">@issuer.Value.Display(dashboard.Issued) @issuer.Value.Currency?.Tag</td>
                                 </tr>
                                 <tr>
+                                    <td class="text-start">Income</td>
+                                    <td class="text-end">@issuer.Value.Display(dashboard.Income) @issuer.Value.Currency?.Tag</td>
+                                </tr>
+                                <tr>
                                     <td class="text-start">Limit</td>
                                     <td class="text-end">
                                         @if(issuer.Value.Limit.HasValue)
@@ -83,7 +87,7 @@
                                 @{
                                     var tillLimit = 0M;
                                     if(issuer.Value.Limit.HasValue)
-                                        tillLimit = issuer.Value.Limit.Value - dashboard.Issued;
+                                        tillLimit = issuer.Value.Limit.Value - dashboard.Income;
 
                                     var color = tillLimit < 0 ? "table-danger" : string.Empty;
                                 }

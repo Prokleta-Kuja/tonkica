@@ -115,7 +115,7 @@ namespace tonkica.Data
             };
             Clients.AddRange(client1);
 
-            var issuer1 = new Issuer("Moja tvrtka", "Ulica izdavača 7\n10 000 Zagreb\nHrvatska", hrk);
+            var issuer1 = new Issuer("Moja tvrtka", "Ulica izdavača 7\n10 000 Zagreb\nHrvatska", hrk, "Pero Perić, Zagreb");
             Issuers.AddRange(issuer1);
             await SaveChangesAsync();
 

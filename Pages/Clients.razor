@@ -42,18 +42,38 @@
         {
             <legend>Add Client</legend>
             <form @onsubmit=SaveCreateClicked>
-                <TextBox For=@nameof(ClientCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors
-                    Required />
-                <TextBox For=@nameof(ClientCreateModel.ContactInfo) Label="Contact Info" @bind-Value=_create.ContactInfo Errors=_errors Lines=3 Required/>
-                <Dropdown For=@nameof(ClientCreateModel.ContractCurrencyId) Label="Contract Currency" @bind-Value=_create.ContractCurrencyId Errors=_errors
-                    Required Items=_currenciesD />
-                <Dropdown For=@nameof(ClientCreateModel.DisplayCurrencyId) Label=Client @bind-Value=_create.DisplayCurrencyId Errors=_errors
-                    Required Items=_currenciesD />
-                <NumBox For=@nameof(ClientCreateModel.ContractRate) Label=Rate @bind-Value=_create.ContractRate Errors=_errors
-                    Required />
-                <TextBox For=@nameof(ClientCreateModel.DefaultInvoiceNote) Label="Default invoice note" @bind-Value=_create.DefaultInvoiceNote Errors=_errors Lines=3 />
-                <TextBox For=@nameof(ClientCreateModel.TimeZone) Label="Time Zone" @bind-Value=_create.TimeZone PlaceHolder="America/Chicago" Errors=_errors Required />
-                <TextBox For=@nameof(ClientCreateModel.Locale) Label="Locale" @bind-Value=_create.Locale PlaceHolder="en-US" Errors=_errors Required />
+                <TextBox For=@nameof(ClientCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
+                <div class="row">
+                    <div class="col">
+                        <TextBox For=@nameof(ClientCreateModel.ContactInfo) Label="Contact Info" @bind-Value=_create.ContactInfo 
+                            placeholder="Name, address, VAT ID" Errors=_errors Lines=3 Required/>
+                    </div>
+                    <div class="col">
+                        <TextBox For=@nameof(ClientCreateModel.DefaultInvoiceNote) Label="Default invoice note" @bind-Value=_create.DefaultInvoiceNote 
+                            placeholder="Converted via bank rates" Errors=_errors Lines=3 />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <Dropdown For=@nameof(ClientCreateModel.DisplayCurrencyId) Label="Display Currency" @bind-Value=_create.DisplayCurrencyId Errors=_errors
+                            Required Items=_currenciesD />
+                        <NumBox For=@nameof(ClientCreateModel.ContractRate) Label="Contract Rate" @bind-Value=_create.ContractRate Errors=_errors
+                            Required />
+                    </div>
+                    <div class="col">
+                        <Dropdown For=@nameof(ClientCreateModel.ContractCurrencyId) Label="Contract Currency" @bind-Value=_create.ContractCurrencyId Errors=_errors
+                            Required Items=_currenciesD />
+                        <NumBox For=@nameof(ClientCreateModel.DueInDays) Label="Due in days" @bind-Value=_create.DueInDays Errors=_errors Required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <TextBox For=@nameof(ClientCreateModel.TimeZone) Label="Time Zone" @bind-Value=_create.TimeZone PlaceHolder="America/Chicago" Errors=_errors Required />
+                    </div>
+                    <div class="col">
+                        <TextBox For=@nameof(ClientCreateModel.Locale) Label="Locale" @bind-Value=_create.Locale PlaceHolder="en-US" Errors=_errors Required />
+                    </div>
+                </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
@@ -63,18 +83,38 @@
         {
             <legend>Edit @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
-                <TextBox For=@nameof(ClientEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors
-                    Required />
-                <TextBox For=@nameof(ClientEditModel.ContactInfo) Label="Contact Info" @bind-Value=_edit.ContactInfo Errors=_errors Lines=3 Required/>
-                <Dropdown For=@nameof(ClientEditModel.ContractCurrencyId) Label="Contract Currency" @bind-Value=_edit.ContractCurrencyId Errors=_errors
-                    Required Items=_currenciesD />
-                <NumBox For=@nameof(ClientEditModel.ContractRate) Label=Rate @bind-Value=_edit.ContractRate Errors=_errors
-                    Required />
-                <Dropdown For=@nameof(ClientEditModel.DisplayCurrencyId) Label=Client @bind-Value=_edit.DisplayCurrencyId Errors=_errors
-                    Required Items=_currenciesD />
-                <TextBox For=@nameof(ClientEditModel.DefaultInvoiceNote) Label="Default invoice note" @bind-Value=_edit.DefaultInvoiceNote Errors=_errors Lines=3 />
-                <TextBox For=@nameof(ClientEditModel.TimeZone) Label="Time Zone" @bind-Value=_edit.TimeZone PlaceHolder="America/Chicago" Errors=_errors Required />
-                <TextBox For=@nameof(ClientEditModel.Locale) Label="Locale" @bind-Value=_edit.Locale PlaceHolder="en-US" Errors=_errors Required />
+                <TextBox For=@nameof(ClientEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
+                <div class="row">
+                    <div class="col">
+                        <TextBox For=@nameof(ClientEditModel.ContactInfo) Label="Contact Info" @bind-Value=_edit.ContactInfo 
+                            placeholder="Name, address, VAT ID" Errors=_errors Lines=3 Required/>
+                    </div>
+                    <div class="col">
+                        <TextBox For=@nameof(ClientEditModel.DefaultInvoiceNote) Label="Default invoice note" @bind-Value=_edit.DefaultInvoiceNote
+                            placeholder="Converted via bank rates" Errors=_errors Lines=3 />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <Dropdown For=@nameof(ClientEditModel.DisplayCurrencyId) Label="Display Currency" @bind-Value=_edit.DisplayCurrencyId Errors=_errors
+                            Required Items=_currenciesD />
+                        <NumBox For=@nameof(ClientEditModel.ContractRate) Label="Contract Rate" @bind-Value=_edit.ContractRate Errors=_errors
+                            Required />
+                    </div>
+                    <div class="col">
+                        <Dropdown For=@nameof(ClientEditModel.ContractCurrencyId) Label="Contract Currency" @bind-Value=_edit.ContractCurrencyId Errors=_errors
+                            Required Items=_currenciesD />
+                        <NumBox For=@nameof(ClientEditModel.DueInDays) Label="Due in days" @bind-Value=_edit.DueInDays Errors=_errors Required />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <TextBox For=@nameof(ClientEditModel.TimeZone) Label="Time Zone" @bind-Value=_edit.TimeZone PlaceHolder="America/Chicago" Errors=_errors Required />
+                    </div>
+                    <div class="col">
+                        <TextBox For=@nameof(ClientEditModel.Locale) Label="Locale" @bind-Value=_edit.Locale PlaceHolder="en-US" Errors=_errors Required />
+                    </div>
+                </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>

@@ -14,6 +14,7 @@ namespace tonkica.Models
         public int ContractCurrencyId { get; set; }
         public decimal? ContractRate { get; set; }
         public int DisplayCurrencyId { get; set; }
+        public decimal? DueInDays { get; set; }
         public string? DefaultInvoiceNote { get; set; }
         public string? TimeZone { get; set; }
         public string? Locale { get; set; }
@@ -26,6 +27,7 @@ namespace tonkica.Models
             ContractCurrencyId = c.ContractCurrencyId;
             ContractRate = c.ContractRate;
             DisplayCurrencyId = c.DisplayCurrencyId;
+            DueInDays = c.DueInDays;
             DefaultInvoiceNote = c.DefaultInvoiceNote;
             TimeZone = c.TimeZone;
             Locale = c.Locale;
@@ -49,6 +51,9 @@ namespace tonkica.Models
 
             if (DisplayCurrencyId <= 0)
                 errors.Add(nameof(DisplayCurrencyId), "Required");
+
+            if (DueInDays <= 0)
+                errors.Add(nameof(DueInDays), "Must be larger then 0");
 
             if (!string.IsNullOrWhiteSpace(TimeZone))
                 try { TimeZoneInfo.FindSystemTimeZoneById(TimeZone); }

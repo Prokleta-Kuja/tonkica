@@ -12,6 +12,7 @@ namespace tonkica.Models
         public decimal? Limit { get; set; }
         public string? ClockifyUrl { get; set; }
         public int CurrencyId { get; set; }
+        public string? IssuedByEmployee { get; set; }
         public string? TimeZone { get; set; }
         public string? Locale { get; set; }
 
@@ -30,6 +31,9 @@ namespace tonkica.Models
 
             if (Limit.HasValue && Limit.Value < 0)
                 errors.Add(nameof(Limit), "Cannot be lower than 0");
+
+            if (string.IsNullOrWhiteSpace(IssuedByEmployee))
+                errors.Add(nameof(IssuedByEmployee), "Required");
 
             if (!string.IsNullOrWhiteSpace(TimeZone))
                 try { TimeZoneInfo.FindSystemTimeZoneById(TimeZone); }

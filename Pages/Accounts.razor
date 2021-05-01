@@ -39,12 +39,18 @@
             <legend>Add Account</legend>
             <form @onsubmit=SaveCreateClicked>
                 <TextBox For=@nameof(AccountCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
-                <Dropdown For=@nameof(AccountCreateModel.IssuerId) Label="Issuer"
-                    @bind-Value=_create.IssuerId Errors=_errors Required Items=_issuersD />
-                <TextBox For=@nameof(AccountCreateModel.Info) Label="Info" @bind-Value=_create.Info
-                    Errors=_errors Lines=3 Required />
-                <Dropdown For=@nameof(AccountCreateModel.CurrencyId) Label="Currency"
-                    @bind-Value=_create.CurrencyId Errors=_errors Required Items=_currenciesD />
+                <div class="row">
+                    <div class="col">
+                        <Dropdown For=@nameof(AccountCreateModel.IssuerId) Label="Issuer"
+                            @bind-Value=_create.IssuerId Errors=_errors Required Items=_issuersD />
+                        <Dropdown For=@nameof(AccountCreateModel.CurrencyId) Label="Currency"
+                            @bind-Value=_create.CurrencyId Errors=_errors Required Items=_currenciesD />
+                    </div>
+                    <div class="col">
+                        <TextBox For=@nameof(AccountCreateModel.Info) Label="Info" @bind-Value=_create.Info
+                            Errors=_errors Lines=4 Required />
+                    </div>
+                </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
@@ -55,12 +61,18 @@
             <legend>Edit @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
                 <TextBox For=@nameof(AccountEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
-                <Dropdown For=@nameof(AccountEditModel.IssuerId) Label="Issuer"
-                    @bind-Value=_edit.IssuerId Errors=_errors Required Items=_issuersD />
-                <TextBox For=@nameof(AccountEditModel.Info) Label="Contact Info" @bind-Value=_edit.Info
-                    Errors=_errors Lines=3 Required />
-                <Dropdown For=@nameof(AccountEditModel.CurrencyId) Label="Currency"
-                    @bind-Value=_edit.CurrencyId Errors=_errors Required Items=_currenciesD />
+                <div class="row">
+                    <div class="col">
+                        <Dropdown For=@nameof(AccountEditModel.IssuerId) Label="Issuer"
+                            @bind-Value=_edit.IssuerId Errors=_errors Required Items=_issuersD />
+                        <Dropdown For=@nameof(AccountEditModel.CurrencyId) Label="Currency"
+                            @bind-Value=_edit.CurrencyId Errors=_errors Required Items=_currenciesD />
+                    </div>
+                    <div class="col">
+                        <TextBox For=@nameof(AccountEditModel.Info) Label="Contact Info" @bind-Value=_edit.Info
+                            Errors=_errors Lines=4 Required />
+                    </div>
+                </div>
 
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
