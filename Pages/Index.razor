@@ -12,7 +12,7 @@
     @if (_issuerDashboards.ContainsKey(issuer.Key))
         {
             var dashboard = _issuerDashboards[issuer.Key];
-            <div class="col">
+            <div class="mb-3 col-md-6 col-lg-4">
                 <div class="card text-white bg-success h-100 mb-3">
                     <div class="card-header">
                         <h5 class="card-title">Total Income</h5>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="mb-3 col-md-6 col-lg-4">
                 <div class="card text-white bg-danger h-100 mb-3">
                     <div class="card-header">
                         <h5 class="card-title">Total Expenses</h5>
@@ -58,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col">
+            <div class="mb-3 col-md-6 offset-md-3 col-lg-4 offset-lg-0">
                 <div class="card h-100 mb-3">
                     <div class="card-header">
                         <h5 class="card-title">Summary</h5>
