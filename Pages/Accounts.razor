@@ -20,9 +20,9 @@
                     @foreach (var account in _list)
                     {
                         <tr @key=account.Id>
-                            <td>@account.Name</td>
-                            <td>@account.Info</td>
-                            <td>@account.Currency?.Tag</td>
+                            <td class="user-select-all">@account.Name</td>
+                            <td class="user-select-all">@account.Info</td>
+                            <td class="user-select-all">@account.Currency?.Tag</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-secondary"
                                     @onclick="()=>EditClicked(account)">Edit</button>

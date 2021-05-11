@@ -22,11 +22,11 @@
                     @foreach (var Client in _list)
                     {
                         <tr @key=Client.Id>
-                            <td>@Client.Name</td>
-                            <td>@Client.ContactInfo</td>
-                            <td>@Client.ContractCurrency?.Tag</td>
-                            <td>@Client.Display(Client.ContractRate)</td>
-                            <td>@Client.DefaultInvoiceNote</td>
+                            <td class="user-select-all">@Client.Name</td>
+                            <td class="user-select-all">@Client.ContactInfo</td>
+                            <td class="user-select-all">@Client.ContractCurrency?.Tag</td>
+                            <td class="user-select-all">@Client.Display(Client.ContractRate)</td>
+                            <td class="user-select-all">@Client.DefaultInvoiceNote</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-secondary"
                                     @onclick="()=>EditClicked(Client)">Edit</button>

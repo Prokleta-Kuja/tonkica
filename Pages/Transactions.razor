@@ -31,14 +31,14 @@
                         {
                             var issuer = transaction.Account?.Issuer;
                             <tr @key=transaction.Id class=@RowClass(transaction.Amount)>
-                                <td>@transaction.Category?.Name</td>
-                                <td>@transaction.Account?.Name</td>
-                                <td>
+                                <td class="user-select-all">@transaction.Category?.Name</td>
+                                <td class="user-select-all">@transaction.Account?.Name</td>
+                                <td class="user-select-all">
                                     @issuer?.Display(transaction.Amount)&nbsp;@transaction.Account?.Currency?.Tag <br>
                                     <small>@issuer?.Display(transaction.IssuerAmount)&nbsp;(@issuer?.Display(transaction.IssuerRate,4))&nbsp;@issuer?.Currency?.Tag</small>                            
                                 </td>
-                                <td>@issuer?.Display(transaction.Date)</td>
-                                <td>@transaction.Note</td>
+                                <td class="user-select-all">@issuer?.Display(transaction.Date)</td>
+                                <td class="user-select-all">@transaction.Note</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-secondary"
                                         @onclick="()=>EditClicked(transaction)">Edit</button>
