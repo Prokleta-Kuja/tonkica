@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col">
                         <TextBox For=@nameof(InvoiceEditModel.SequenceNumber) Label=Sequence @bind-Value=_edit.SequenceNumber Errors=_errors
-                            Required />
+                            Required AutoFocus />
                     </div>
                     <div class="col-8">
                         <TextBox For=@nameof(InvoiceEditModel.Subject) Label=Subject @bind-Value=_edit.Subject Errors=_errors

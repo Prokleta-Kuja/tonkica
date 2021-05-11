@@ -38,7 +38,7 @@
         {
             <legend>Add Account</legend>
             <form @onsubmit=SaveCreateClicked>
-                <TextBox For=@nameof(AccountCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
+                <TextBox For=@nameof(AccountCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required AutoFocus />
                 <div class="row">
                     <div class="col">
                         <Dropdown For=@nameof(AccountCreateModel.IssuerId) Label="Issuer"
@@ -60,7 +60,7 @@
         {
             <legend>Edit @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
-                <TextBox For=@nameof(AccountEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
+                <TextBox For=@nameof(AccountEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required AutoFocus />
                 <div class="row">
                     <div class="col">
                         <Dropdown For=@nameof(AccountEditModel.IssuerId) Label="Issuer"

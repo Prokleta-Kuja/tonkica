@@ -38,7 +38,7 @@
         {
             <legend>Add Issuer</legend>
             <form @onsubmit=SaveCreateClicked>
-                <TextBox For=@nameof(IssuerCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
+                <TextBox For=@nameof(IssuerCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required AutoFocus />
                 <TextBox For=@nameof(IssuerCreateModel.IssuedByEmployee) Label="Invoice issued by" PlaceHolder="Emploeyee, place" @bind-Value=_create.IssuedByEmployee Errors=_errors Required />
                 <div class="row">
                     <div class="col">
@@ -70,7 +70,7 @@
         {
             <legend>Edit @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
-                <TextBox For=@nameof(IssuerEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
+                <TextBox For=@nameof(IssuerEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required AutoFocus />
                 <TextBox For=@nameof(IssuerEditModel.IssuedByEmployee) Label="Invoice issued by" PlaceHolder="Emploeyee, place" @bind-Value=_edit.IssuedByEmployee Errors=_errors Required />
                 <div class="row">
                     <div class="col">

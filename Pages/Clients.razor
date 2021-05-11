@@ -42,7 +42,7 @@
         {
             <legend>Add Client</legend>
             <form @onsubmit=SaveCreateClicked>
-                <TextBox For=@nameof(ClientCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required />
+                <TextBox For=@nameof(ClientCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required AutoFocus />
                 <div class="row">
                     <div class="col">
                         <TextBox For=@nameof(ClientCreateModel.ContactInfo) Label="Contact Info" @bind-Value=_create.ContactInfo 
@@ -79,11 +79,11 @@
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
             </form>
         }
-        else if(_edit!=null)
+        else if(_edit != null)
         {
             <legend>Edit @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
-                <TextBox For=@nameof(ClientEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required />
+                <TextBox For=@nameof(ClientEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required AutoFocus />
                 <div class="row">
                     <div class="col">
                         <TextBox For=@nameof(ClientEditModel.ContactInfo) Label="Contact Info" @bind-Value=_edit.ContactInfo 

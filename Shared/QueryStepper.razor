@@ -3,13 +3,13 @@
     @if(_isActive)
     {
         <button class="btn btn-outline-secondary" @onclick=Decrement><span>&laquo;</span></button>
-        <button class="btn btn-secondary" title="Disable" @onclick=Toggle>@Value</button>
+        <button class="btn btn-secondary" title="Disable" @onclick=Toggle @ref=Input>@Value</button>
         <button class="btn btn-outline-secondary" @onclick=Increment><span>&raquo;</span></button>
     }
     else
     {
         <button class="btn btn-outline-secondary disabled" @onclick=Decrement><span>&laquo;</span></button>
-        <button class="btn btn-outline-secondary" title="Enable" @onclick=Toggle>
+        <button class="btn btn-outline-secondary" title="Enable" @onclick=Toggle @ref=Input>
             @(InactiveText == null ? Value : InactiveText)
         </button>
         <button class="btn btn-outline-secondary disabled" @onclick=Increment><span>&raquo;</span></button>
@@ -20,6 +20,7 @@
     [Inject] private NavigationManager _navManager { get; set; } = null!;
     private bool _isActive;
     public int Value { get; set; }
+    private ElementReference Input;
     [Parameter] public string QueryPart { get; set; } = null!;
     [Parameter] public EventCallback<int?> OnChange { get; set; }
     [Parameter] public EventCallback<bool> OnOverflow {get;set;}
@@ -29,6 +30,12 @@
     [Parameter] public int DefaultValue { get; set; }
     [Parameter] public bool DefaultActive { get; set; }
     [Parameter] public string? InactiveText { get; set; }
+    [Parameter] public bool AutoFocus { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender && AutoFocus)
+            await Input.FocusAsync();
+    }
 
     protected override void OnInitialized()
     {

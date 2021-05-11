@@ -4,7 +4,7 @@
     <h1>Invoices</h1>
     <div>
         <QueryStepper @ref=stepperYear QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
-        <QueryStepper InactiveText="Month" QueryPart=@QUERY_MONTH DefaultValue=_defaultMonth OnChange=ChangeMonth Min=1 Max=12 Overflow OnOverflow=YearOverflow/>
+        <QueryStepper InactiveText="Month" QueryPart=@QUERY_MONTH DefaultValue=_defaultMonth OnChange=ChangeMonth Min=1 Max=12 Overflow OnOverflow=YearOverflow AutoFocus />
     </div>
 </div>
 
@@ -61,7 +61,7 @@
                     </div>
                     <div class="modal-body">
                         <Dropdown For=@nameof(InvoiceCreateModel.IssuerId) Label=Issuer @bind-Value=_create.IssuerId Errors=_errors
-                            Required Items=_issuersD />
+                            Required Items=_issuersD AutoFocus />
                         <Dropdown For=@nameof(InvoiceCreateModel.ClientId) Label=Client @bind-Value=_create.ClientId Errors=_errors
                             Required Items=_clientsD />
                         <TextBox For=@nameof(InvoiceCreateModel.Subject) Label=Subject @bind-Value=_create.Subject Errors=_errors

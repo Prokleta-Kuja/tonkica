@@ -4,7 +4,7 @@
     <h1>Transactions</h1>
     <div>
         <QueryStepper @ref=stepperYear QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
-        <QueryStepper InactiveText="Month" QueryPart=@QUERY_MONTH DefaultValue=_defaultMonth OnChange=ChangeMonth Min=1 Max=12 Overflow OnOverflow=YearOverflow/>
+        <QueryStepper InactiveText="Month" QueryPart=@QUERY_MONTH DefaultValue=_defaultMonth OnChange=ChangeMonth Min=1 Max=12 Overflow OnOverflow=YearOverflow AutoFocus />
     </div>
 </div>
 
@@ -55,7 +55,7 @@
         {
             <legend>Add Transaction</legend>
             <form @onsubmit=SaveCreateClicked>
-                <Dropdown For=@nameof(TransactionCreateModel.AccountId) Label="Account"
+                <Dropdown For=@nameof(TransactionCreateModel.AccountId) Label="Account" AutoFocus
                     @bind-Value=_create.AccountId Errors=_errors Required Items=_accountsD />
                 <Dropdown For=@nameof(TransactionCreateModel.CategoryId) Label="Category"
                     @bind-Value=_create.CategoryId Errors=_errors Required Items=_categoriesD />
@@ -72,7 +72,7 @@
         {
             <legend>Edit Transaction @_edit.Id</legend>
             <form @onsubmit=SaveEditClicked>
-                <Dropdown For=@nameof(TransactionEditModel.AccountId) Label="Account"
+                <Dropdown For=@nameof(TransactionEditModel.AccountId) Label="Account" AutoFocus
                     @bind-Value=_edit.AccountId Errors=_errors Required Items=_accountsD />
                 <Dropdown For=@nameof(TransactionCreateModel.CategoryId) Label="Category"
                     @bind-Value=_edit.CategoryId Errors=_errors Required Items=_categoriesD />

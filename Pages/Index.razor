@@ -2,7 +2,7 @@
 
 <div class="d-flex align-items-center justify-content-between mt-3">
     <h1>Hello, world!</h1>
-    <QueryStepper QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
+    <QueryStepper QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear AutoFocus />
 </div>
 
 @foreach (var issuer in _issuers.Where(i => _issuerDashboards.ContainsKey(i.Key)))

@@ -4,7 +4,7 @@
     <label for="@For" class="form-label">@Label @(Required ? "*":"")</label>
     <div class="input-group @_errorClass">
         <input type="datetime" class="form-control @_errorClass" id="@For" placeholder=@PlaceHolder
-            @bind=_local @onblur=Update @bind:culture=_ci required=@Required>
+            @bind=_local @onblur=Update @bind:culture=_ci required=@Required @ref=Input>
         <button class="btn btn-outline-secondary" title="Today" type="button" @onclick=Today>📆</button>
         <button class="btn btn-outline-danger" title="Clear" type="button" @onclick=Clear>⨉</button>
     </div>
@@ -21,6 +21,7 @@
     const string DEFAULT_TZ = "Europe/Zagreb";
     private bool _isError => Errors != null && Errors.ContainsKey(For);
     private string _errorClass => _isError ? "is-invalid" : string.Empty;
+    private ElementReference Input;
     CultureInfo _ci = null!;
     TimeZoneInfo _tz = null!;
     DateTime? _local;
@@ -33,6 +34,12 @@
     [Parameter] public string? Locale { get; set; }
     [Parameter] public string? TimeZone { get; set; }
     [Parameter] public Dictionary<string, string>? Errors { get; set; }
+    [Parameter] public bool AutoFocus { get; set; }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender && AutoFocus)
+            await Input.FocusAsync();
+    }
     protected override void OnInitialized()
     {
         try { _ci = CultureInfo.GetCultureInfo(Locale ?? DEFAULT_LOCALE); }
