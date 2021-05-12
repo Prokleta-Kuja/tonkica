@@ -3,37 +3,7 @@
 <h1>Accounts</h1>
 
 <div class="row">
-    <div class="col-lg-6 order-md-2 order-lg-1">
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Info</th>
-                        <th>Currency</th>
-                        <th>
-                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var account in _list)
-                    {
-                        <tr @key=account.Id>
-                            <td class="user-select-all">@account.Name</td>
-                            <td class="user-select-all">@account.Info</td>
-                            <td class="user-select-all">@account.Currency?.Tag</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-secondary"
-                                    @onclick="()=>EditClicked(account)">Edit</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-lg-6 order-md-1 order-lg-2">
+    <div class="col-lg-6 order-lg-2">
         @if (_create != null)
         {
             <legend>Add Account</legend>
@@ -82,5 +52,36 @@
         {
             <div class="alert alert-info">Select Account to edit or add.</div>
         }
+    </div>
+
+    <div class="col-lg-6 order-lg-1">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Info</th>
+                        <th>Currency</th>
+                        <th>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var account in _list)
+                    {
+                        <tr @key=account.Id>
+                            <td class="user-select-all">@account.Name</td>
+                            <td class="user-select-all">@account.Info</td>
+                            <td class="user-select-all">@account.Currency?.Tag</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                    @onclick="()=>EditClicked(account)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

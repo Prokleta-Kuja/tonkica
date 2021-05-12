@@ -1,6 +1,6 @@
 @attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Invoices)]
 
-<div class="d-flex justify-content-between align-items-center">
+<div class="d-flex justify-content-between align-items-center flex-wrap">
     <h1>Invoices</h1>
     <div>
         <QueryStepper @ref=stepperYear QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
@@ -13,7 +13,7 @@
         <thead>
             <tr>
                 <th>Issuer</th>
-                <th>Seq #</th>
+                <th>#</th>
                 <th>Client</th>
                 <th>Subject</th>
                 <th>Total</th>

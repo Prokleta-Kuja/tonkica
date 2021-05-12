@@ -3,37 +3,7 @@
 <h1>Issuers</h1>
 
 <div class="row">
-    <div class="col-lg-6 order-md-2 order-lg-1">
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Contact Info</th>
-                        <th>Currency</th>
-                        <th>
-                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var issuer in _list)
-                    {
-                        <tr @key=issuer.Id>
-                            <td class="user-select-all">@issuer.Name</td>
-                            <td class="user-select-all">@issuer.ContactInfo</td>
-                            <td class="user-select-all">@issuer.Currency?.Tag</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-secondary"
-                                    @onclick="()=>EditClicked(issuer)">Edit</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-lg-6 order-md-1 order-lg-2">
+    <div class="col-lg-6 order-lg-2">
         @if (_create != null)
         {
             <legend>Add Issuer</legend>
@@ -102,5 +72,36 @@
         {
             <div class="alert alert-info">Select Issuer to edit or add.</div>
         }
+    </div>
+
+    <div class="col-lg-6 order-lg-1">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact Info</th>
+                        <th>Currency</th>
+                        <th>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var issuer in _list)
+                    {
+                        <tr @key=issuer.Id>
+                            <td class="user-select-all">@issuer.Name</td>
+                            <td class="user-select-all">@issuer.ContactInfo</td>
+                            <td class="user-select-all">@issuer.Currency?.Tag</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                    @onclick="()=>EditClicked(issuer)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

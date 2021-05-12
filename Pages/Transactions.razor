@@ -1,6 +1,6 @@
 @attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Transactions)]
 
-<div class="d-flex justify-content-between align-items-center">
+<div class="d-flex justify-content-between align-items-center flex-wrap">
     <h1>Transactions</h1>
     <div>
         <QueryStepper @ref=stepperYear QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
@@ -9,48 +9,7 @@
 </div>
 
 <div class="row">
-    <div class="col-lg-9 order-md-2 order-lg-1">
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Category</th>
-                        <th>Account</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                        <th>Note</th>
-                        <th>
-                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
-                        static string RowClass(decimal amount) => amount > 0 ? "table-success" : "table-danger";
-                        foreach (var transaction in _list)
-                        {
-                            var issuer = transaction.Account?.Issuer;
-                            <tr @key=transaction.Id class=@RowClass(transaction.Amount)>
-                                <td class="user-select-all">@transaction.Category?.Name</td>
-                                <td class="user-select-all">@transaction.Account?.Name</td>
-                                <td class="user-select-all">
-                                    @issuer?.Display(transaction.Amount)&nbsp;@transaction.Account?.Currency?.Tag <br>
-                                    <small>@issuer?.Display(transaction.IssuerAmount)&nbsp;(@issuer?.Display(transaction.IssuerRate,4))&nbsp;@issuer?.Currency?.Tag</small>                            
-                                </td>
-                                <td class="user-select-all">@issuer?.Display(transaction.Date)</td>
-                                <td class="user-select-all">@transaction.Note</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-secondary"
-                                        @onclick="()=>EditClicked(transaction)">Edit</button>
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-lg-3 order-md-1 order-lg-2">
+    <div class="col-lg-3 order-lg-2 mt-2">
         @if (_create != null)
         {
             <legend>Add Transaction</legend>
@@ -93,6 +52,48 @@
             Edit Categories
             </button>
         }
+    </div>
+
+    <div class="col-lg-9 order-lg-1">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Account</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Note</th>
+                        <th>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        static string RowClass(decimal amount) => amount > 0 ? "table-success" : "table-danger";
+                        foreach (var transaction in _list)
+                        {
+                            var issuer = transaction.Account?.Issuer;
+                            <tr @key=transaction.Id class=@RowClass(transaction.Amount)>
+                                <td class="user-select-all">@transaction.Category?.Name</td>
+                                <td class="user-select-all">@transaction.Account?.Name</td>
+                                <td class="user-select-all">
+                                    @issuer?.Display(transaction.Amount)&nbsp;@transaction.Account?.Currency?.Tag <br>
+                                    <small>@issuer?.Display(transaction.IssuerAmount)&nbsp;(@issuer?.Display(transaction.IssuerRate,4))&nbsp;@issuer?.Currency?.Tag</small>                            
+                                </td>
+                                <td class="user-select-all">@issuer?.Display(transaction.Date)</td>
+                                <td class="user-select-all">@transaction.Note</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-secondary"
+                                        @onclick="()=>EditClicked(transaction)">Edit</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 

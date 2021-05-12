@@ -3,41 +3,7 @@
 <h1>Clients</h1>
 
 <div class="row">
-    <div class="col-lg-6 order-md-2 order-lg-1">
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Contact Info</th>
-                        <th>Contract</th>
-                        <th>Rate</th>
-                        <th>Default Note</th>
-                        <th>
-                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var Client in _list)
-                    {
-                        <tr @key=Client.Id>
-                            <td class="user-select-all">@Client.Name</td>
-                            <td class="user-select-all">@Client.ContactInfo</td>
-                            <td class="user-select-all">@Client.ContractCurrency?.Tag</td>
-                            <td class="user-select-all">@Client.Display(Client.ContractRate)</td>
-                            <td class="user-select-all">@Client.DefaultInvoiceNote</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-secondary"
-                                    @onclick="()=>EditClicked(Client)">Edit</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-lg-6 order-md-1 order-lg-2">
+    <div class="col-lg-6 order-lg-2">
         @if (_create != null)
         {
             <legend>Add Client</legend>
@@ -124,5 +90,40 @@
         {
             <div class="alert alert-info">Select Client to edit or add.</div>
         }
+    </div>
+
+    <div class="col-lg-6 order-lg-1">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact Info</th>
+                        <th>Contract</th>
+                        <th>Rate</th>
+                        <th>Default Note</th>
+                        <th>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var Client in _list)
+                    {
+                        <tr @key=Client.Id>
+                            <td class="user-select-all">@Client.Name</td>
+                            <td class="user-select-all">@Client.ContactInfo</td>
+                            <td class="user-select-all">@Client.ContractCurrency?.Tag</td>
+                            <td class="user-select-all">@Client.Display(Client.ContractRate)</td>
+                            <td class="user-select-all">@Client.DefaultInvoiceNote</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary"
+                                    @onclick="()=>EditClicked(Client)">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
