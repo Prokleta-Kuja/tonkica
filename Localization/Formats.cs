@@ -7,28 +7,28 @@ namespace tonkica.Localization
     {
         const string DEFAULT_TZ = "Europe/Zagreb";
         const string DEFAULT_LOCALE = "hr-HR";
-        TimeZoneInfo _tz;
-        CultureInfo _ci;
+        public TimeZoneInfo TimeZone { get; private set; }
+        public CultureInfo Culture { get; private set; }
         public Formats(string locale, string timeZone)
         {
-            if (_tz == null || _tz.Id != timeZone)
+            if (TimeZone == null || TimeZone.Id != timeZone)
                 try
                 {
-                    _tz = TimeZoneInfo.FindSystemTimeZoneById(timeZone ?? DEFAULT_TZ);
+                    TimeZone = TimeZoneInfo.FindSystemTimeZoneById(timeZone ?? DEFAULT_TZ);
                 }
                 catch (Exception)
                 {
-                    _tz = TimeZoneInfo.FindSystemTimeZoneById(DEFAULT_TZ);
+                    TimeZone = TimeZoneInfo.FindSystemTimeZoneById(DEFAULT_TZ);
                 }
 
-            if (_ci == null || _ci.Name != locale)
+            if (Culture == null || Culture.Name != locale)
                 try
                 {
-                    _ci = CultureInfo.GetCultureInfo(locale ?? DEFAULT_LOCALE);
+                    Culture = CultureInfo.GetCultureInfo(locale ?? DEFAULT_LOCALE);
                 }
                 catch (Exception)
                 {
-                    _ci = CultureInfo.GetCultureInfo(DEFAULT_LOCALE);
+                    Culture = CultureInfo.GetCultureInfo(DEFAULT_LOCALE);
                 }
         }
         public string Display(DateTimeOffset? dt, bool showTime = true, bool showOffset = false, string empty = "-")
@@ -36,15 +36,15 @@ namespace tonkica.Localization
             if (!dt.HasValue)
                 return empty;
 
-            var printDt = TimeZoneInfo.ConvertTimeFromUtc(dt.Value.UtcDateTime, _tz!);
-            var format = _ci!.DateTimeFormat.ShortDatePattern;
+            var printDt = TimeZoneInfo.ConvertTimeFromUtc(dt.Value.UtcDateTime, TimeZone!);
+            var format = Culture!.DateTimeFormat.ShortDatePattern;
 
             if (showTime)
-                format += $" {_ci.DateTimeFormat.ShortTimePattern}";
+                format += $" {Culture.DateTimeFormat.ShortTimePattern}";
 
             if (showOffset)
             {
-                var offset = _tz!.GetUtcOffset(printDt);
+                var offset = TimeZone!.GetUtcOffset(printDt);
                 var sign = offset.TotalMilliseconds < 0 ? '-' : '+';
                 format += $" {sign}{offset:h\\:mm}";
             }
@@ -56,7 +56,7 @@ namespace tonkica.Localization
             if (!num.HasValue)
                 return empty;
 
-            return num.Value.ToString($"#,##0.{new string('0', places)}", _ci!.NumberFormat);
+            return num.Value.ToString($"#,##0.{new string('0', places)}", Culture!.NumberFormat);
         }
     }
 }

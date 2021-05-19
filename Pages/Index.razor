@@ -5,13 +5,14 @@
     <QueryStepper QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear AutoFocus />
 </div>
 
-@foreach (var issuer in _issuers.Where(i => _issuerDashboards.ContainsKey(i.Key)))
+@foreach (var issuerPair in _issuers.Where(i => _issuerDashboards.ContainsKey(i.Key)))
 {
-    <h4 class="mt-3">@issuer.Value.Name</h4>
+    var issuer = issuerPair.Value;
+    <h4 class="mt-3">@issuerPair.Value.Name</h4>
     <div class="row">
-    @if (_issuerDashboards.ContainsKey(issuer.Key))
+    @if (_issuerDashboards.ContainsKey(issuerPair.Key))
         {
-            var dashboard = _issuerDashboards[issuer.Key];
+            var dashboard = _issuerDashboards[issuerPair.Key];
             <div class="mb-3 col-md-6 col-lg-4">
                 <div class="card text-white bg-success h-100 mb-3">
                     <div class="card-header">
@@ -24,14 +25,14 @@
                                 {
                                     <tr>
                                         <td class="text-start">@category.Key</td>
-                                        <td class="text-end">@issuer.Value.Display(category.Value) @issuer.Value.Currency?.Tag</td>
+                                        <td class="text-end">@issuer.Formats.Display(category.Value) @issuer.Currency?.Tag</td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                     <div class="card-footer text-end">
-                        <h3 class="m-0">@issuer.Value.Display(dashboard.Income) @issuer.Value.Currency?.Tag</h3>
+                        <h3 class="m-0">@issuer.Formats.Display(dashboard.Income) @issuer.Currency?.Tag</h3>
                     </div>
                 </div>
             </div>
@@ -47,14 +48,14 @@
                                 {
                                     <tr>
                                         <td class="text-start">@category.Key</td>
-                                        <td class="text-end">@issuer.Value.Display(category.Value) @issuer.Value.Currency?.Tag</td>
+                                        <td class="text-end">@issuer.Formats.Display(category.Value) @issuer.Currency?.Tag</td>
                                     </tr>
                                 }
                             </tbody>
                         </table>
                     </div>
                     <div class="card-footer text-end">
-                        <h3 class="m-0">@issuer.Value.Display(dashboard.Expense) @issuer.Value.Currency?.Tag</h3>
+                        <h3 class="m-0">@issuer.Formats.Display(dashboard.Expense) @issuer.Currency?.Tag</h3>
                     </div>
                 </div>
             </div>
@@ -68,36 +69,36 @@
                             <tbody>
                                 <tr>
                                     <td class="text-start">Issued</td>
-                                    <td class="text-end">@issuer.Value.Display(dashboard.Issued) @issuer.Value.Currency?.Tag</td>
+                                    <td class="text-end">@issuer.Formats.Display(dashboard.Issued) @issuer.Currency?.Tag</td>
                                 </tr>
                                 <tr>
                                     <td class="text-start">Income</td>
-                                    <td class="text-end">@issuer.Value.Display(dashboard.Income) @issuer.Value.Currency?.Tag</td>
+                                    <td class="text-end">@issuer.Formats.Display(dashboard.Income) @issuer.Currency?.Tag</td>
                                 </tr>
                                 <tr>
                                     <td class="text-start">Limit</td>
                                     <td class="text-end">
-                                        @if(issuer.Value.Limit.HasValue)
+                                        @if(issuer.Limit.HasValue)
                                         {
-                                            <text>@issuer.Value.Display(issuer.Value.Limit ?? 0) @issuer.Value.Currency?.Tag</text>
+                                            <text>@issuer.Formats.Display(issuer.Limit ?? 0) @issuer.Currency?.Tag</text>
                                         }
                                         else { <text>No</text> }
                                     </td>
                                 </tr>
                                 @{
                                     var tillLimit = 0M;
-                                    if(issuer.Value.Limit.HasValue)
-                                        tillLimit = issuer.Value.Limit.Value - dashboard.Income;
+                                    if(issuer.Limit.HasValue)
+                                        tillLimit = issuer.Limit.Value - dashboard.Income;
 
                                     var color = tillLimit < 0 ? "table-danger" : string.Empty;
                                 }
                                 <tr class=@color>
                                     <td class="text-start">Till limit</td>
-                                    <td class="text-end">@issuer.Value.Display(tillLimit) @issuer.Value.Currency?.Tag</td>
+                                    <td class="text-end">@issuer.Formats.Display(tillLimit) @issuer.Currency?.Tag</td>
                                 </tr>
                                 <tr>
                                     <td class="text-start">Level @dashboard.CurrentLevel</td>
-                                    <td class="text-end">Next in @issuer.Value.Display(dashboard.TillNextLevel) @issuer.Value.Currency?.Tag</td>
+                                    <td class="text-end">Next in @issuer.Formats.Display(dashboard.TillNextLevel) @issuer.Currency?.Tag</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -105,7 +106,7 @@
                     <div class="card-footer">
                         <div class="d-flex justify-content-between align-items-center">
                             <h3 class="m-0">Profit</h3>
-                            <h3 class="m-0">@issuer.Value.Display(dashboard.Income + dashboard.Expense) @issuer.Value.Currency?.Tag</h3>
+                            <h3 class="m-0">@issuer.Formats.Display(dashboard.Income + dashboard.Expense) @issuer.Currency?.Tag</h3>
                         </div>
                     </div>
                 </div>

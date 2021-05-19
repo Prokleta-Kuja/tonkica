@@ -56,8 +56,8 @@ namespace tonkica.Pages
             client.DisplayCurrencyId = _create.DisplayCurrencyId;
             client.DueInDays = _create.DueInDays ?? 30;
             client.DefaultInvoiceNote = _create.DefaultInvoiceNote;
-            client.TimeZone = _create.TimeZone;
-            client.Locale = _create.Locale;
+            client.TimeZone = _create.TimeZone!;
+            client.Locale = _create.Locale!;
 
             _db.Clients.Add(client);
             await _db.SaveChangesAsync();
@@ -87,8 +87,8 @@ namespace tonkica.Pages
             client.DisplayCurrencyId = _edit.DisplayCurrencyId;
             client.DueInDays = _edit.DueInDays ?? 30;
             client.DefaultInvoiceNote = _edit.DefaultInvoiceNote;
-            client.TimeZone = _edit.TimeZone;
-            client.Locale = _edit.Locale;
+            client.TimeZone = _edit.TimeZone!;
+            client.Locale = _edit.Locale!;
 
             await _db.SaveChangesAsync();
             _edit = null;

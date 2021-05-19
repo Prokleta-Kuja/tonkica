@@ -79,10 +79,10 @@
                                 <td class="user-select-all">@transaction.Category?.Name</td>
                                 <td class="user-select-all">@transaction.Account?.Name</td>
                                 <td class="user-select-all">
-                                    @issuer?.Display(transaction.Amount)&nbsp;@transaction.Account?.Currency?.Tag <br>
-                                    <small>@issuer?.Display(transaction.IssuerAmount)&nbsp;(@issuer?.Display(transaction.IssuerRate,4))&nbsp;@issuer?.Currency?.Tag</small>                            
+                                    @issuer?.Formats.Display(transaction.Amount)&nbsp;@transaction.Account?.Currency?.Tag <br>
+                                    <small>@issuer?.Formats.Display(transaction.IssuerAmount)&nbsp;(@issuer?.Formats.Display(transaction.IssuerRate,4))&nbsp;@issuer?.Currency?.Tag</small>                            
                                 </td>
-                                <td class="user-select-all">@issuer?.Display(transaction.Date)</td>
+                                <td class="user-select-all">@issuer?.Formats.Display(transaction.Date)</td>
                                 <td class="user-select-all">@transaction.Note</td>
                                 <td>
                                     <button class="btn btn-sm btn-outline-secondary"

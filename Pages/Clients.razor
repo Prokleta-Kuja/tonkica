@@ -108,17 +108,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var Client in _list)
+                    @foreach (var client in _list)
                     {
-                        <tr @key=Client.Id>
-                            <td class="user-select-all">@Client.Name</td>
-                            <td class="user-select-all">@Client.ContactInfo</td>
-                            <td class="user-select-all">@Client.ContractCurrency?.Tag</td>
-                            <td class="user-select-all">@Client.Display(Client.ContractRate)</td>
-                            <td class="user-select-all">@Client.DefaultInvoiceNote</td>
+                        <tr @key=client.Id>
+                            <td class="user-select-all">@client.Name</td>
+                            <td class="user-select-all">@client.ContactInfo</td>
+                            <td class="user-select-all">@client.ContractCurrency?.Tag</td>
+                            <td class="user-select-all">@client.Formats.Display(client.ContractRate)</td>
+                            <td class="user-select-all">@client.DefaultInvoiceNote</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-secondary"
-                                    @onclick="()=>EditClicked(Client)">Edit</button>
+                                    @onclick="()=>EditClicked(client)">Edit</button>
                             </td>
                         </tr>
                     }

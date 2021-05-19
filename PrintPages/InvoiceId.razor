@@ -9,17 +9,17 @@ else
 {
     <div class="row justify-content-between">
     <div class="col">
-        <h4>Invoice @_invoice.SequenceNumber</h4>
+        <h4>@_t?.Invoice @_invoice.SequenceNumber</h4>
         <p>
-            Issued: @_invoice.Client?.Display(_invoice.Published, true, true) <br>
-            Issued by: @_invoice.Issuer?.IssuedByEmployee
+            @_t?.Issued: @_invoice.Client?.Formats.Display(_invoice.Published, true, true) <br>
+            @_t?.IssuedByEmployee: @_invoice.Issuer?.IssuedByEmployee
         </p>
     </div>
     <div class="col">
         <h4>&nbsp;</h4>
         <p>
-            Delivered: @_invoice.Client?.Display(_invoice.Published, false, false) <br>
-            Due by: @_invoice.Client?.Display(_invoice.Published?.AddDays((double)_invoice.Client.DueInDays), false, false)
+            @_t?.Delivered: @_invoice.Client?.Formats.Display(_invoice.Published, false, false) <br>
+            @_t?.DueBy: @_invoice.Client?.Formats.Display(_invoice.Published?.AddDays((double)_invoice.Client.DueInDays), false, false)
         </p>
     </div>
     <div class="col-auto">
@@ -28,17 +28,17 @@ else
 </div>
     <div class="row mt-4">
     <div class="col">
-        <h5 class="border-bottom">Issued To</h5>
+        <h5 class="border-bottom">@_t?.IssuedTo</h5>
         <h6>@_invoice.Client?.Name</h6>
         <p class="multiline">@_invoice.Client?.ContactInfo</p>
     </div>
     <div class="col">
-        <h5 class="border-bottom">Issued By</h5>
+        <h5 class="border-bottom">@_t?.IssuedByIssuer</h5>
         <h6>@_invoice.Issuer?.Name</h6>
         <p class="multiline">@_invoice.Issuer?.ContactInfo</p>
     </div>
     <div class="col-auto">
-        <h5 class="border-bottom">Payment details</h5>
+        <h5 class="border-bottom">@_t?.PaymentDetails</h5>
         <p class=multiline>@_invoice.Account?.Info</p>
     </div>
 </div>
@@ -46,11 +46,11 @@ else
     <table class="table table-print mt-3">
     <thead>
         <tr>
-            <td>No</td>
-            <td>Description</td>
-            <td class="text-end">Cost</td>
-            <td class="text-end">QTY</td>
-            <td class="text-end">Amount</td>
+            <td>@_t?.No</td>
+            <td>@_t?.Description</td>
+            <td class="text-end">@_t?.Cost</td>
+            <td class="text-end">@_t?.Quantity</td>
+            <td class="text-end">@_t?.Amount</td>
         </tr>
     </thead>
     <tbody>
@@ -73,16 +73,16 @@ else
         <table class="table table-print">
             <thead>
                 <tr>
-                    <td class="text-center">Currency</td>
-                    <td class="text-end">Rate</td>
-                    <td class="text-end">Total</td>
+                    <td class="text-center">@_t?.Currency</td>
+                    <td class="text-end">@_t?.Rate</td>
+                    <td class="text-end">@_t?.Total</td>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td class="text-center">@_invoice!.Currency?.Tag</td>
                     <td class="text-end">@C.Formats.AsDecimal(1)</td>
-                    <td class="text-end">@C.Formats.AsDecimal(_invoice!.Total,2)</td>
+                    <td class="text-end">@C.Formats.AsDecimal(_invoice.Total,2)</td>
                 </tr>
                 @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
                     {
@@ -104,5 +104,5 @@ else
             </table>
         </div>
     </div>
-    <div class=multiline><b>Note: </b>@_invoice.Note</div>
+    <div class=multiline><b>@_t?.Note: </b>@_invoice.Note</div>
 }

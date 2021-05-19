@@ -92,13 +92,13 @@
                                     <input class="form-control form-control-sm" @bind=item.Title placeholder="Title" disabled=@(!IsDraft) />
                                 </td>
                                 <td class="qty">
-                                    <input class="form-control form-control-sm text-end" @bind=item.Quantity @bind:culture=issuer?.CultureInfo placeholder="Qty" disabled=@(!IsDraft) />
+                                    <input class="form-control form-control-sm text-end" @bind=item.Quantity @bind:culture=issuer?.Formats.Culture placeholder="Qty" disabled=@(!IsDraft) />
                                 </td>
                                 <td class="price">
-                                    <input class="form-control form-control-sm text-end" @bind=item.Price @bind:culture=issuer?.CultureInfo placeholder="Price" disabled=@(!IsDraft) />
+                                    <input class="form-control form-control-sm text-end" @bind=item.Price @bind:culture=issuer?.Formats.Culture placeholder="Price" disabled=@(!IsDraft) />
                                 </td>
                                 <td class="price">
-                                    <input class="form-control form-control-sm text-end" @bind=item.Total @bind:culture=issuer?.CultureInfo placeholder="Total"
+                                    <input class="form-control form-control-sm text-end" @bind=item.Total @bind:culture=issuer?.Formats.Culture placeholder="Total"
                                         disabled />
                                 </td>
                                 <td class=d-grid>
@@ -112,17 +112,17 @@
                     <tfoot>
                         <tr class=table-info>
                             <td></td>
-                            <td class="text-end">@issuer?.Display(_invoice.QuantityTotal)</td>
-                            <td class=text-end>@issuer?.Display(1,4)</td>
-                            <td class=text-end>@issuer?.Display(_invoice.Total)</td>
+                            <td class="text-end">@issuer?.Formats.Display(_invoice.QuantityTotal)</td>
+                            <td class=text-end>@issuer?.Formats.Display(1,4)</td>
+                            <td class=text-end>@issuer?.Formats.Display(_invoice.Total)</td>
                             <td class=text-end>@_invoice.Currency?.Tag</td>
                         </tr>
                         @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
                         {
                             <tr class=table-info>
                                 <td colspan=2></td>
-                                <td class=text-end>@issuer?.Display(_invoice.DisplayRate,4)</td>
-                                <td class=text-end>@issuer?.Display(_invoice.DisplayTotal)</td>
+                                <td class=text-end>@issuer?.Formats.Display(_invoice.DisplayRate,4)</td>
+                                <td class=text-end>@issuer?.Formats.Display(_invoice.DisplayTotal)</td>
                                 <td class=text-end>@_invoice.DisplayCurrency?.Tag</td>
                             </tr>
                         }
@@ -130,8 +130,8 @@
                         {
                             <tr class=table-info>
                                 <td colspan=2></td>
-                                <td class=text-end>@issuer?.Display(_invoice.IssuerRate,4)</td>
-                                <td class=text-end>@issuer?.Display(_invoice.IssuerTotal)</td>
+                                <td class=text-end>@issuer?.Formats.Display(_invoice.IssuerRate,4)</td>
+                                <td class=text-end>@issuer?.Formats.Display(_invoice.IssuerTotal)</td>
                                 <td class=text-end>@_invoice.IssuerCurrency?.Tag</td>
                             </tr>
                         }
@@ -140,15 +140,15 @@
                                 <input class="form-control form-control-sm" disabled=@(!IsDraft) @bind=_item.Title placeholder="Title" />
                             </td>
                             <td class="qty">
-                                <input class="form-control form-control-sm text-end" @bind=_item.Quantity @bind:culture=issuer?.CultureInfo
+                                <input class="form-control form-control-sm text-end" @bind=_item.Quantity @bind:culture=issuer?.Formats.Culture
                                     placeholder="Qty" disabled=@(!IsDraft) />
                             </td>
                             <td class="price">
-                                <input class="form-control form-control-sm text-end" @bind=_item.Price @bind:culture=issuer?.CultureInfo
+                                <input class="form-control form-control-sm text-end" @bind=_item.Price @bind:culture=issuer?.Formats.Culture
                                     placeholder="Price" disabled=@(!IsDraft) />
                             </td>
                             <td class="price">
-                                <input class="form-control form-control-sm text-end" @bind=_item.Total @bind:culture=issuer?.CultureInfo placeholder="Total"
+                                <input class="form-control form-control-sm text-end" @bind=_item.Total @bind:culture=issuer?.Formats.Culture placeholder="Total"
                                     disabled />
                             </td>
                             <td class=d-grid>
