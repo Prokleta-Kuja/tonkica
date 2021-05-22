@@ -27,8 +27,8 @@ namespace tonkica.PrintPages
                 .Include(x => x.Account)
                 .SingleOrDefaultAsync(x => x.Id == Id);
 
-            if (_invoice != null && _invoice.Issuer != null)
-                _t = LocalizationFactory.Print(_invoice.Issuer.Locale);
+            if (_invoice != null && _invoice.Client != null)
+                _t = LocalizationFactory.Print(_invoice.Client.Locale);
         }
     }
 }

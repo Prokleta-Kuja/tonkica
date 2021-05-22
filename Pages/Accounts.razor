@@ -1,12 +1,12 @@
 @attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Accounts)]
 
-<h1>Accounts</h1>
+<h1>@_t.PageTitle</h1>
 
 <div class="row">
     <div class="col-lg-6 order-lg-2">
         @if (_create != null)
         {
-            <legend>Add Account</legend>
+            <legend>@_t.AddTitle</legend>
             <form @onsubmit=SaveCreateClicked>
                 <TextBox For=@nameof(AccountCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required AutoFocus />
                 <div class="row">
@@ -22,13 +22,13 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+                <button type="submit" class="btn btn-primary">@_t.Submit</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>@_t.Cancel</button>
             </form>
         }
         else if (_edit != null)
         {
-            <legend>Edit @_edit.Name</legend>
+            <legend>@_t.EditTitle @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
                 <TextBox For=@nameof(AccountEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required AutoFocus />
                 <div class="row">
@@ -39,18 +39,18 @@
                             @bind-Value=_edit.CurrencyId Errors=_errors Required Items=_currenciesD />
                     </div>
                     <div class="col">
-                        <TextBox For=@nameof(AccountEditModel.Info) Label="Contact Info" @bind-Value=_edit.Info
+                        <TextBox For=@nameof(AccountEditModel.Info) Label="Info" @bind-Value=_edit.Info
                             Errors=_errors Lines=4 Required />
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+                <button type="submit" class="btn btn-primary">@_t.Submit</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>@_t.Cancel</button>
             </form>
         }
         else
         {
-            <div class="alert alert-info">Select Account to edit or add.</div>
+            <div class="alert alert-info">@_t.Info</div>
         }
     </div>
 
@@ -59,11 +59,11 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Info</th>
-                        <th>Currency</th>
+                        <th>@_t.AccountName</th>
+                        <th>@_t.AccountInfo</th>
+                        <th>@_t.AccountCurrency</th>
                         <th>
-                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>@_t.Add</button>
                         </th>
                     </tr>
                 </thead>
@@ -76,7 +76,7 @@
                             <td class="user-select-all">@account.Currency?.Tag</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-secondary"
-                                    @onclick="()=>EditClicked(account)">Edit</button>
+                                    @onclick="()=>EditClicked(account)">@_t.Edit</button>
                             </td>
                         </tr>
                     }

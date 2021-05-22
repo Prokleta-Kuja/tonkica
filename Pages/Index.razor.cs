@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
+using tonkica.Localization;
 using tonkica.Models;
 
 namespace tonkica.Pages
@@ -19,6 +20,7 @@ namespace tonkica.Pages
         private int _currentYear;
         private IDictionary<int, Issuer> _issuers = new Dictionary<int, Issuer>();
         private IDictionary<int, DashboardModel> _issuerDashboards = new Dictionary<int, DashboardModel>();
+        private IIndex _t = LocalizationFactory.Index();
 
         protected override async Task OnInitializedAsync()
         {
