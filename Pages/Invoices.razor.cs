@@ -141,17 +141,17 @@ namespace tonkica.Pages
             invoice.IssuerCurrency = issuer.Currency;
             invoice.Note = client.DefaultInvoiceNote;
 
-            var displayAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.DisplayCurrencyId);
+            var displayAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.DisplayCurrency?.Id);
             if (displayAccount != null)
                 invoice.Account = displayAccount;
             else
             {
-                var contractAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.CurrencyId);
+                var contractAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.Currency?.Id);
                 if (contractAccount != null)
                     invoice.Account = contractAccount;
                 else
                 {
-                    var issuerAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.IssuerCurrencyId);
+                    var issuerAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.IssuerCurrency?.Id);
                     if (issuerAccount != null)
                         invoice.Account = issuerAccount;
                     else

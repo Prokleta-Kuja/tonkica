@@ -54,16 +54,19 @@ else
         </tr>
     </thead>
     <tbody>
-        @for (int i = 0; i < _invoice?.Items!.Count; i++)
-        {
-            var item = _invoice?.Items!.ElementAt(i);
-            <tr>
-                <td>@(i + 1).</td>
-                <td>@item!.Title</td>
-                <td class="text-end">@C.Formats.AsDecimal(item!.Price,2)</td>
-                <td class="text-end">@C.Formats.AsDecimal(item!.Quantity,2)</td>
-                <td class="text-end">@C.Formats.AsDecimal(item!.Total,2)</td>
-            </tr>
+        @{
+            var symbol = _invoice.Currency?.Symbol;
+            for (int i = 0; i < _invoice.Items!.Count; i++)
+            {        
+                var item = _invoice.Items!.ElementAt(i);
+                <tr>
+                    <td>@(i + 1).</td>
+                    <td>@item!.Title</td>
+                    <td class="text-end">@_invoice.Client?.Formats.Display(item!.Price,2) @symbol</td>
+                    <td class="text-end">@_invoice.Client?.Formats.Display(item!.Quantity,2)</td>
+                    <td class="text-end">@_invoice.Client?.Formats.Display(item!.Total,2) @symbol</td>
+                </tr>
+            }
         }
         </tbody>
     </table>
@@ -81,23 +84,23 @@ else
             <tbody>
                 <tr>
                     <td class="text-center">@_invoice!.Currency?.Tag</td>
-                    <td class="text-end">@C.Formats.AsDecimal(1)</td>
-                    <td class="text-end">@C.Formats.AsDecimal(_invoice.Total,2)</td>
+                    <td class="text-end">@_invoice.Client?.Formats.Display(1,0)</td>
+                    <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.Total,2)</td>
                 </tr>
                 @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
                     {
                         <tr>
                             <td class="text-center">@_invoice.DisplayCurrency?.Tag</td>
-                            <td class="text-end">@C.Formats.AsDecimal(_invoice.DisplayRate)</td>
-                            <td class="text-end">@C.Formats.AsDecimal(_invoice.DisplayTotal,2)</td>
+                            <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.DisplayRate)</td>
+                            <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.DisplayTotal,2)</td>
                         </tr>
                     }
                     @if (_invoice.IssuerCurrencyId != _invoice.DisplayCurrencyId)
                     {
                         <tr>
                             <td class="text-center">@_invoice.IssuerCurrency?.Tag</td>
-                            <td class="text-end">@C.Formats.AsDecimal(_invoice.IssuerRate)</td>
-                            <td class="text-end">@C.Formats.AsDecimal(_invoice.IssuerTotal,2)</td>
+                            <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.IssuerRate)</td>
+                            <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.IssuerTotal,2)</td>
                         </tr>
                     }
                 </tbody>

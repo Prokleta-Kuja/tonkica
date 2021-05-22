@@ -48,6 +48,7 @@ namespace tonkica.Pages
 
             _invoice = await _db.Invoices
                 .Include(x => x.Items)
+                .Include(x => x.Account)
                 .SingleOrDefaultAsync(x => x.Id == Id);
 
             if (_invoice != null)
@@ -72,6 +73,7 @@ namespace tonkica.Pages
             _invoice.SequenceNumber = _edit.SequenceNumber;
             _invoice.Published = _edit.Published;
             _invoice.Status = (InvoiceStatus)_edit.Status;
+
             if (!_invoice.Published.HasValue && _invoice.Status == InvoiceStatus.Issued)
                 _invoice.Published = DateTimeOffset.UtcNow;
             else if (_invoice.Published.HasValue && _invoice.Status == InvoiceStatus.Draft)
@@ -88,6 +90,13 @@ namespace tonkica.Pages
             _invoice.Currency = _currencies.First(c => c.Id == _edit.CurrencyId);
             _invoice.DisplayCurrency = _currencies.First(c => c.Id == _edit.DisplayCurrencyId);
             _invoice.IssuerCurrency = _currencies.First(c => c.Id == _edit.IssuerCurrencyId);
+
+            if (_edit.DisplayCurrencyId != _invoice.Account!.CurrencyId)
+            {
+                var newAccount = await _db.Accounts.FirstOrDefaultAsync(x => x.CurrencyId == _edit.DisplayCurrencyId);
+                if (newAccount != null)
+                    _invoice.Account = newAccount;
+            }
 
             await _rates.CalculateRates(_invoice);
 

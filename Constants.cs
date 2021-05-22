@@ -23,9 +23,5 @@ namespace tonkica
             public static string DataPath(string file) => Path.Combine(Environment.CurrentDirectory, "data", file);
             public static readonly string AppDbConnectionString = $"Data Source={DataPath("app.db")}";
         }
-        public static class Formats
-        {
-            public static string AsDecimal(decimal d, int places = 4) => d.ToString($"#,##0.{new string('0', places)}");
-        }
     }
 }
