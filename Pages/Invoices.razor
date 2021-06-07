@@ -9,7 +9,7 @@
 </div>
 
 <div class="table-responsive">
-    <table class="table">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th>Issuer</th>
@@ -27,15 +27,22 @@
         <tbody>
             @foreach (var invoice in _list)
             {
-                <tr @key=invoice.Id>
+                var row = invoice.Status == Enums.InvoiceStatus.Paid ? "table-success" : invoice.Status == Enums.InvoiceStatus.Issued ? "table-warning" : "";
+                <tr @key=invoice.Id class=@row>
                     <td class="user-select-all">@invoice.Issuer?.Name</td>
                     <td class="user-select-all">@invoice.SequenceNumber</td>
                     <td class="user-select-all">@invoice.Client?.Name</td>
                     <td class="user-select-all">@invoice.Subject</td>
                     <td class="user-select-all">
                         @invoice.Issuer?.Formats.Display(invoice.Total) @invoice.Currency?.Tag <br />
-                        <small>@invoice.Issuer?.Formats.Display(invoice.DisplayTotal)&nbsp;(@invoice.Issuer?.Formats.Display(invoice.DisplayRate, 2))&nbsp;@invoice.DisplayCurrency?.Tag <br /></small>
-                        <small>@invoice.Issuer?.Formats.Display(invoice.IssuerTotal)&nbsp;(@invoice.Issuer?.Formats.Display(invoice.IssuerRate, 2))&nbsp;@invoice.IssuerCurrency?.Tag</small>
+                        @if (invoice.DisplayCurrencyId != invoice.CurrencyId)
+                        {
+                            <small>@invoice.Issuer?.Formats.Display(invoice.DisplayTotal)&nbsp;(@invoice.Issuer?.Formats.Display(invoice.DisplayRate, 2))&nbsp;@invoice.DisplayCurrency?.Tag <br /></small>
+                        }
+                        @if (invoice.IssuerCurrencyId != invoice.DisplayCurrencyId)
+                        {
+                            <small>@invoice.Issuer?.Formats.Display(invoice.IssuerTotal)&nbsp;(@invoice.Issuer?.Formats.Display(invoice.IssuerRate, 2))&nbsp;@invoice.IssuerCurrency?.Tag</small>
+                        }
                     </td>
                     <td class="user-select-all">@invoice.Issuer?.Formats.Display(invoice.Published)</td>
                     <td class="user-select-all">@invoice.Status</td>
