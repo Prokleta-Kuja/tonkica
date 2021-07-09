@@ -31,8 +31,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="card-footer text-end">
-                        <h3 class="m-0">@issuer.Formats.Display(dashboard.Income) @issuer.Currency?.Tag</h3>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="m-0">@issuer.Formats.Display(dashboard.IncomePercentage)%</h3>
+                            <h3 class="m-0">@issuer.Formats.Display(dashboard.Income) @issuer.Currency?.Tag</h3>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -54,8 +57,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="card-footer text-end">
-                        <h3 class="m-0">@issuer.Formats.Display(dashboard.Expense) @issuer.Currency?.Tag</h3>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="m-0">@issuer.Formats.Display(dashboard.ExpensePercentage)%</h3>
+                            <h3 class="m-0">@issuer.Formats.Display(dashboard.Expense) @issuer.Currency?.Tag</h3>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -96,7 +96,7 @@ namespace tonkica.Pages
             }
 
             foreach (var issuer in _issuerDashboards)
-                issuer.Value.CalculateLevel();
+                issuer.Value.PostProcess();
 
             StateHasChanged();
         }
