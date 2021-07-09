@@ -21,6 +21,22 @@ namespace tonkica.Localization
 
             return new Index_en();
         }
+        public static ITransactions Transactions() => Transactions(EnvLocale);
+        public static ITransactions Transactions(string locale)
+        {
+            if (locale.StartsWith("hr"))
+                return new Transactions_hr();
+
+            return new Transactions_en();
+        }
+        public static IClients Clients() => Clients(EnvLocale);
+        public static IClients Clients(string locale)
+        {
+            if (locale.StartsWith("hr"))
+                return new Clients_hr();
+
+            return new Clients_en();
+        }
         public static IAccounts Accounts() => Accounts(EnvLocale);
         public static IAccounts Accounts(string locale)
         {

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
+using tonkica.Localization;
 using tonkica.Models;
 using tonkica.Services;
 using tonkica.Shared;
@@ -34,6 +35,7 @@ namespace tonkica.Pages
         private TransactionEditModel? _edit;
         private string? _newCategory;
         private Dictionary<string, string>? _errors;
+        private ITransactions _t = LocalizationFactory.Transactions();
 
         protected override async Task OnInitializedAsync()
         {

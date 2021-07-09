@@ -8,21 +8,21 @@
         {
             <legend>@_t.AddTitle</legend>
             <form @onsubmit=SaveCreateClicked>
-                <TextBox For=@nameof(AccountCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required AutoFocus />
+                <TextBox For=@nameof(AccountCreateModel.Name) Label=@_t.AccountName @bind-Value=_create.Name Errors=_errors Required AutoFocus />
                 <div class="row">
                     <div class="col">
-                        <Dropdown For=@nameof(AccountCreateModel.IssuerId) Label="Issuer"
+                        <Dropdown For=@nameof(AccountCreateModel.IssuerId) Label=@_t.AccountIssuer
                             @bind-Value=_create.IssuerId Errors=_errors Required Items=_issuersD />
-                        <Dropdown For=@nameof(AccountCreateModel.CurrencyId) Label="Currency"
+                        <Dropdown For=@nameof(AccountCreateModel.CurrencyId) Label=@_t.AccountCurrency
                             @bind-Value=_create.CurrencyId Errors=_errors Required Items=_currenciesD />
                     </div>
                     <div class="col">
-                        <TextBox For=@nameof(AccountCreateModel.Info) Label="Info" @bind-Value=_create.Info
+                        <TextBox For=@nameof(AccountCreateModel.Info) Label=@_t.AccountInfo @bind-Value=_create.Info
                             Errors=_errors Lines=4 Required />
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">@_t.Submit</button>
+                <button type="submit" class="btn btn-primary">@_t.Save</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>@_t.Cancel</button>
             </form>
         }
@@ -30,21 +30,21 @@
         {
             <legend>@_t.EditTitle @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
-                <TextBox For=@nameof(AccountEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required AutoFocus />
+                <TextBox For=@nameof(AccountEditModel.Name) Label=@_t.AccountName @bind-Value=_edit.Name Errors=_errors Required AutoFocus />
                 <div class="row">
                     <div class="col">
-                        <Dropdown For=@nameof(AccountEditModel.IssuerId) Label="Issuer"
+                        <Dropdown For=@nameof(AccountEditModel.IssuerId) Label=@_t.AccountIssuer
                             @bind-Value=_edit.IssuerId Errors=_errors Required Items=_issuersD />
-                        <Dropdown For=@nameof(AccountEditModel.CurrencyId) Label="Currency"
+                        <Dropdown For=@nameof(AccountEditModel.CurrencyId) Label=@_t.AccountCurrency
                             @bind-Value=_edit.CurrencyId Errors=_errors Required Items=_currenciesD />
                     </div>
                     <div class="col">
-                        <TextBox For=@nameof(AccountEditModel.Info) Label="Info" @bind-Value=_edit.Info
+                        <TextBox For=@nameof(AccountEditModel.Info) Label=@_t.AccountInfo @bind-Value=_edit.Info
                             Errors=_errors Lines=4 Required />
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">@_t.Submit</button>
+                <button type="submit" class="btn btn-primary">@_t.Save</button>
                 <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>@_t.Cancel</button>
             </form>
         }

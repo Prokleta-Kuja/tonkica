@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
+using tonkica.Localization;
 using tonkica.Models;
 
 namespace tonkica.Pages
@@ -18,6 +19,7 @@ namespace tonkica.Pages
         private ClientCreateModel? _create;
         private ClientEditModel? _edit;
         private Dictionary<string, string>? _errors;
+        private IClients _t = LocalizationFactory.Clients();
 
         protected override async Task OnInitializedAsync()
         {
