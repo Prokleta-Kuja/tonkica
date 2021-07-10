@@ -3,7 +3,7 @@
 <div class="d-flex justify-content-between align-items-center flex-wrap">
     <h1>@_t.PageTitle</h1>
     <div>
-        <QueryStepper @ref=stepperYear QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
+        <QueryStepper @ref=StepperYear QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
         <QueryStepper InactiveText="Month" QueryPart=@QUERY_MONTH DefaultValue=_defaultMonth OnChange=ChangeMonth Min=1 Max=12 Overflow OnOverflow=YearOverflow AutoFocus />
     </div>
 </div>
@@ -111,7 +111,7 @@
         <div class="modal-body">
             <table class="table table-striped">
                 <tbody>
-                    @foreach (var category in _categories)
+                    @foreach (var category in Categories)
                     {
                         <tr>
                             <td>

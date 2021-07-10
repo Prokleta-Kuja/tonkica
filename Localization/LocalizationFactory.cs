@@ -45,6 +45,14 @@ namespace tonkica.Localization
 
             return new Accounts_en();
         }
+        public static IIssuers Issuers() => Issuers(EnvLocale);
+        public static IIssuers Issuers(string locale)
+        {
+            if (locale.StartsWith("hr"))
+                return new Issuers_hr();
+
+            return new Issuers_en();
+        }
         public static IPrint Print() => Print(EnvLocale);
         public static IPrint Print(string locale)
         {

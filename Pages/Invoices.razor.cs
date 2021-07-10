@@ -14,43 +14,38 @@ namespace tonkica.Pages
 {
     public partial class Invoices
     {
-        [Inject] private AppDbContext _db { get; set; } = null!;
-        [Inject] private CurrencyRatesClient _rates { get; set; } = null!;
-        [Inject] private NavigationManager _navigator { get; set; } = null!;
-        [Inject] private NavigationManager _navManager { get; set; } = null!;
+        [Inject] private AppDbContext Db { get; set; } = null!;
+        [Inject] private CurrencyRatesClient Rates { get; set; } = null!;
+        [Inject] private NavigationManager NavManager { get; set; } = null!;
         private const string QUERY_YEAR = "year";
-        private int _defaultYear = DateTime.UtcNow.Year;
+        private readonly int _defaultYear = DateTime.UtcNow.Year;
         private int _currentYear;
         private const string QUERY_MONTH = "month";
-        private int _defaultMonth = DateTime.UtcNow.Month;
+        private readonly int _defaultMonth = DateTime.UtcNow.Month;
         private int? _currentMonth;
-        private QueryStepper? stepperYear { get; set; }
-        private IList<Currency> _currencies = new List<Currency>();
-        private Dictionary<int, string> _currenciesD = new Dictionary<int, string>();
-        private IList<Issuer> _issuers = new List<Issuer>();
-        private Dictionary<int, string> _issuersD = new Dictionary<int, string>();
-        private IList<Client> _clients = new List<Client>();
-        private Dictionary<int, string> _clientsD = new Dictionary<int, string>();
-        private IList<Account> _accounts = new List<Account>();
-        private List<Invoice> _list = new List<Invoice>();
+        private QueryStepper? StepperYear { get; set; }
+        private List<Issuer> _issuers = new();
+        private Dictionary<int, string> _issuersD = new();
+        private List<Client> _clients = new();
+        private Dictionary<int, string> _clientsD = new();
+        private List<Account> _accounts = new();
+        private List<Invoice> _list = new();
         private InvoiceCreateModel? _create;
         private Dictionary<string, string>? _errors;
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _currencies = await _db.Currencies.ToListAsync();
-            _currenciesD = _currencies.ToDictionary(x => x.Id, x => x.Tag);
 
-            _issuers = await _db.Issuers.ToListAsync();
+            _issuers = await Db.Issuers.ToListAsync();
             _issuersD = _issuers.ToDictionary(x => x.Id, x => x.Name);
 
-            _clients = await _db.Clients.ToListAsync();
+            _clients = await Db.Clients.ToListAsync();
             _clientsD = _clients.ToDictionary(x => x.Id, x => x.Name);
 
-            _accounts = await _db.Accounts.ToListAsync();
+            _accounts = await Db.Accounts.ToListAsync();
 
-            var uri = new Uri(_navManager.Uri);
+            var uri = new Uri(NavManager.Uri);
 
             _currentYear = _defaultYear;
             if (QueryHelpers.ParseQuery(uri.Query).TryGetValue(QUERY_YEAR, out var yearStr))
@@ -71,13 +66,13 @@ namespace tonkica.Pages
         }
         private void YearOverflow(bool isIncrement)
         {
-            if (stepperYear == null)
+            if (StepperYear == null)
                 return;
 
             if (isIncrement)
-                _currentYear = ++stepperYear.Value;
+                _currentYear = ++StepperYear.Value;
             else
-                _currentYear = --stepperYear.Value;
+                _currentYear = --StepperYear.Value;
         }
         private async Task ChangeYear(int? newYear)
         {
@@ -100,7 +95,7 @@ namespace tonkica.Pages
                 end = start.AddMonths(1);
             }
 
-            _list = await _db.Invoices
+            _list = await Db.Invoices
                 .Where(t => (t.Published >= start && t.Published < end) || !t.Published.HasValue)
                 .OrderByDescending(t => t.Published)
                 .ToListAsync();
@@ -108,9 +103,9 @@ namespace tonkica.Pages
         private async Task AddClicked()
         {
             if (!_issuersD.Any())
-                _issuersD = await _db.Issuers.ToDictionaryAsync(i => i.Id, i => i.Name);
+                _issuersD = await Db.Issuers.ToDictionaryAsync(i => i.Id, i => i.Name);
             if (!_clientsD.Any())
-                _clientsD = await _db.Clients.ToDictionaryAsync(i => i.Id, i => i.Name);
+                _clientsD = await Db.Clients.ToDictionaryAsync(i => i.Id, i => i.Name);
 
             _create = new InvoiceCreateModel();
 
@@ -159,13 +154,13 @@ namespace tonkica.Pages
                 }
             }
 
-            await _rates.CalculateRates(invoice);
+            await Rates.CalculateRates(invoice);
 
-            _db.Invoices.Add(invoice);
-            await _db.SaveChangesAsync();
+            Db.Invoices.Add(invoice);
+            await Db.SaveChangesAsync();
             _create = null;
 
-            _navigator.NavigateTo(C.Routes.InvoiceFor(invoice.Id));
+            NavManager.NavigateTo(C.Routes.InvoiceFor(invoice.Id));
             return default;
         }
     }

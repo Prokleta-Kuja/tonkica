@@ -1,76 +1,74 @@
 @attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Issuers)]
 
-<h1>Issuers</h1>
+<h1>@_t.PageTitle</h1>
 
 <div class="row">
     <div class="col-lg-6 order-lg-2">
         @if (_create != null)
         {
-            <legend>Add Issuer</legend>
+            <legend>@_t.AddTitle</legend>
             <form @onsubmit=SaveCreateClicked>
-                <TextBox For=@nameof(IssuerCreateModel.Name) Label=Name @bind-Value=_create.Name Errors=_errors Required AutoFocus />
-                <TextBox For=@nameof(IssuerCreateModel.IssuedByEmployee) Label="Invoice issued by" PlaceHolder="Emploeyee, place" @bind-Value=_create.IssuedByEmployee Errors=_errors Required />
+                <TextBox For=@nameof(IssuerCreateModel.Name) Label=@_t.IssuerName @bind-Value=_create.Name Errors=_errors Required AutoFocus />
+                <TextBox For=@nameof(IssuerCreateModel.IssuedByEmployee) Label=@_t.IssuerEmployee PlaceHolder=@_t.IssuerEmployeeInfo @bind-Value=_create.IssuedByEmployee Errors=_errors Required />
                 <div class="row">
                     <div class="col">
-                        <Dropdown For=@nameof(IssuerCreateModel.CurrencyId) Label="Currency" @bind-Value=_create.CurrencyId
+                        <Dropdown For=@nameof(IssuerCreateModel.CurrencyId) Label=@_t.IssuerCurrency @bind-Value=_create.CurrencyId
                             Errors=_errors Required Items=_currenciesD />
-                        <NumBox For=@nameof(IssuerCreateModel.Limit) Label=Limit @bind-Value=_create.Limit Errors=_errors />
+                        <NumBox For=@nameof(IssuerCreateModel.Limit) Label=@_t.IssuerLimit @bind-Value=_create.Limit Errors=_errors />
                     </div>
                     <div class="col">
-                        <TextBox For=@nameof(IssuerCreateModel.ContactInfo) Label="Contact Info" @bind-Value=_create.ContactInfo
-                            placeholder="Name, address, VAT ID" Errors=_errors Lines=4 Required />
+                        <TextBox For=@nameof(IssuerCreateModel.ContactInfo) Label=@_t.IssuerContact @bind-Value=_create.ContactInfo
+                            PlaceHolder=@_t.IssuerContactInfo Errors=_errors Lines=4 Required />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <TextBox For=@nameof(IssuerCreateModel.TimeZone) Label="Time Zone" @bind-Value=_create.TimeZone PlaceHolder="Europe/Zagreb" Errors=_errors Required />
+                        <TextBox For=@nameof(IssuerCreateModel.TimeZone) Label=@_t.IssuerTimeZone @bind-Value=_create.TimeZone PlaceHolder=@_t.IssuerTimeZoneInfo Errors=_errors Required />
                     </div>
                     <div class="col">
-                        <TextBox For=@nameof(IssuerCreateModel.Locale) Label="Locale" @bind-Value=_create.Locale PlaceHolder="hr-HR" Errors=_errors Required />
+                        <TextBox For=@nameof(IssuerCreateModel.Locale) Label=@_t.IssuerLocale @bind-Value=_create.Locale PlaceHolder=@_t.IssuerLocaleInfo Errors=_errors Required />
                     </div>
                 </div>
-                <TextBox For=@nameof(IssuerCreateModel.ClockifyUrl) Label="Clockify detailed url"
-                    @bind-Value=_create.ClockifyUrl Errors=_errors />
+                <TextBox For=@nameof(IssuerCreateModel.ClockifyUrl) Label=@_t.IssuerClockify @bind-Value=_create.ClockifyUrl Errors=_errors />
 
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+                <button type="submit" class="btn btn-primary">@_t.Save</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>@_t.Cancel</button>
             </form>
         }
         else if (_edit != null)
         {
-            <legend>Edit @_edit.Name</legend>
+            <legend>@_t.EditTitle @_edit.Name</legend>
             <form @onsubmit=SaveEditClicked>
-                <TextBox For=@nameof(IssuerEditModel.Name) Label=Name @bind-Value=_edit.Name Errors=_errors Required AutoFocus />
-                <TextBox For=@nameof(IssuerEditModel.IssuedByEmployee) Label="Invoice issued by" PlaceHolder="Emploeyee, place" @bind-Value=_edit.IssuedByEmployee Errors=_errors Required />
+                <TextBox For=@nameof(IssuerEditModel.Name) Label=@_t.IssuerName @bind-Value=_edit.Name Errors=_errors Required AutoFocus />
+                <TextBox For=@nameof(IssuerEditModel.IssuedByEmployee) Label=@_t.IssuerEmployee PlaceHolder=@_t.IssuerEmployeeInfo @bind-Value=_edit.IssuedByEmployee Errors=_errors Required />
                 <div class="row">
                     <div class="col">
-                        <Dropdown For=@nameof(IssuerEditModel.CurrencyId) Label="Currency" @bind-Value=_edit.CurrencyId
+                        <Dropdown For=@nameof(IssuerEditModel.CurrencyId) Label=@_t.IssuerCurrency @bind-Value=_edit.CurrencyId
                             Errors=_errors Required Items=_currenciesD />
-                        <NumBox For=@nameof(IssuerEditModel.Limit) Label=Limit @bind-Value=_edit.Limit Errors=_errors />
+                        <NumBox For=@nameof(IssuerEditModel.Limit) Label=@_t.IssuerLimit  @bind-Value=_edit.Limit Errors=_errors />
                     </div>
                     <div class="col">
-                        <TextBox For=@nameof(IssuerEditModel.ContactInfo) Label="Contact Info" @bind-Value=_edit.ContactInfo
-                            placeholder="Name, address, VAT ID" Errors=_errors Lines=4 Required />
+                        <TextBox For=@nameof(IssuerEditModel.ContactInfo) Label=@_t.IssuerContact @bind-Value=_edit.ContactInfo
+                            PlaceHolder=@_t.IssuerContactInfo Errors=_errors Lines=4 Required />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <TextBox For=@nameof(IssuerEditModel.TimeZone) Label="Time Zone" @bind-Value=_edit.TimeZone PlaceHolder="Europe/Zagreb" Errors=_errors Required />
+                        <TextBox For=@nameof(IssuerEditModel.TimeZone) Label=@_t.IssuerTimeZone @bind-Value=_edit.TimeZone PlaceHolder=@_t.IssuerTimeZoneInfo Errors=_errors Required />
                     </div>
                     <div class="col">
-                        <TextBox For=@nameof(IssuerEditModel.Locale) Label="Locale" @bind-Value=_edit.Locale PlaceHolder="hr-HR" Errors=_errors Required />
+                        <TextBox For=@nameof(IssuerEditModel.Locale) Label=@_t.IssuerLocale @bind-Value=_edit.Locale PlaceHolder=@_t.IssuerLocaleInfo Errors=_errors Required />
                     </div>
                 </div>
-                <TextBox For=@nameof(IssuerEditModel.ClockifyUrl) Label="Clockify detailed url"
-                    @bind-Value=_edit.ClockifyUrl Errors=_errors />
+                <TextBox For=@nameof(IssuerEditModel.ClockifyUrl) Label=@_t.IssuerClockify @bind-Value=_edit.ClockifyUrl Errors=_errors />
 
-                <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+                <button type="submit" class="btn btn-primary">@_t.SaveChanges</button>
+                <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>@_t.Cancel</button>
             </form>
         }
         else
         {
-            <div class="alert alert-info">Select Issuer to edit or add.</div>
+            <div class="alert alert-info">@_t.Info</div>
         }
     </div>
 
@@ -79,11 +77,11 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Contact Info</th>
-                        <th>Currency</th>
+                        <th>@_t.TableName</th>
+                        <th>@_t.TableContact</th>
+                        <th>@_t.TableCurrency</th>
                         <th>
-                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                            <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>@_t.Add</button>
                         </th>
                     </tr>
                 </thead>
@@ -96,7 +94,7 @@
                             <td class="user-select-all">@issuer.Currency?.Tag</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-secondary"
-                                    @onclick="()=>EditClicked(issuer)">Edit</button>
+                                    @onclick="()=>EditClicked(issuer)">@_t.Edit</button>
                             </td>
                         </tr>
                     }

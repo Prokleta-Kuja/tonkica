@@ -15,41 +15,40 @@ namespace tonkica.Pages
 {
     public partial class Transactions
     {
-        [Inject] private AppDbContext _db { get; set; } = null!;
-        [Inject] private CurrencyRatesClient _rates { get; set; } = null!;
-        [Inject] private NavigationManager _navManager { get; set; } = null!;
+        [Inject] private AppDbContext Db { get; set; } = null!;
+        [Inject] private CurrencyRatesClient Rates { get; set; } = null!;
+        [Inject] private NavigationManager NavManager { get; set; } = null!;
         private const string QUERY_YEAR = "year";
-        private int _defaultYear = DateTime.UtcNow.Year;
+        private readonly int _defaultYear = DateTime.UtcNow.Year;
         private int _currentYear;
         private const string QUERY_MONTH = "month";
-        private int _defaultMonth = DateTime.UtcNow.Month;
+        private readonly int _defaultMonth = DateTime.UtcNow.Month;
         private int? _currentMonth;
-        private QueryStepper? stepperYear { get; set; }
-        private IList<Account> _accounts = new List<Account>();
-        private Dictionary<int, string> _accountsD = new Dictionary<int, string>();
-        private IList<TransactionCategory> _categories { get; set; } = null!;
-        private Dictionary<int, string> _categoriesD = new Dictionary<int, string>();
-        private IList<Transaction> _list = new List<Transaction>();
-        private Transaction _item = new Transaction();
+        private QueryStepper? StepperYear { get; set; }
+        private List<Account> _accounts = new();
+        private Dictionary<int, string> _accountsD = new();
+        private List<TransactionCategory> Categories { get; set; } = null!;
+        private Dictionary<int, string> _categoriesD = new();
+        private List<Transaction> _list = new();
         private TransactionCreateModel? _create;
         private TransactionEditModel? _edit;
         private string? _newCategory;
         private Dictionary<string, string>? _errors;
-        private ITransactions _t = LocalizationFactory.Transactions();
+        private readonly ITransactions _t = LocalizationFactory.Transactions();
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _accounts = await _db.Accounts
+            _accounts = await Db.Accounts
                 .Include(a => a.Currency)
                 .Include(a => a.Issuer)
                 .ToListAsync();
             _accountsD = _accounts.ToDictionary(x => x.Id, x => x.Name);
 
-            _categories = await _db.TransactionCategories.ToListAsync();
-            _categoriesD = _categories.ToDictionary(x => x.Id, x => x.Name);
+            Categories = await Db.TransactionCategories.ToListAsync();
+            _categoriesD = Categories.ToDictionary(x => x.Id, x => x.Name);
 
-            var uri = new Uri(_navManager.Uri);
+            var uri = new Uri(NavManager.Uri);
 
             _currentYear = _defaultYear;
             if (QueryHelpers.ParseQuery(uri.Query).TryGetValue(QUERY_YEAR, out var yearStr))
@@ -70,13 +69,13 @@ namespace tonkica.Pages
         }
         private void YearOverflow(bool isIncrement)
         {
-            if (stepperYear == null)
+            if (StepperYear == null)
                 return;
 
             if (isIncrement)
-                _currentYear = ++stepperYear.Value;
+                _currentYear = ++StepperYear.Value;
             else
-                _currentYear = --stepperYear.Value;
+                _currentYear = --StepperYear.Value;
         }
         private async Task ChangeYear(int? newYear)
         {
@@ -99,7 +98,7 @@ namespace tonkica.Pages
                 end = start.AddMonths(1);
             }
 
-            _list = await _db.Transactions
+            _list = await Db.Transactions
                 .Where(t => t.Date >= start && t.Date < end)
                 .OrderByDescending(t => t.Date)
                 .ToListAsync();
@@ -127,7 +126,7 @@ namespace tonkica.Pages
                 return default;
 
             var account = _accounts.Single(a => a.Id == _create.AccountId);
-            var category = _categories.Single(c => c.Id == _create.CategoryId);
+            var category = Categories.Single(c => c.Id == _create.CategoryId);
 
             var transaction = new Transaction();
             transaction.AccountId = account.Id;
@@ -139,11 +138,11 @@ namespace tonkica.Pages
             transaction.Date = _create.Date!.Value;
             transaction.Note = _create.Note;
 
-            await _rates.CalculateRates(transaction);
+            await Rates.CalculateRates(transaction);
             transaction.IssuerAmount = transaction.Amount * transaction.IssuerRate;
 
-            _db.Transactions.Add(transaction);
-            await _db.SaveChangesAsync();
+            Db.Transactions.Add(transaction);
+            await Db.SaveChangesAsync();
 
             _list.Insert(0, transaction);
             _create = null;
@@ -164,7 +163,7 @@ namespace tonkica.Pages
                 return default;
 
             var account = _accounts.Single(a => a.Id == _edit.AccountId);
-            var category = _categories.Single(c => c.Id == _edit.CategoryId);
+            var category = Categories.Single(c => c.Id == _edit.CategoryId);
 
             transaction.AccountId = account.Id;
             transaction.Account = account;
@@ -175,23 +174,23 @@ namespace tonkica.Pages
             transaction.Date = _edit.Date!.Value;
             transaction.Note = _edit.Note;
 
-            await _rates.CalculateRates(transaction);
+            await Rates.CalculateRates(transaction);
             transaction.IssuerAmount = transaction.Amount * transaction.IssuerRate;
 
-            await _db.SaveChangesAsync();
+            await Db.SaveChangesAsync();
             _edit = null;
 
             return default;
         }
         private async Task SaveCategories()
         {
-            await _db.SaveChangesAsync();
+            await Db.SaveChangesAsync();
         }
         private async Task RemoveCategory(TransactionCategory category)
         {
-            _db.TransactionCategories.Remove(category);
-            await _db.SaveChangesAsync();
-            _categories = _categories.Where(i => i.Id != category.Id).ToList();
+            Db.TransactionCategories.Remove(category);
+            await Db.SaveChangesAsync();
+            Categories = Categories.Where(i => i.Id != category.Id).ToList();
             _categoriesD.Remove(category.Id);
         }
         private async Task AddCategory()
@@ -200,10 +199,10 @@ namespace tonkica.Pages
                 return;
 
             var category = new TransactionCategory { Name = _newCategory };
-            _db.TransactionCategories.Add(category);
-            await _db.SaveChangesAsync();
+            Db.TransactionCategories.Add(category);
+            await Db.SaveChangesAsync();
 
-            _categories.Add(category);
+            Categories.Add(category);
             _categoriesD.Add(category.Id, category.Name);
 
             _newCategory = string.Empty;

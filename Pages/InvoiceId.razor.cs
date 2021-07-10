@@ -13,15 +13,15 @@ namespace tonkica.Pages
 {
     public partial class InvoiceId
     {
-        [Inject] private AppDbContext _db { get; set; } = null!;
-        [Inject] private CurrencyRatesClient _rates { get; set; } = null!;
-        [Inject] private ClockifyClient _clockify { get; set; } = null!;
+        [Inject] private AppDbContext Db { get; set; } = null!;
+        [Inject] private CurrencyRatesClient Rates { get; set; } = null!;
+        [Inject] private ClockifyClient Clockify { get; set; } = null!;
         [Parameter] public int Id { get; set; }
-        private IList<Currency> _currencies = new List<Currency>();
+        private List<Currency> _currencies = new();
         private Dictionary<int, string> _currenciesD = new();
-        private IList<Issuer> _issuers = new List<Issuer>();
+        private List<Issuer> _issuers = new();
         private Dictionary<int, string> _issuersD = new();
-        private IList<Client> _clients = new List<Client>();
+        private List<Client> _clients = new();
         private Dictionary<int, string> _clientsD = new();
         private readonly Dictionary<int, string> _statusesD = new();
         private Invoice? _invoice;
@@ -37,16 +37,16 @@ namespace tonkica.Pages
             foreach (var e in Enum.GetValues(typeof(InvoiceStatus)))
                 _statusesD.Add((int)e, e.ToString()!);
 
-            _currencies = await _db.Currencies.ToListAsync();
+            _currencies = await Db.Currencies.ToListAsync();
             _currenciesD = _currencies.ToDictionary(x => x.Id, x => x.Tag);
 
-            _issuers = await _db.Issuers.ToListAsync();
+            _issuers = await Db.Issuers.ToListAsync();
             _issuersD = _issuers.ToDictionary(x => x.Id, x => x.Name);
 
-            _clients = await _db.Clients.ToListAsync();
+            _clients = await Db.Clients.ToListAsync();
             _clientsD = _clients.ToDictionary(x => x.Id, x => x.Name);
 
-            _invoice = await _db.Invoices
+            _invoice = await Db.Invoices
                 .Include(x => x.Items)
                 .Include(x => x.Account)
                 .SingleOrDefaultAsync(x => x.Id == Id);
@@ -93,18 +93,18 @@ namespace tonkica.Pages
 
             if (_edit.DisplayCurrencyId != _invoice.Account!.CurrencyId)
             {
-                var newAccount = await _db.Accounts.FirstOrDefaultAsync(x => x.CurrencyId == _edit.DisplayCurrencyId);
+                var newAccount = await Db.Accounts.FirstOrDefaultAsync(x => x.CurrencyId == _edit.DisplayCurrencyId);
                 if (newAccount != null)
                     _invoice.Account = newAccount;
             }
 
-            await _rates.CalculateRates(_invoice);
+            await Rates.CalculateRates(_invoice);
 
             _invoice.Total = _invoice.Items!.Sum(i => i.Total);
             _invoice.DisplayTotal = _invoice.Total * _invoice.DisplayRate;
             _invoice.IssuerTotal = _invoice.Total * _invoice.IssuerRate;
 
-            await _db.SaveChangesAsync();
+            await Db.SaveChangesAsync();
             _edit = new InvoiceEditModel(_invoice);
             IsDraft = _invoice.Status == (int)InvoiceStatus.Draft;
             return default;
@@ -114,7 +114,7 @@ namespace tonkica.Pages
             if (string.IsNullOrWhiteSpace(_invoice?.Issuer?.ClockifyUrl))
                 return;
 
-            var entries = await _clockify.GetDefaultTimeEntries(_invoice.Issuer.ClockifyUrl);
+            var entries = await Clockify.GetDefaultTimeEntries(_invoice.Issuer.ClockifyUrl);
             var groups = entries.GroupBy(e => e.Description);
 
             foreach (var group in groups)
@@ -144,7 +144,7 @@ namespace tonkica.Pages
             _invoice.DisplayTotal = _invoice.Total * _invoice.DisplayRate;
             _invoice.IssuerTotal = _invoice.Total * _invoice.IssuerRate;
 
-            await _db.SaveChangesAsync();
+            await Db.SaveChangesAsync();
         }
 
         private async Task AddItemClicked()

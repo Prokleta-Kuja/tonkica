@@ -5,27 +5,28 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
+using tonkica.Localization;
 using tonkica.Models;
 
 namespace tonkica.Pages
 {
     public partial class Issuers
     {
-        [Inject] private AppDbContext _db { get; set; } = null!;
-        private IList<Currency> _currencies = new List<Currency>();
-        private Dictionary<int, string> _currenciesD = new Dictionary<int, string>();
-        private IList<Issuer> _list = new List<Issuer>();
-        private Issuer _item = new Issuer();
+        [Inject] private AppDbContext Db { get; set; } = null!;
+        private List<Currency> _currencies = new();
+        private Dictionary<int, string> _currenciesD = new();
+        private List<Issuer> _list = new();
         private IssuerCreateModel? _create;
         private IssuerEditModel? _edit;
         private Dictionary<string, string>? _errors;
+        private readonly IIssuers _t = LocalizationFactory.Issuers();
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _currencies = await _db.Currencies.ToListAsync();
+            _currencies = await Db.Currencies.ToListAsync();
             _currenciesD = _currencies.ToDictionary(x => x.Id, x => x.Tag);
-            _list = await _db.Issuers.ToListAsync();
+            _list = await Db.Issuers.ToListAsync();
         }
         private void AddClicked()
         {
@@ -58,8 +59,8 @@ namespace tonkica.Pages
             issuer.TimeZone = _create.TimeZone!;
             issuer.Locale = _create.Locale!;
 
-            _db.Issuers.Add(issuer);
-            await _db.SaveChangesAsync();
+            Db.Issuers.Add(issuer);
+            await Db.SaveChangesAsync();
 
             _list.Insert(0, issuer);
             _create = null;
@@ -88,7 +89,7 @@ namespace tonkica.Pages
             issuer.TimeZone = _edit.TimeZone!;
             issuer.Locale = _edit.Locale!;
 
-            await _db.SaveChangesAsync();
+            await Db.SaveChangesAsync();
             _edit = null;
 
             return default;

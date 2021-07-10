@@ -12,26 +12,25 @@ namespace tonkica.Pages
 {
     public partial class Accounts
     {
-        [Inject] private AppDbContext _db { get; set; } = null!;
-        private IList<Currency> _currencies = new List<Currency>();
-        private Dictionary<int, string> _currenciesD = new Dictionary<int, string>();
-        private IList<Issuer> _issuers = new List<Issuer>();
-        private Dictionary<int, string> _issuersD = new Dictionary<int, string>();
-        private IList<Account> _list = new List<Account>();
-        private Account _item = new Account();
+        [Inject] private AppDbContext Db { get; set; } = null!;
+        private List<Currency> _currencies = new();
+        private Dictionary<int, string> _currenciesD = new();
+        private List<Issuer> _issuers = new();
+        private Dictionary<int, string> _issuersD = new();
+        private List<Account> _list = new();
         private AccountCreateModel? _create;
         private AccountEditModel? _edit;
         private Dictionary<string, string>? _errors;
-        private IAccounts _t = LocalizationFactory.Accounts();
+        private readonly IAccounts _t = LocalizationFactory.Accounts();
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _currencies = await _db.Currencies.ToListAsync();
+            _currencies = await Db.Currencies.ToListAsync();
             _currenciesD = _currencies.ToDictionary(x => x.Id, x => x.Tag);
-            _issuers = await _db.Issuers.ToListAsync();
+            _issuers = await Db.Issuers.ToListAsync();
             _issuersD = _issuers.ToDictionary(x => x.Id, x => x.Name);
-            _list = await _db.Accounts.ToListAsync();
+            _list = await Db.Accounts.ToListAsync();
         }
         private void AddClicked()
         {
@@ -60,8 +59,8 @@ namespace tonkica.Pages
             Account.CurrencyId = _create.CurrencyId;
             Account.IssuerId = _create.IssuerId;
 
-            _db.Accounts.Add(Account);
-            await _db.SaveChangesAsync();
+            Db.Accounts.Add(Account);
+            await Db.SaveChangesAsync();
 
             _list.Insert(0, Account);
             _create = null;
@@ -86,7 +85,7 @@ namespace tonkica.Pages
             Account.CurrencyId = _edit.CurrencyId;
             Account.IssuerId = _edit.IssuerId;
 
-            await _db.SaveChangesAsync();
+            await Db.SaveChangesAsync();
             _edit = null;
 
             return default;

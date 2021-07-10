@@ -11,12 +11,12 @@
                 <TextBox For=@nameof(ClientCreateModel.Name) Label=@_t.ClientName @bind-Value=_create.Name Errors=_errors Required AutoFocus />
                 <div class="row">
                     <div class="col">
-                        <TextBox For=@nameof(ClientCreateModel.ContactInfo) Label=@_t.ClientContactInfo @bind-Value=_create.ContactInfo 
-                            placeholder="Name, address, VAT ID" Errors=_errors Lines=3 Required/>
+                        <TextBox For=@nameof(ClientCreateModel.ContactInfo) Label=@_t.ClientContact @bind-Value=_create.ContactInfo 
+                            PlaceHolder=@_t.ClientContactInfo Errors=_errors Lines=3 Required/>
                     </div>
                     <div class="col">
                         <TextBox For=@nameof(ClientCreateModel.DefaultInvoiceNote) Label=@_t.ClientNote @bind-Value=_create.DefaultInvoiceNote 
-                            placeholder="Converted via bank rates" Errors=_errors Lines=3 />
+                            PlaceHolder=@_t.ClientNoteInfo Errors=_errors Lines=3 />
                     </div>
                 </div>
                 <div class="row">
@@ -29,7 +29,7 @@
                     <div class="col">
                         <Dropdown For=@nameof(ClientCreateModel.ContractCurrencyId) Label=@_t.ClientContract @bind-Value=_create.ContractCurrencyId Errors=_errors
                             Required Items=_currenciesD />
-                        <NumBox For=@nameof(ClientCreateModel.DueInDays) Label=@_t.ClientDueDate @bind-Value=_create.DueInDays Errors=_errors Required />
+                        <NumBox For=@nameof(ClientCreateModel.DueInDays) Label=@_t.ClientDueDate PlaceHolder=@_t.ClientDueDateInfo @bind-Value=_create.DueInDays Errors=_errors Required />
                     </div>
                 </div>
                 <div class="row">
@@ -52,12 +52,12 @@
                 <TextBox For=@nameof(ClientEditModel.Name) Label=@_t.ClientName @bind-Value=_edit.Name Errors=_errors Required AutoFocus />
                 <div class="row">
                     <div class="col">
-                        <TextBox For=@nameof(ClientEditModel.ContactInfo) Label=@_t.ClientContactInfo @bind-Value=_edit.ContactInfo 
-                            placeholder="Name, address, VAT ID" Errors=_errors Lines=3 Required/>
+                        <TextBox For=@nameof(ClientEditModel.ContactInfo) Label=@_t.ClientContact @bind-Value=_edit.ContactInfo 
+                            PlaceHolder=@_t.ClientContactInfo Errors=_errors Lines=3 Required/>
                     </div>
                     <div class="col">
                         <TextBox For=@nameof(ClientEditModel.DefaultInvoiceNote) Label=@_t.ClientNote @bind-Value=_edit.DefaultInvoiceNote
-                            placeholder="Converted via bank rates" Errors=_errors Lines=3 />
+                            PlaceHolder=@_t.ClientNoteInfo Errors=_errors Lines=3 />
                     </div>
                 </div>
                 <div class="row">
@@ -70,7 +70,7 @@
                     <div class="col">
                         <Dropdown For=@nameof(ClientEditModel.ContractCurrencyId) Label=@_t.ClientContract @bind-Value=_edit.ContractCurrencyId Errors=_errors
                             Required Items=_currenciesD />
-                        <NumBox For=@nameof(ClientEditModel.DueInDays) Label=@_t.ClientDueDate @bind-Value=_edit.DueInDays Errors=_errors Required />
+                        <NumBox For=@nameof(ClientEditModel.DueInDays) Label=@_t.ClientDueDate PlaceHolder=@_t.ClientDueDateInfo @bind-Value=_edit.DueInDays Errors=_errors Required />
                     </div>
                 </div>
                 <div class="row">

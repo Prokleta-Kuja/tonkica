@@ -12,21 +12,21 @@ namespace tonkica.Pages
 {
     public partial class Clients
     {
-        [Inject] private AppDbContext _db { get; set; } = null!;
-        private IList<Currency> _currencies = new List<Currency>();
-        private Dictionary<int, string> _currenciesD = new Dictionary<int, string>();
-        private IList<Client> _list = new List<Client>();
+        [Inject] private AppDbContext Db { get; set; } = null!;
+        private List<Currency> _currencies = new();
+        private Dictionary<int, string> _currenciesD = new();
+        private List<Client> _list = new();
         private ClientCreateModel? _create;
         private ClientEditModel? _edit;
         private Dictionary<string, string>? _errors;
-        private IClients _t = LocalizationFactory.Clients();
+        private readonly IClients _t = LocalizationFactory.Clients();
 
         protected override async Task OnInitializedAsync()
         {
             await base.OnInitializedAsync();
-            _currencies = await _db.Currencies.ToListAsync();
+            _currencies = await Db.Currencies.ToListAsync();
             _currenciesD = _currencies.ToDictionary(x => x.Id, x => x.Tag);
-            _list = await _db.Clients.ToListAsync();
+            _list = await Db.Clients.ToListAsync();
         }
         private void AddClicked()
         {
@@ -61,8 +61,8 @@ namespace tonkica.Pages
             client.TimeZone = _create.TimeZone!;
             client.Locale = _create.Locale!;
 
-            _db.Clients.Add(client);
-            await _db.SaveChangesAsync();
+            Db.Clients.Add(client);
+            await Db.SaveChangesAsync();
 
             _list.Insert(0, client);
             _create = null;
@@ -92,7 +92,7 @@ namespace tonkica.Pages
             client.TimeZone = _edit.TimeZone!;
             client.Locale = _edit.Locale!;
 
-            await _db.SaveChangesAsync();
+            await Db.SaveChangesAsync();
             _edit = null;
 
             return default;

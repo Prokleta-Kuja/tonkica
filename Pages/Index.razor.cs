@@ -13,10 +13,10 @@ namespace tonkica.Pages
 {
     public partial class Index
     {
-        [Inject] private AppDbContext _db { get; set; } = null!;
-        [Inject] private NavigationManager _navManager { get; set; } = null!;
+        [Inject] private AppDbContext Db { get; set; } = null!;
+        [Inject] private NavigationManager NavManager { get; set; } = null!;
         private const string QUERY_YEAR = "year";
-        private int _defaultYear = DateTime.UtcNow.Year;
+        private readonly int _defaultYear = DateTime.UtcNow.Year;
         private int _currentYear;
         private IDictionary<int, Issuer> _issuers = new Dictionary<int, Issuer>();
         private IDictionary<int, DashboardModel> _issuerDashboards = new Dictionary<int, DashboardModel>();
@@ -26,12 +26,12 @@ namespace tonkica.Pages
         {
             await base.OnInitializedAsync();
 
-            _issuers = await _db.Issuers
+            _issuers = await Db.Issuers
                 .Include(i => i.Currency)
                 .ToDictionaryAsync(i => i.Id);
 
             var year = _defaultYear;
-            var uri = new Uri(_navManager.Uri);
+            var uri = new Uri(NavManager.Uri);
             if (QueryHelpers.ParseQuery(uri.Query).TryGetValue(QUERY_YEAR, out var yearStr))
                 year = Convert.ToInt32(yearStr);
 
@@ -48,13 +48,13 @@ namespace tonkica.Pages
             var start = new DateTime(year, 1, 1, 1, 1, 1, DateTimeKind.Utc);
             var end = start.AddYears(1).AddSeconds(-1);
 
-            var transactions = await _db.Transactions
+            var transactions = await Db.Transactions
                 .Include(t => t.Account)
                 .Include(t => t.Category)
                 .Where(t => t.Date > start && t.Date < end)
                 .ToListAsync();
 
-            var invoices = await _db.Invoices
+            var invoices = await Db.Invoices
                 .Where(t => t.Published > start && t.Published < end || !t.Published.HasValue)
                 .ToListAsync();
 
