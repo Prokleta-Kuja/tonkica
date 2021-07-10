@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
 using tonkica.Enums;
+using tonkica.Localization;
 using tonkica.Models;
 using tonkica.Services;
 
@@ -29,6 +30,7 @@ namespace tonkica.Pages
         private InvoiceItem _item = null!;
         private Dictionary<string, string>? _errors;
         private bool IsDraft { get; set; }
+        private readonly IInvoice _t = LocalizationFactory.Invoice();
 
         protected override async Task OnInitializedAsync()
         {

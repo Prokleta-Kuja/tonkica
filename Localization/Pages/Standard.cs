@@ -10,6 +10,7 @@ namespace tonkica.Localization
         string SaveChanges { get; }
         string Save { get; }
         string Cancel { get; }
+        string NotFound { get; }
     }
     public class Standard_en : IStandard
     {
@@ -21,6 +22,7 @@ namespace tonkica.Localization
         public string SaveChanges => "Save changes";
         public string Save => "Submit";
         public string Cancel => "Cancel";
+        public string NotFound => "Not found.";
     }
     public class Standard_hr : IStandard
     {
@@ -32,5 +34,6 @@ namespace tonkica.Localization
         public string SaveChanges => "Spremi izmjene";
         public string Save => "Spremi";
         public string Cancel => "Odustani";
+        public string NotFound => "Nema.";
     }
 }

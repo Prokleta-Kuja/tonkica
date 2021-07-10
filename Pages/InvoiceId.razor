@@ -1,6 +1,6 @@
 @attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Invoice)]
 
-<h1>Invoice @Id</h1>
+<h1>@_t.PageTitle @Id</h1>
 @if (_edit != null)
 {
     var issuer = _issuers.Single(i => i.Id == _edit.IssuerId);
@@ -9,62 +9,62 @@
         <form @onsubmit=SaveClicked>
                 <div class="row">
                     <div class="col">
-                        <TextBox For=@nameof(InvoiceEditModel.SequenceNumber) Label=Sequence @bind-Value=_edit.SequenceNumber Errors=_errors
+                        <TextBox For=@nameof(InvoiceEditModel.SequenceNumber) Label=@_t.InvoiceSequence @bind-Value=_edit.SequenceNumber Errors=_errors
                             Required AutoFocus />
                     </div>
                     <div class="col-8">
-                        <TextBox For=@nameof(InvoiceEditModel.Subject) Label=Subject @bind-Value=_edit.Subject Errors=_errors
+                        <TextBox For=@nameof(InvoiceEditModel.Subject) Label=@_t.InvoiceSubject @bind-Value=_edit.Subject Errors=_errors
                             Required />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <Dropdown For=@nameof(InvoiceEditModel.IssuerId) Label=Issuer @bind-Value=_edit.IssuerId Errors=_errors
+                        <Dropdown For=@nameof(InvoiceEditModel.IssuerId) Label=@_t.InvoiceIssuer @bind-Value=_edit.IssuerId Errors=_errors
                             Required Items=_issuersD />
                     </div>
                     <div class="col">
-                        <Dropdown For=@nameof(InvoiceEditModel.ClientId) Label=Client @bind-Value=_edit.ClientId Errors=_errors
+                        <Dropdown For=@nameof(InvoiceEditModel.ClientId) Label=@_t.InvoiceClient @bind-Value=_edit.ClientId Errors=_errors
                             Required Items=_clientsD />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <Dropdown For=@nameof(InvoiceEditModel.CurrencyId) Label="Invoice Currency" @bind-Value=_edit.CurrencyId
+                        <Dropdown For=@nameof(InvoiceEditModel.CurrencyId) Label=@_t.InvoiceCurrency @bind-Value=_edit.CurrencyId
                             Errors=_errors Required Items=_currenciesD />
                     </div>
                     <div class="col">
-                        <Dropdown For=@nameof(InvoiceEditModel.DisplayCurrencyId) Label="Display Currency"
+                        <Dropdown For=@nameof(InvoiceEditModel.DisplayCurrencyId) Label=@_t.InvoiceDisplayCurrency
                             @bind-Value=_edit.DisplayCurrencyId Errors=_errors Required Items=_currenciesD />
                     </div>
                     <div class="col">
-                        <Dropdown For=@nameof(InvoiceEditModel.IssuerCurrencyId) Label="Issuer Currency"
+                        <Dropdown For=@nameof(InvoiceEditModel.IssuerCurrencyId) Label=@_t.InvoiceIssuerCurrency
                             @bind-Value=_edit.IssuerCurrencyId Errors=_errors Required Items=_currenciesD />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <Dropdown For=@nameof(InvoiceEditModel.Status) Label="Status" @bind-Value=_edit.Status Errors=_errors
+                        <Dropdown For=@nameof(InvoiceEditModel.Status) Label=@_t.InvoiceStatus @bind-Value=_edit.Status Errors=_errors
                             Required Items=_statusesD />   
                     </div>
                     @if(!IsDraft)
                     {
                         <div class="col-8">
-                            <DateTimeBox For=@nameof(InvoiceEditModel.Published) Label=Published @bind-Value=_edit.Published 
+                            <DateTimeBox For=@nameof(InvoiceEditModel.Published) Label=@_t.InvoicePublished @bind-Value=_edit.Published 
                             Locale=@issuer?.Locale TimeZone=@issuer?.TimeZone Errors=_errors Required/>
                         </div>
                     }
                 </div>
-                <TextBox For=@nameof(InvoiceEditModel.Note) Label=Note @bind-Value=_edit.Note Errors=_errors Lines=4 />
+                <TextBox For=@nameof(InvoiceEditModel.Note) Label=@_t.InvoiceNote @bind-Value=_edit.Note Errors=_errors Lines=4 />
                 <div class="float-end">                    
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">@_t.Save</button>
                 </div>
                 @if(!IsDraft)
                 {
-                    <a href=@C.Routes.InvoicePrintFor(_invoice!.Id) class="btn btn-outline-secondary">Print</a>
+                    <a href=@C.Routes.InvoicePrintFor(_invoice!.Id) class="btn btn-outline-secondary">@_t.Print</a>
                 }
                 else
                 {
-                    <button type="button" class="btn btn-danger" @onclick=ClockifyClicked>Load clockify</button>
+                    <button type="button" class="btn btn-danger" @onclick=ClockifyClicked>@_t.Clockify</button>
                 }
         </form>
     </div>
@@ -73,13 +73,13 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th class="text-center">Title</th>
-                        <th class="text-end qty">Qty</th>
-                        <th class="text-end price">Price</th>
-                        <th class="text-end price">Total</th>
+                        <th class="text-center">@_t.TableTitle</th>
+                        <th class="text-end qty">@_t.TableQty</th>
+                        <th class="text-end price">@_t.TablePrice</th>
+                        <th class="text-end price">@_t.TableTotal</th>
                         <th class=d-grid>
                             <button class="btn btn-sm btn-outline-primary" disabled=@(!IsDraft) @onclick=SaveInvoiceItems>
-                                Save
+                                @_t.Save
                             </button>
                         </th>
                     </tr>
@@ -89,21 +89,21 @@
                         {
                             <tr>
                                 <td>
-                                    <input class="form-control form-control-sm" @bind=item.Title placeholder="Title" disabled=@(!IsDraft) />
+                                    <input class="form-control form-control-sm" @bind=item.Title placeholder=@_t.TableTitle disabled=@(!IsDraft) />
                                 </td>
                                 <td class="qty">
-                                    <input class="form-control form-control-sm text-end" @bind=item.Quantity @bind:culture=issuer?.Formats.Culture placeholder="Qty" disabled=@(!IsDraft) />
+                                    <input class="form-control form-control-sm text-end" @bind=item.Quantity @bind:culture=issuer?.Formats.Culture placeholder=@_t.TableQty disabled=@(!IsDraft) />
                                 </td>
                                 <td class="price">
-                                    <input class="form-control form-control-sm text-end" @bind=item.Price @bind:culture=issuer?.Formats.Culture placeholder="Price" disabled=@(!IsDraft) />
+                                    <input class="form-control form-control-sm text-end" @bind=item.Price @bind:culture=issuer?.Formats.Culture placeholder=@_t.TablePrice disabled=@(!IsDraft) />
                                 </td>
                                 <td class="price">
-                                    <input class="form-control form-control-sm text-end" @bind=item.Total @bind:culture=issuer?.Formats.Culture placeholder="Total"
+                                    <input class="form-control form-control-sm text-end" @bind=item.Total @bind:culture=issuer?.Formats.Culture placeholder=@_t.TableTotal
                                         disabled />
                                 </td>
                                 <td class=d-grid>
                                     <button class="btn btn-sm btn-outline-danger" disabled=@(!IsDraft) @onclick="()=>RemoveItemClicked(item)">
-                                        Remove
+                                        @_t.Remove
                                     </button>
                                 </td>
                             </tr>
@@ -137,23 +137,23 @@
                         }
                         <tr class=table-primary>
                             <td>
-                                <input class="form-control form-control-sm" disabled=@(!IsDraft) @bind=_item.Title placeholder="Title" />
+                                <input class="form-control form-control-sm" disabled=@(!IsDraft) @bind=_item.Title placeholder=@_t.TableTitle />
                             </td>
                             <td class="qty">
                                 <input class="form-control form-control-sm text-end" @bind=_item.Quantity @bind:culture=issuer?.Formats.Culture
-                                    placeholder="Qty" disabled=@(!IsDraft) />
+                                    placeholder=@_t.TableQty disabled=@(!IsDraft) />
                             </td>
                             <td class="price">
                                 <input class="form-control form-control-sm text-end" @bind=_item.Price @bind:culture=issuer?.Formats.Culture
-                                    placeholder="Price" disabled=@(!IsDraft) />
+                                    placeholder=@_t.TablePrice disabled=@(!IsDraft) />
                             </td>
                             <td class="price">
-                                <input class="form-control form-control-sm text-end" @bind=_item.Total @bind:culture=issuer?.Formats.Culture placeholder="Total"
+                                <input class="form-control form-control-sm text-end" @bind=_item.Total @bind:culture=issuer?.Formats.Culture placeholder=@_t.TableTotal
                                     disabled />
                             </td>
                             <td class=d-grid>
                                 <button class="btn btn-sm btn-outline-success" disabled=@(!IsDraft) @onclick=AddItemClicked>
-                                    Add
+                                    @_t.Add
                                 </button>
                             </td>
                         </tr>
@@ -165,5 +165,5 @@
 }
 else
 {
-    <h4>Not found.</h4>
+    <h4>@_t.NotFound</h4>
 }

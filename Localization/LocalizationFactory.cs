@@ -7,12 +7,12 @@ namespace tonkica.Localization
         const string ENV_LOCALE = "LOCALE";
         const string ENV_TZ = "TZ";
         const string DEFAULT_LOCALE = "hr";
-        const string DEFAULT_TZ = "America/Chicago";
+        const string DEFAULT_TZ = "Europe/Zagreb";
         static string EnvLocale => Environment.GetEnvironmentVariable(ENV_LOCALE) ?? DEFAULT_LOCALE;
         static string EnvTZ => Environment.GetEnvironmentVariable(ENV_TZ) ?? DEFAULT_TZ;
 
         public static Formats Formats() => Formats(EnvLocale, EnvTZ);
-        public static Formats Formats(string locale, string timeZone) => new Formats(locale, timeZone);
+        public static Formats Formats(string locale, string timeZone) => new(locale, timeZone);
         public static IIndex Index() => Index(EnvLocale);
         public static IIndex Index(string locale)
         {
@@ -20,6 +20,22 @@ namespace tonkica.Localization
                 return new Index_hr();
 
             return new Index_en();
+        }
+        public static IInvoices Invoices() => Invoices(EnvLocale);
+        public static IInvoices Invoices(string locale)
+        {
+            if (locale.StartsWith("hr"))
+                return new Invoices_hr();
+
+            return new Invoices_en();
+        }
+        public static IInvoice Invoice() => Invoice(EnvLocale);
+        public static IInvoice Invoice(string locale)
+        {
+            if (locale.StartsWith("hr"))
+                return new Invoice_hr();
+
+            return new Invoice_en();
         }
         public static ITransactions Transactions() => Transactions(EnvLocale);
         public static ITransactions Transactions(string locale)

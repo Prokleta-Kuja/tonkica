@@ -1,7 +1,7 @@
 @attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Invoices)]
 
 <div class="d-flex justify-content-between align-items-center flex-wrap">
-    <h1>Invoices</h1>
+    <h1>@_t.PageTitle</h1>
     <div>
         <QueryStepper @ref=StepperYear QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
         <QueryStepper InactiveText="Month" QueryPart=@QUERY_MONTH DefaultValue=_defaultMonth OnChange=ChangeMonth Min=1 Max=12 Overflow OnOverflow=YearOverflow AutoFocus />
@@ -12,15 +12,15 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th>Issuer</th>
-                <th>#</th>
-                <th>Client</th>
-                <th>Subject</th>
-                <th>Total</th>
-                <th>Published</th>
-                <th>Status</th>
+                <th>@_t.TableIssuer</th>
+                <th>@_t.TableNo</th>
+                <th>@_t.TableClient</th>
+                <th>@_t.TableSubject</th>
+                <th>@_t.TableTotal</th>
+                <th>@_t.TablePublished</th>
+                <th>@_t.TableStatus</th>
                 <th>
-                    <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>Add</button>
+                    <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>@_t.Add</button>
                 </th>
             </tr>
         </thead>
@@ -47,7 +47,7 @@
                     <td class="user-select-all">@invoice.Issuer?.Formats.Display(invoice.Published)</td>
                     <td class="user-select-all">@invoice.Status</td>
                     <td>
-                        <a class="btn btn-sm btn-outline-secondary" href="@C.Routes.InvoiceFor(invoice.Id)">Edit</a>
+                        <a class="btn btn-sm btn-outline-secondary" href="@C.Routes.InvoiceFor(invoice.Id)">@_t.Edit</a>
                     </td>
                 </tr>
             }
@@ -63,22 +63,22 @@
             <form @onsubmit=SaveClicked>
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Add new invoice</h5>
+                        <h5 class="modal-title">@_t.AddTitle</h5>
                         <button type="button" class="btn-close" @onclick="CancelClicked"></button>
                     </div>
                     <div class="modal-body">
-                        <Dropdown For=@nameof(InvoiceCreateModel.IssuerId) Label=Issuer @bind-Value=_create.IssuerId Errors=_errors
+                        <Dropdown For=@nameof(InvoiceCreateModel.IssuerId) Label=@_t.InvoiceIssuer @bind-Value=_create.IssuerId Errors=_errors
                             Required Items=_issuersD AutoFocus />
-                        <Dropdown For=@nameof(InvoiceCreateModel.ClientId) Label=Client @bind-Value=_create.ClientId Errors=_errors
+                        <Dropdown For=@nameof(InvoiceCreateModel.ClientId) Label=@_t.InvoiceClient @bind-Value=_create.ClientId Errors=_errors
                             Required Items=_clientsD />
-                        <TextBox For=@nameof(InvoiceCreateModel.Subject) Label=Subject @bind-Value=_create.Subject Errors=_errors
+                        <TextBox For=@nameof(InvoiceCreateModel.Subject) Label=@_t.InvoiceSubject @bind-Value=_create.Subject Errors=_errors
                             Required />
-                        <TextBox For=@nameof(InvoiceCreateModel.SequenceNumber) Label=Sequence @bind-Value=_create.SequenceNumber Errors=_errors 
+                        <TextBox For=@nameof(InvoiceCreateModel.SequenceNumber) Label=@_t.InvoiceSequence @bind-Value=_create.SequenceNumber Errors=_errors 
                             Required />
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                        <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>Cancel</button>
+                        <button type="submit" class="btn btn-primary">@_t.Save</button>
+                        <button type="reset" class="btn btn-outline-danger" @onclick=CancelClicked>@_t.Cancel</button>
                     </div>
                 </div>
             </form>

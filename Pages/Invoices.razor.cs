@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
+using tonkica.Localization;
 using tonkica.Models;
 using tonkica.Services;
 using tonkica.Shared;
@@ -32,6 +33,7 @@ namespace tonkica.Pages
         private List<Invoice> _list = new();
         private InvoiceCreateModel? _create;
         private Dictionary<string, string>? _errors;
+        private readonly IInvoices _t = LocalizationFactory.Invoices();
 
         protected override async Task OnInitializedAsync()
         {
