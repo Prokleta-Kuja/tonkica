@@ -13,6 +13,22 @@ namespace tonkica.Localization
 
         public static Formats Formats() => Formats(EnvLocale, EnvTZ);
         public static Formats Formats(string locale, string timeZone) => new(locale, timeZone);
+        public static IStandard Standard() => Standard(EnvLocale);
+        public static IStandard Standard(string locale)
+        {
+            if (locale.StartsWith("hr"))
+                return new Standard_hr();
+
+            return new Standard_en();
+        }
+        public static INavigation Navigation() => Navigation(EnvLocale);
+        public static INavigation Navigation(string locale)
+        {
+            if (locale.StartsWith("hr"))
+                return new Navigation_hr();
+
+            return new Navigation_en();
+        }
         public static IIndex Index() => Index(EnvLocale);
         public static IIndex Index(string locale)
         {

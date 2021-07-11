@@ -80,7 +80,7 @@
                         <th>@_t.TableName</th>
                         <th>@_t.TableContact</th>
                         <th>@_t.TableCurrency</th>
-                        <th>
+                        <th class="text-end">
                             <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>@_t.Add</button>
                         </th>
                     </tr>
@@ -92,7 +92,7 @@
                             <td class="user-select-all">@issuer.Name</td>
                             <td class="user-select-all">@issuer.ContactInfo</td>
                             <td class="user-select-all">@issuer.Currency?.Tag</td>
-                            <td>
+                            <td class="text-end">
                                 <button class="btn btn-sm btn-outline-secondary"
                                     @onclick="()=>EditClicked(issuer)">@_t.Edit</button>
                             </td>

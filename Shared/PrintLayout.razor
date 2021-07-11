@@ -1,7 +1,11 @@
 @inherits LayoutComponentBase
 
 <div class="d-grid d-print-none">
-    <button class="btn btn-success btn-block" type="button" onclick="window.print()">Print</button>
+    <button class="btn btn-success btn-block" type="button" onclick="window.print()">@_t.Print</button>
 </div>
 
 @Body
+
+@code{
+    readonly IStandard _t = LocalizationFactory.Standard();
+}

@@ -4,7 +4,7 @@
     <h1>@_t.PageTitle</h1>
     <div>
         <QueryStepper @ref=StepperYear QueryPart=@QUERY_YEAR DefaultValue=_defaultYear OnChange=ChangeYear />
-        <QueryStepper InactiveText="Month" QueryPart=@QUERY_MONTH DefaultValue=_defaultMonth OnChange=ChangeMonth Min=1 Max=12 Overflow OnOverflow=YearOverflow AutoFocus />
+        <QueryStepper InactiveText=@_t.Month QueryPart=@QUERY_MONTH DefaultValue=_defaultMonth OnChange=ChangeMonth Min=1 Max=12 Overflow OnOverflow=YearOverflow AutoFocus />
     </div>
 </div>
 
@@ -64,7 +64,7 @@
                         <th>@_t.TableAmount</th>
                         <th>@_t.TableDate</th>
                         <th>@_t.TableNote</th>
-                        <th>
+                        <th class="text-end">
                             <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>@_t.Add</button>
                         </th>
                     </tr>
@@ -87,7 +87,7 @@
                                 </td>
                                 <td class="user-select-all">@issuer?.Formats.Display(transaction.Date)</td>
                                 <td class="user-select-all">@transaction.Note</td>
-                                <td>
+                                <td class="text-end">
                                     <button class="btn btn-sm btn-outline-secondary"
                                         @onclick="()=>EditClicked(transaction)">@_t.Edit</button>
                                 </td>

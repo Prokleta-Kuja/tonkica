@@ -62,7 +62,7 @@
                         <th>@_t.AccountName</th>
                         <th>@_t.AccountInfo</th>
                         <th>@_t.AccountCurrency</th>
-                        <th>
+                        <th class="text-end">
                             <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>@_t.Add</button>
                         </th>
                     </tr>
@@ -74,7 +74,7 @@
                             <td class="user-select-all">@account.Name</td>
                             <td class="user-select-all">@account.Info</td>
                             <td class="user-select-all">@account.Currency?.Tag</td>
-                            <td>
+                            <td class="text-end">
                                 <button class="btn btn-sm btn-outline-secondary"
                                     @onclick="()=>EditClicked(account)">@_t.Edit</button>
                             </td>

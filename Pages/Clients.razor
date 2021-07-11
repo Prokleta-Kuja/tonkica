@@ -102,7 +102,7 @@
                         <th>@_t.TableContract</th>
                         <th>@_t.TableRate</th>
                         <th>@_t.TableNote</th>
-                        <th>
+                        <th class="text-end">
                             <button class="btn btn-sm btn-outline-primary" @onclick=AddClicked>@_t.Add</button>
                         </th>
                     </tr>
@@ -116,7 +116,7 @@
                             <td class="user-select-all">@client.ContractCurrency?.Tag</td>
                             <td class="user-select-all">@client.Formats.Display(client.ContractRate)</td>
                             <td class="user-select-all">@client.DefaultInvoiceNote</td>
-                            <td>
+                            <td class="text-end">
                                 <button class="btn btn-sm btn-outline-secondary"
                                     @onclick="()=>EditClicked(client)">@_t.Edit</button>
                             </td>

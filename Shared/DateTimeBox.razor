@@ -5,8 +5,8 @@
     <div class="input-group @_errorClass">
         <input type="datetime" class="form-control @_errorClass" id="@For" placeholder=@PlaceHolder
             @bind=_local @onblur=Update @bind:culture=_ci required=@Required @ref=Input>
-        <button class="btn btn-outline-secondary" title="Today" type="button" @onclick=Today>📆</button>
-        <button class="btn btn-outline-danger" title="Clear" type="button" @onclick=Clear>⨉</button>
+        <button class="btn btn-outline-secondary" title=@_t.Today type="button" @onclick=Today>📆</button>
+        <button class="btn btn-outline-danger" title=@_t.Clear type="button" @onclick=Clear>⨉</button>
     </div>
     @if (_isError)
     {
@@ -25,6 +25,7 @@
     CultureInfo _ci = null!;
     TimeZoneInfo _tz = null!;
     DateTime? _local;
+    readonly IStandard _t = LocalizationFactory.Standard();
     [Parameter] public string For { get; set; } = null!;
     [Parameter] public string Label { get; set; } = null!;
     [Parameter] public DateTimeOffset? Value { get; set; }

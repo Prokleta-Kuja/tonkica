@@ -3,13 +3,13 @@
     @if(_isActive)
     {
         <button class="btn btn-outline-secondary" @onclick=Decrement><span>&laquo;</span></button>
-        <button class="btn btn-secondary" title="Disable" @onclick=Toggle @ref=Input>@Value</button>
+        <button class="btn btn-secondary" title=@_t.Disable @onclick=Toggle @ref=Input>@Value</button>
         <button class="btn btn-outline-secondary" @onclick=Increment><span>&raquo;</span></button>
     }
     else
     {
         <button class="btn btn-outline-secondary disabled" @onclick=Decrement><span>&laquo;</span></button>
-        <button class="btn btn-outline-secondary" title="Enable" @onclick=Toggle @ref=Input>
+        <button class="btn btn-outline-secondary" title=@_t.Enable @onclick=Toggle @ref=Input>
             @(InactiveText == null ? Value : InactiveText)
         </button>
         <button class="btn btn-outline-secondary disabled" @onclick=Increment><span>&raquo;</span></button>
@@ -21,6 +21,7 @@
     private bool _isActive;
     public int Value { get; set; }
     private ElementReference Input;
+    readonly IStandard _t = LocalizationFactory.Standard();
     [Parameter] public string QueryPart { get; set; } = null!;
     [Parameter] public EventCallback<int?> OnChange { get; set; }
     [Parameter] public EventCallback<bool> OnOverflow {get;set;}

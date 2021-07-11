@@ -13,7 +13,6 @@ namespace tonkica.Localization
         string InvoiceStatus { get; }
         string InvoicePublished { get; }
         string InvoiceNote { get; }
-        string Print { get; }
         string Clockify { get; }
         string TableTitle { get; }
         string TableQty { get; }
@@ -33,7 +32,6 @@ namespace tonkica.Localization
         public string InvoiceStatus => "Status";
         public string InvoicePublished => "Published";
         public string InvoiceNote => "Note";
-        public string Print => "Print";
         public string Clockify => "Load clockify";
         public string TableTitle => "Title";
         public string TableQty => "Qty";
@@ -53,7 +51,6 @@ namespace tonkica.Localization
         public string InvoiceStatus => "Stanje";
         public string InvoicePublished => "Izdano";
         public string InvoiceNote => "Napomena";
-        public string Print => "Ispis";
         public string Clockify => "Učitaj clockify";
         public string TableTitle => "Stavka";
         public string TableQty => "Kol";
