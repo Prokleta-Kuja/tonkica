@@ -18,6 +18,7 @@ namespace tonkica.Pages
         [Inject] private AppDbContext Db { get; set; } = null!;
         [Inject] private CurrencyRatesClient Rates { get; set; } = null!;
         [Inject] private NavigationManager NavManager { get; set; } = null!;
+        private string? _searchTerm;
         private const string QUERY_YEAR = "year";
         private readonly int _defaultYear = DateTime.UtcNow.Year;
         private int _currentYear;
@@ -59,6 +60,11 @@ namespace tonkica.Pages
 
             await RefreshList();
         }
+        private async Task Search(string? term)
+        {
+            _searchTerm = term;
+            await RefreshList();
+        }
         private async Task ChangeMonth(int? newMonth)
         {
             if (newMonth == _currentMonth)
@@ -98,10 +104,13 @@ namespace tonkica.Pages
                 end = start.AddMonths(1);
             }
 
-            _list = await Db.Transactions
+            var query = Db.Transactions
+                .AsQueryable()
                 .Where(t => t.Date >= start && t.Date < end)
-                .OrderByDescending(t => t.Date)
-                .ToListAsync();
+                .FilterDb(_searchTerm, nameof(Transaction.Note))
+                .SortDb(nameof(Transaction.Date), true);
+
+            _list = await query.ToListAsync();
         }
         private void AddClicked()
         {

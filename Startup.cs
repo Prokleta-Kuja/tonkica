@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +29,11 @@ namespace tonkica
             services.AddDbContext<AppDbContext>(builder =>
              {
                  builder.UseSqlite(C.Settings.AppDbConnectionString);
-                 builder.EnableSensitiveDataLogging(System.Diagnostics.Debugger.IsAttached);
+                 if (Debugger.IsAttached)
+                 {
+                     builder.EnableSensitiveDataLogging();
+                     builder.LogTo(message => Debug.WriteLine(message), new[] { RelationalEventId.CommandExecuted });
+                 }
              });
             services.AddHttpClient();
             services.AddTransient<CurrencyRatesClient>();
