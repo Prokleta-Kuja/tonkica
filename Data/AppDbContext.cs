@@ -2,15 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace tonkica.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : DbContext, IDataProtectionKeyContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
         public DbSet<Account> Accounts { get; set; } = null!;
         public DbSet<Client> Clients { get; set; } = null!;
         public DbSet<Currency> Currencies { get; set; } = null!;

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -35,6 +36,7 @@ namespace tonkica
                      builder.LogTo(message => Debug.WriteLine(message), new[] { RelationalEventId.CommandExecuted });
                  }
              });
+            services.AddDataProtection().PersistKeysToDbContext<AppDbContext>();
             services.AddHttpClient();
             services.AddTransient<CurrencyRatesClient>();
             services.AddTransient<ClockifyClient>();
