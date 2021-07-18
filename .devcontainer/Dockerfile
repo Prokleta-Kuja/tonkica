@@ -23,5 +23,4 @@ RUN if [ "$INSTALL_AZURE_CLI" = "true" ]; then bash /tmp/library-scripts/azcli-d
 # RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT=1 \
-    TZ=Europe/Zagreb \
-    PATH="${PATH}:/home/vscode/.dotnet/tools"
+    TZ=Europe/Zagreb 
