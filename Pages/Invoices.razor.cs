@@ -39,6 +39,9 @@ namespace tonkica.Pages
         {
             await base.OnInitializedAsync();
 
+            // Load currencies into cache
+            await Db.Currencies.ToListAsync();
+
             _issuers = await Db.Issuers.ToListAsync();
             _issuersD = _issuers.ToDictionary(x => x.Id, x => x.Name);
 
