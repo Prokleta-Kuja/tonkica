@@ -16,13 +16,13 @@ namespace tonkica.Data
         public string Symbol { get; set; }
         public bool IsPrefix { get; set; }
 
-        public ICollection<Issuer>? Issuers { get; set; }
-        public ICollection<Client>? ContractClients { get; set; }
-        public ICollection<Client>? DisplayClients { get; set; }
-        public ICollection<Invoice>? Invoices { get; set; }
-        public ICollection<Invoice>? DisplayInvoices { get; set; }
-        public ICollection<Invoice>? IssuerInvoices { get; set; }
-        public ICollection<Transaction>? Transactions { get; set; }
-        public ICollection<Account>? Accounts { get; set; }
+        public ICollection<Issuer> Issuers { get; set; } = null!;
+        public ICollection<Client> ContractClients { get; set; } = null!;
+        public ICollection<Client> DisplayClients { get; set; } = null!;
+        public ICollection<Invoice> Invoices { get; set; } = null!;
+        public ICollection<Invoice> DisplayInvoices { get; set; } = null!;
+        public ICollection<Invoice> IssuerInvoices { get; set; } = null!;
+        public ICollection<Transaction> Transactions { get; set; } = null!;
+        public ICollection<Account> Accounts { get; set; } = null!;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
 using tonkica.Localization;
 using tonkica.Models;
+using tonkica.QueryParams;
 using tonkica.Services;
 using tonkica.Shared;
 
@@ -18,7 +20,6 @@ namespace tonkica.Pages
         [Inject] private AppDbContext Db { get; set; } = null!;
         [Inject] private CurrencyRatesClient Rates { get; set; } = null!;
         [Inject] private NavigationManager NavManager { get; set; } = null!;
-        private string? _searchTerm;
         private const string QUERY_YEAR = "year";
         private readonly int _defaultYear = DateTime.UtcNow.Year;
         private int _currentYear;
@@ -30,6 +31,7 @@ namespace tonkica.Pages
         private Dictionary<int, string> _accountsD = new();
         private List<TransactionCategory> Categories { get; set; } = null!;
         private Dictionary<int, string> _categoriesD = new();
+        private Params _params = new(TransactionCol.Date, true);
         private List<Transaction> _list = new();
         private TransactionCreateModel? _create;
         private TransactionEditModel? _edit;
@@ -62,7 +64,11 @@ namespace tonkica.Pages
         }
         private async Task Search(string? term)
         {
-            _searchTerm = term;
+            if (string.IsNullOrWhiteSpace(term))
+                _params.ClearSearchTerm();
+            else
+                _params.SetSearchTerm(term);
+
             await RefreshList();
         }
         private async Task ChangeMonth(int? newMonth)
@@ -106,11 +112,45 @@ namespace tonkica.Pages
 
             var query = Db.Transactions
                 .AsQueryable()
-                .Where(t => t.Date >= start && t.Date < end)
-                .FilterDb(_searchTerm, nameof(Transaction.Note))
-                .SortDb(nameof(Transaction.Date), true);
+                .Where(t => t.Date >= start && t.Date < end);
 
-            _list = await query.ToListAsync();
+            if (!string.IsNullOrWhiteSpace(_params.SearchTerm))
+            {
+                var term = _params.SearchTerm.ToUpperInvariant();
+                query = query.Where(t =>
+                    t.Category!.NameNormalized.Contains(term) ||
+                    t.Account!.NameNormalized.Contains(term) ||
+                    t.NoteNormalized!.Contains(term)
+                );
+            }
+
+            switch (_params.OrderBy)
+            {
+                case TransactionCol.Category:
+                    Expression<Func<Transaction, string>> categoryName = t => t.Category!.Name;
+                    query = _params.OrderDesc ? query.OrderByDescending(categoryName) : query.OrderBy(categoryName);
+                    break;
+                case TransactionCol.Account:
+                    Expression<Func<Transaction, string>> account = t => t.Account!.Name;
+                    query = _params.OrderDesc ? query.OrderByDescending(account) : query.OrderBy(account);
+                    break;
+                case TransactionCol.Amount:
+                    Expression<Func<Transaction, decimal>> amount = t => t.Amount;
+                    query = _params.OrderDesc ? query.OrderByDescending(amount) : query.OrderBy(amount);
+                    break;
+                case TransactionCol.Date:
+                    Expression<Func<Transaction, DateTimeOffset>> date = t => t.Date;
+                    query = _params.OrderDesc ? query.OrderByDescending(date) : query.OrderBy(date);
+                    break;
+                case TransactionCol.Note:
+                    Expression<Func<Transaction, string?>> note = t => t.Note;
+                    query = _params.OrderDesc ? query.OrderByDescending(note) : query.OrderBy(note);
+                    break;
+                default: break;
+            }
+
+            _list = await query.Skip(_params.Skip).ToListAsync();
+            StateHasChanged();
         }
         private void AddClicked()
         {

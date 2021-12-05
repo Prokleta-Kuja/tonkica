@@ -6,7 +6,8 @@ namespace tonkica.Data
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
+        public string NameNormalized { get => Name.ToUpperInvariant(); private set { } }
 
-        public ICollection<Transaction>? Transactions { get; set; }
+        public ICollection<Transaction> Transactions { get; set; } = null!;
     }
 }

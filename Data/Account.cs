@@ -19,13 +19,14 @@ namespace tonkica.Data
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string NameNormalized { get => Name.ToUpperInvariant(); private set { } }
         public string Info { get; set; }
         public int CurrencyId { get; set; }
         public int IssuerId { get; set; }
 
         public Currency? Currency { get; set; }
         public Issuer? Issuer { get; set; }
-        public ICollection<Invoice>? Invoices { get; set; }
-        public ICollection<Transaction>? Transactions { get; set; }
+        public ICollection<Invoice> Invoices { get; set; } = null!;
+        public ICollection<Transaction> Transactions { get; set; } = null!;
     }
 }

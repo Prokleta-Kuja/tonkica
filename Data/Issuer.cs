@@ -21,6 +21,7 @@ namespace tonkica.Data
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string NameNormalized { get => Name.ToUpperInvariant(); private set { } }
         public string ContactInfo { get; set; }
         public decimal? Limit { get; set; }
         public string? ClockifyUrl { get; set; }
@@ -30,8 +31,8 @@ namespace tonkica.Data
         public string IssuedByEmployee { get; set; }
 
         public Currency? Currency { get; set; }
-        public ICollection<Account>? Accounts { get; set; }
-        public ICollection<Invoice>? Invoices { get; set; }
+        public ICollection<Account> Accounts { get; set; } = null!;
+        public ICollection<Invoice> Invoices { get; set; } = null!;
 
         private Formats? _formats;
         public Formats Formats

@@ -13,6 +13,7 @@ namespace tonkica.Data
         public decimal IssuerAmount { get; set; }
         public DateTimeOffset Date { get; set; }
         public string? Note { get; set; }
+        public string? NoteNormalized { get => Note?.ToUpperInvariant(); private set { } }
 
         public TransactionCategory? Category { get; set; }
         public Account? Account { get; set; }

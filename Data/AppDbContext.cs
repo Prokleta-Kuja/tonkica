@@ -12,15 +12,15 @@ namespace tonkica.Data
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<DataProtectionKey> DataProtectionKeys { get; set; } = null!;
-        public DbSet<Account> Accounts { get; set; } = null!;
-        public DbSet<Client> Clients { get; set; } = null!;
-        public DbSet<Currency> Currencies { get; set; } = null!;
-        public DbSet<Invoice> Invoices { get; set; } = null!;
-        public DbSet<InvoiceItem> InvoiceItems { get; set; } = null!;
-        public DbSet<Issuer> Issuers { get; set; } = null!;
-        public DbSet<Transaction> Transactions { get; set; } = null!;
-        public DbSet<TransactionCategory> TransactionCategories { get; set; } = null!;
+        public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
+        public DbSet<Account> Accounts => Set<Account>();
+        public DbSet<Client> Clients => Set<Client>();
+        public DbSet<Currency> Currencies => Set<Currency>();
+        public DbSet<Invoice> Invoices => Set<Invoice>();
+        public DbSet<InvoiceItem> InvoiceItems => Set<InvoiceItem>();
+        public DbSet<Issuer> Issuers => Set<Issuer>();
+        public DbSet<Transaction> Transactions => Set<Transaction>();
+        public DbSet<TransactionCategory> TransactionCategories => Set<TransactionCategory>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -85,6 +85,15 @@ namespace tonkica.Data
 
             foreach (var entityType in builder.Model.GetEntityTypes())
             {
+                var normalizedProperties = entityType.ClrType.GetProperties()
+                       .Where(p => p.Name.EndsWith("NORMALIZED", StringComparison.InvariantCultureIgnoreCase));
+
+                foreach (var property in normalizedProperties)
+                    builder
+                        .Entity(entityType.Name)
+                        .Property(property.Name)
+                        .ValueGeneratedNever();
+
                 var dtProperties = entityType.ClrType.GetProperties()
                     .Where(p => p.PropertyType == typeof(DateTimeOffset) || p.PropertyType == typeof(DateTimeOffset?));
 

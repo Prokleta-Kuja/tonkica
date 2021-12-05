@@ -20,6 +20,7 @@ namespace tonkica.Data
 
         public int Id { get; set; }
         public string Name { get; set; }
+        public string NameNormalized { get => Name.ToUpperInvariant(); private set { } }
         public string ContactInfo { get; set; }
         public int ContractCurrencyId { get; set; }
         public decimal ContractRate { get; set; }
@@ -31,7 +32,7 @@ namespace tonkica.Data
 
         public Currency? ContractCurrency { get; set; }
         public Currency? DisplayCurrency { get; set; }
-        public ICollection<Invoice>? Invoices { get; set; }
+        public ICollection<Invoice> Invoices { get; set; } = null!;
 
         private Formats? _formats;
         public Formats Formats
