@@ -32,7 +32,7 @@ namespace tonkica
             if (includeHidden)
                 return query;
             else
-                return query.Where(o => EF.Property<object>(o, isHiddenProperty) == null);
+                return query.Where(o => EF.Property<object>(o!, isHiddenProperty) == null);
         }
         internal static IQueryable<T> IncludeHidden<T>(this IQueryable<T> query, bool includeHidden, string isHiddenProperty)
         {
@@ -69,7 +69,7 @@ namespace tonkica
 
             var pred = PredicateBuilder.False<T>();
             foreach (var property in properties)
-                pred = pred.Or(o => EF.Functions.Like(EF.Property<string>(o, property), searchTerm));
+                pred = pred.Or(o => EF.Functions.Like(EF.Property<string>(o!, property), searchTerm));
 
             return query.Where(pred);
         }
@@ -109,8 +109,8 @@ namespace tonkica
                 return query;
 
             return query = descending ?
-                  query.OrderByDescending(o => EF.Property<object>(o, property)) :
-                  query.OrderBy(o => EF.Property<object>(o, property));
+                  query.OrderByDescending(o => EF.Property<object>(o!, property)) :
+                  query.OrderBy(o => EF.Property<object>(o!, property));
         }
         internal static IQueryable<T> Sort<T>(this IQueryable<T> query, string? sortBy, bool descending, string? defaultProperty = default)
         {
