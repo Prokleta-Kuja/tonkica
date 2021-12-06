@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.WebUtilities;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using tonkica.Data;
 using tonkica.Localization;
 using tonkica.Models;
+using tonkica.QueryParams;
 using tonkica.Services;
 using tonkica.Shared;
 
@@ -30,6 +32,7 @@ namespace tonkica.Pages
         private List<Client> _clients = new();
         private Dictionary<int, string> _clientsD = new();
         private List<Account> _accounts = new();
+        private Params _params = new(InvoiceCol.Published, true);
         private List<Invoice> _list = new();
         private InvoiceCreateModel? _create;
         private Dictionary<string, string>? _errors;
@@ -58,6 +61,15 @@ namespace tonkica.Pages
 
             if (QueryHelpers.ParseQuery(uri.Query).TryGetValue(QUERY_MONTH, out var monthStr))
                 _currentMonth = Convert.ToInt32(monthStr);
+
+            await RefreshList();
+        }
+        private async Task Search(string? term)
+        {
+            if (string.IsNullOrWhiteSpace(term))
+                _params.ClearSearchTerm();
+            else
+                _params.SetSearchTerm(term);
 
             await RefreshList();
         }
@@ -100,10 +112,51 @@ namespace tonkica.Pages
                 end = start.AddMonths(1);
             }
 
-            _list = await Db.Invoices
-                .Where(t => (t.Published >= start && t.Published < end) || !t.Published.HasValue)
-                .OrderByDescending(t => t.Published)
-                .ToListAsync();
+            var query = Db.Invoices
+                .AsQueryable()
+                .Where(i => (i.Published >= start && i.Published < end) || !i.Published.HasValue);
+
+            if (!string.IsNullOrWhiteSpace(_params.SearchTerm))
+            {
+                var term = _params.SearchTerm.ToUpperInvariant();
+                query = query.Where(i =>
+                    i.Issuer!.NameNormalized.Contains(term) ||
+                    i.Client!.NameNormalized.Contains(term) ||
+                    i.Subject.Contains(term)
+                );
+            }
+
+            switch (_params.OrderBy)
+            {
+                case InvoiceCol.Issuer:
+                    Expression<Func<Invoice, string>> issuer = i => i.Issuer!.Name;
+                    query = _params.OrderDesc ? query.OrderByDescending(issuer) : query.OrderBy(issuer);
+                    break;
+                case InvoiceCol.Client:
+                    Expression<Func<Invoice, string>> client = i => i.Client!.Name;
+                    query = _params.OrderDesc ? query.OrderByDescending(client) : query.OrderBy(client);
+                    break;
+                case InvoiceCol.Subject:
+                    Expression<Func<Invoice, string>> subject = i => i.Subject;
+                    query = _params.OrderDesc ? query.OrderByDescending(subject) : query.OrderBy(subject);
+                    break;
+                case InvoiceCol.Total:
+                    Expression<Func<Invoice, decimal>> total = i => i.Total;
+                    query = _params.OrderDesc ? query.OrderByDescending(total) : query.OrderBy(total);
+                    break;
+                case InvoiceCol.Published:
+                    Expression<Func<Invoice, DateTimeOffset?>> published = i => i.Published;
+                    query = _params.OrderDesc ? query.OrderByDescending(published) : query.OrderBy(published);
+                    break;
+                case InvoiceCol.Status:
+                    Expression<Func<Invoice, Enums.InvoiceStatus>> status = i => i.Status;
+                    query = _params.OrderDesc ? query.OrderByDescending(status) : query.OrderBy(status);
+                    break;
+                default: break;
+            }
+
+            _list = await query.Skip(_params.Skip).ToListAsync();
+            StateHasChanged();
         }
         private async Task AddClicked()
         {
