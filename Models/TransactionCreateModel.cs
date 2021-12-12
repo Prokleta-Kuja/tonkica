@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using tonkica.Localization;
 
 namespace tonkica.Models
 {
@@ -12,24 +13,24 @@ namespace tonkica.Models
         public DateTimeOffset? Date { get; set; }
         public string? Note { get; set; }
 
-        public Dictionary<string, string>? Validate()
+        public Dictionary<string, string>? Validate(ITransactions translation)
         {
             var errors = new Dictionary<string, string>();
 
             if (AccountId <= 0)
-                errors.Add(nameof(AccountId), "Required");
+                errors.Add(nameof(AccountId), translation.ValidationRequired);
 
             if (CategoryId <= 0)
-                errors.Add(nameof(CategoryId), "Required");
+                errors.Add(nameof(CategoryId), translation.ValidationRequired);
 
             if (!Amount.HasValue)
-                errors.Add(nameof(Amount), "Required");
+                errors.Add(nameof(Amount), translation.ValidationRequired);
 
             if (!Date.HasValue)
-                errors.Add(nameof(Date), "Required");
+                errors.Add(nameof(Date), translation.ValidationRequired);
 
             if (Date.HasValue && Date.Value > DateTimeOffset.Now)
-                errors.Add(nameof(Date), "Cannot be in the future");
+                errors.Add(nameof(Date), translation.ValidationNotInFuture);
 
             if (errors.Any())
                 return errors;

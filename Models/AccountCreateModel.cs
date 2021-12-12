@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using tonkica.Localization;
 
 namespace tonkica.Models
 {
@@ -10,21 +11,21 @@ namespace tonkica.Models
         public int CurrencyId { get; set; }
         public int IssuerId { get; set; }
 
-        public Dictionary<string, string>? Validate()
+        public Dictionary<string, string>? Validate(IAccounts translation)
         {
             var errors = new Dictionary<string, string>();
 
             if (string.IsNullOrWhiteSpace(Name))
-                errors.Add(nameof(Name), "Required");
+                errors.Add(nameof(Name), translation.ValidationRequired);
 
             if (string.IsNullOrWhiteSpace(Info))
-                errors.Add(nameof(Info), "Required");
+                errors.Add(nameof(Info), translation.ValidationRequired);
 
             if (CurrencyId <= 0)
-                errors.Add(nameof(CurrencyId), "Required");
+                errors.Add(nameof(CurrencyId), translation.ValidationRequired);
 
             if (IssuerId <= 0)
-                errors.Add(nameof(IssuerId), "Required");
+                errors.Add(nameof(IssuerId), translation.ValidationRequired);
 
             if (errors.Any())
                 return errors;

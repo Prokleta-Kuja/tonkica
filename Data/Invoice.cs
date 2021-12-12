@@ -31,6 +31,6 @@ namespace tonkica.Data
         public Currency? Currency { get; set; }
         public Currency? DisplayCurrency { get; set; }
         public Currency? IssuerCurrency { get; set; }
-        public ICollection<InvoiceItem>? Items { get; set; }
+        public ICollection<InvoiceItem> Items { get; set; } = null!;
     }
 }

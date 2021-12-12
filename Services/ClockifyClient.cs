@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -24,10 +25,17 @@ namespace tonkica.Services
             _client.BaseAddress = new Uri(BASE_ADDRESS);
         }
 
-        public async Task<List<ClockifyEntry>> GetDefaultTimeEntries(string url, CancellationToken cancellationToken = default)
+        public async Task<List<ClockifyEntry>> GetDefaultTimeEntries(string url, DateTime start, DateTime end, CancellationToken cancellationToken = default)
         {
+            if (start.Kind != DateTimeKind.Utc || end.Kind != DateTimeKind.Utc)
+                throw new FormatException("Dates should be of UTC kind");
+
             var token = ExtractToken(url);
-            var response = await _client.GetAsync($"{token}?exportType=JSON&pageSize=500", cancellationToken);
+            var s = start.ToString("o", CultureInfo.InvariantCulture);
+            var e = end.ToString("o", CultureInfo.InvariantCulture);
+            var endpoint = $"{token}?exportType=JSON&pageSize=9999&dateRangeStart={s}&dateRangeEnd={e}";
+
+            var response = await _client.GetAsync(endpoint, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync();

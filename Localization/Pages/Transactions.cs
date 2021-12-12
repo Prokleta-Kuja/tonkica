@@ -19,6 +19,7 @@ namespace tonkica.Localization
         string TableAmount { get; }
         string TableDate { get; }
         string TableNote { get; }
+        string ValidationNotInFuture { get; }
     }
     public class Transactions_en : Standard_en, ITransactions
     {
@@ -39,6 +40,7 @@ namespace tonkica.Localization
         public string TableAmount => "Amount";
         public string TableDate => "Date";
         public string TableNote => "Note";
+        public string ValidationNotInFuture => "Cannot be in the future";
     }
     public class Transactions_hr : Standard_hr, ITransactions
     {
@@ -59,5 +61,6 @@ namespace tonkica.Localization
         public string TableAmount => "Iznos";
         public string TableDate => "Datum";
         public string TableNote => "Opis";
+        public string ValidationNotInFuture => "Ne može biti u budućnosti";
     }
 }

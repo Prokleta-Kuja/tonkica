@@ -23,6 +23,7 @@ namespace tonkica.Localization
         string TableContract { get; }
         string TableRate { get; }
         string TableNote { get; }
+        string ValidationLargerThan0 { get; }
     }
     public class Clients_en : Standard_en, IClients
     {
@@ -47,6 +48,7 @@ namespace tonkica.Localization
         public string TableContract => "Contract";
         public string TableRate => "Rate";
         public string TableNote => "Default Note";
+        public string ValidationLargerThan0 => "Must be larger than 0";
     }
     public class Clients_hr : Standard_hr, IClients
     {
@@ -71,5 +73,6 @@ namespace tonkica.Localization
         public string TableContract => "Valuta";
         public string TableRate => "Satnica";
         public string TableNote => "Zadana napomena";
+        public string ValidationLargerThan0 => "Mora biti veće od 0";
     }
 }

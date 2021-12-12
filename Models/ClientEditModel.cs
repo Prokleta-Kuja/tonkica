@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using tonkica.Data;
+using tonkica.Localization;
 
 namespace tonkica.Models
 {
@@ -33,35 +34,35 @@ namespace tonkica.Models
             Locale = c.Locale;
         }
 
-        public Dictionary<string, string>? Validate()
+        public Dictionary<string, string>? Validate(IClients translation)
         {
             var errors = new Dictionary<string, string>();
 
             if (string.IsNullOrWhiteSpace(Name))
-                errors.Add(nameof(Name), "Required");
+                errors.Add(nameof(Name), translation.ValidationRequired);
 
             if (string.IsNullOrWhiteSpace(ContactInfo))
-                errors.Add(nameof(ContactInfo), "Required");
+                errors.Add(nameof(ContactInfo), translation.ValidationRequired);
 
             if (ContractCurrencyId <= 0)
-                errors.Add(nameof(ContractCurrencyId), "Required");
+                errors.Add(nameof(ContractCurrencyId), translation.ValidationRequired);
 
             if (!ContractRate.HasValue)
-                errors.Add(nameof(ContractRate), "Required");
+                errors.Add(nameof(ContractRate), translation.ValidationRequired);
 
             if (DisplayCurrencyId <= 0)
-                errors.Add(nameof(DisplayCurrencyId), "Required");
+                errors.Add(nameof(DisplayCurrencyId), translation.ValidationRequired);
 
             if (DueInDays <= 0)
-                errors.Add(nameof(DueInDays), "Must be larger then 0");
+                errors.Add(nameof(DueInDays), translation.ValidationLargerThan0);
 
             if (!string.IsNullOrWhiteSpace(TimeZone))
                 try { TimeZoneInfo.FindSystemTimeZoneById(TimeZone); }
-                catch (Exception) { errors.Add(nameof(TimeZone), "Invalid"); }
+                catch (Exception) { errors.Add(nameof(TimeZone), translation.ValidationInvalid); }
 
             if (!string.IsNullOrWhiteSpace(Locale))
                 try { CultureInfo.GetCultureInfo(Locale); }
-                catch (Exception) { errors.Add(nameof(Locale), "Invalid"); }
+                catch (Exception) { errors.Add(nameof(Locale), translation.ValidationInvalid); }
 
             if (errors.Any())
                 return errors;

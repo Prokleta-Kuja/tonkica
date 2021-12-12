@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using tonkica.Data;
 using tonkica.Enums;
+using tonkica.Localization;
 
 namespace tonkica.Models
 {
@@ -18,9 +19,11 @@ namespace tonkica.Models
         public DateTimeOffset? Published { get; set; }
         public int Status { get; set; }
         public string? Note { get; set; }
+        private Invoice _original;
 
         public InvoiceEditModel(Invoice i)
         {
+            _original = i;
             SequenceNumber = i.SequenceNumber;
             Subject = i.Subject;
             IssuerId = i.IssuerId;
@@ -32,22 +35,37 @@ namespace tonkica.Models
             Status = (int)i.Status;
             Note = i.Note;
         }
+        public bool IsDirty =>
+            SequenceNumber != _original.SequenceNumber ||
+            Subject != _original.Subject ||
+            IssuerId != _original.IssuerId ||
+            ClientId != _original.ClientId ||
+            CurrencyId != _original.CurrencyId ||
+            DisplayCurrencyId != _original.DisplayCurrencyId ||
+            IssuerCurrencyId != _original.IssuerCurrencyId ||
+            Published != _original.Published ||
+            Status != (int)_original.Status ||
+            Note != _original.Note;
 
-        public Dictionary<string, string>? Validate()
+
+        public Dictionary<string, string>? Validate(IInvoice translation)
         {
             var errors = new Dictionary<string, string>();
 
             if (string.IsNullOrWhiteSpace(Subject))
-                errors.Add(nameof(Subject), "Required");
+                errors.Add(nameof(Subject), translation.ValidationRequired);
+
+            if (string.IsNullOrWhiteSpace(SequenceNumber))
+                errors.Add(nameof(SequenceNumber), translation.ValidationRequired);
 
             if (IssuerId <= 0)
-                errors.Add(nameof(IssuerId), "Required");
+                errors.Add(nameof(IssuerId), translation.ValidationRequired);
 
             if (ClientId <= 0)
-                errors.Add(nameof(ClientId), "Required");
+                errors.Add(nameof(ClientId), translation.ValidationRequired);
 
             if (Published.HasValue && Published.Value > DateTimeOffset.UtcNow)
-                errors.Add(nameof(Published), "Cannot be in the future");
+                errors.Add(nameof(Published), translation.ValidationCannotBeInTheFuture);
 
             if (errors.Any())
                 return errors;

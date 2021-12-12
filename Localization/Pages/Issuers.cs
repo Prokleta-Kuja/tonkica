@@ -21,6 +21,7 @@ namespace tonkica.Localization
         string TableName { get; }
         string TableContact { get; }
         string TableCurrency { get; }
+        string ValidationLowerThan0 { get; }
     }
     public class Issuers_en : Standard_en, IIssuers
     {
@@ -43,6 +44,7 @@ namespace tonkica.Localization
         public string TableName => "Name";
         public string TableContact => "Contact Info";
         public string TableCurrency => "Currency";
+        public string ValidationLowerThan0 => "Cannot be lower than 0";
     }
     public class Issuers_hr : Standard_hr, IIssuers
     {
@@ -65,5 +67,6 @@ namespace tonkica.Localization
         public string TableName => "Naziv";
         public string TableContact => "Kontakt Podaci";
         public string TableCurrency => "Valuta";
+        public string ValidationLowerThan0 => "Ne može biti manje od 0";
     }
 }

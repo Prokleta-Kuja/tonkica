@@ -18,6 +18,9 @@ namespace tonkica.Localization
         string Disable { get; }
         string Print { get; }
         string NotFound { get; }
+        string ValidationRequired { get; }
+        string ValidationDuplicate { get; }
+        string ValidationInvalid { get; }
     }
     public class Standard_en : IStandard
     {
@@ -37,6 +40,9 @@ namespace tonkica.Localization
         public string Disable => "Disable";
         public string Print => "Print";
         public string NotFound => "Not found.";
+        public string ValidationRequired => "Required";
+        public string ValidationDuplicate => "Duplicate";
+        public string ValidationInvalid => "Invalid";
     }
     public class Standard_hr : IStandard
     {
@@ -56,5 +62,8 @@ namespace tonkica.Localization
         public string Disable => "Onemogući";
         public string Print => "Ispis";
         public string NotFound => "Nema.";
+        public string ValidationRequired => "Obavezno";
+        public string ValidationDuplicate => "Duplikat";
+        public string ValidationInvalid => "Neispravno";
     }
 }

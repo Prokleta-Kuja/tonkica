@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using tonkica.Data;
+using tonkica.Localization;
 
 namespace tonkica.Models
 {
@@ -31,32 +32,32 @@ namespace tonkica.Models
             Locale = i.Locale;
         }
 
-        public Dictionary<string, string>? Validate()
+        public Dictionary<string, string>? Validate(IIssuers translation)
         {
             var errors = new Dictionary<string, string>();
 
             if (string.IsNullOrWhiteSpace(Name))
-                errors.Add(nameof(Name), "Required");
+                errors.Add(nameof(Name), translation.ValidationRequired);
 
             if (string.IsNullOrWhiteSpace(ContactInfo))
-                errors.Add(nameof(ContactInfo), "Required");
+                errors.Add(nameof(ContactInfo), translation.ValidationRequired);
 
             if (CurrencyId <= 0)
-                errors.Add(nameof(CurrencyId), "Required");
+                errors.Add(nameof(CurrencyId), translation.ValidationRequired);
 
             if (Limit.HasValue && Limit.Value < 0)
-                errors.Add(nameof(Limit), "Cannot be lower than 0");
+                errors.Add(nameof(Limit), translation.ValidationLowerThan0);
 
             if (string.IsNullOrWhiteSpace(IssuedByEmployee))
-                errors.Add(nameof(IssuedByEmployee), "Required");
+                errors.Add(nameof(IssuedByEmployee), translation.ValidationRequired);
 
             if (!string.IsNullOrWhiteSpace(TimeZone))
                 try { TimeZoneInfo.FindSystemTimeZoneById(TimeZone); }
-                catch (Exception) { errors.Add(nameof(TimeZone), "Invalid"); }
+                catch (Exception) { errors.Add(nameof(TimeZone), translation.ValidationInvalid); }
 
             if (!string.IsNullOrWhiteSpace(Locale))
                 try { CultureInfo.GetCultureInfo(Locale); }
-                catch (Exception) { errors.Add(nameof(Locale), "Invalid"); }
+                catch (Exception) { errors.Add(nameof(Locale), translation.ValidationInvalid); }
 
             if (errors.Any())
                 return errors;

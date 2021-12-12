@@ -46,7 +46,7 @@ namespace tonkica.Pages
             if (_create == null)
                 return default;
 
-            _errors = _create.Validate();
+            _errors = _create.Validate(_t);
             if (_errors != null)
                 return default;
 
@@ -74,7 +74,7 @@ namespace tonkica.Pages
             if (_edit == null)
                 return default;
 
-            _errors = _edit.Validate();
+            _errors = _edit.Validate(_t);
             if (_errors != null)
                 return default;
 

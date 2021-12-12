@@ -1,9 +1,8 @@
 @attribute [Microsoft.AspNetCore.Components.RouteAttribute(C.Routes.Invoice)]
 
-<h1>@_t.PageTitle @Id</h1>
 @if (_edit != null)
 {
-    var issuer = _issuers.Single(i => i.Id == _edit.IssuerId);
+    <h1>@_t.PageTitle @Id @(Db.ChangeTracker.HasChanges() || _edit.IsDirty ? "*":string.Empty)</h1>
     <div class=row>
     <div class=col>
         <form @onsubmit=SaveClicked>
@@ -46,27 +45,51 @@
                         <Dropdown For=@nameof(InvoiceEditModel.Status) Label=@_t.InvoiceStatus @bind-Value=_edit.Status Errors=_errors
                             Required Items=_statusesD />   
                     </div>
-                    @if(!IsDraft)
+                    @if(!_isDraft)
                     {
                         <div class="col-8">
                             <DateTimeBox For=@nameof(InvoiceEditModel.Published) Label=@_t.InvoicePublished @bind-Value=_edit.Published 
-                            Locale=@issuer?.Locale TimeZone=@issuer?.TimeZone Errors=_errors Required/>
+                            Locale=@_issuer?.Locale TimeZone=@_issuer?.TimeZone Errors=_errors Required/>
                         </div>
                     }
                 </div>
                 <TextBox For=@nameof(InvoiceEditModel.Note) Label=@_t.InvoiceNote @bind-Value=_edit.Note Errors=_errors Lines=4 />
-                <div class="float-end">                    
-                    <button type="submit" class="btn btn-primary">@_t.Save</button>
+                <div class="d-flex justify-content-end">                    
+                    @if(!_isDraft)
+                    {
+                        <a href=@C.Routes.InvoicePrintFor(_invoice!.Id) class="btn btn-outline-secondary ms-2">@_t.Print</a>
+                    }
+                    @if(!_clockifyOpen)
+                    {
+                        <button type="button" class="btn btn-danger ms-2" @onclick=ClockifyOpen>@_t.Clockify</button>
+                    }
+                    <button type="submit" class="btn btn-primary ms-2">@_t.Save</button>
                 </div>
-                @if(!IsDraft)
-                {
-                    <a href=@C.Routes.InvoicePrintFor(_invoice!.Id) class="btn btn-outline-secondary">@_t.Print</a>
-                }
-                else
-                {
-                    <button type="button" class="btn btn-danger" @onclick=ClockifyClicked>@_t.Clockify</button>
-                }
         </form>
+        @if(_clockifyOpen)
+        {
+            <div>
+                <DateTimeBox For=@nameof(_clockifyStart) Label=@_t.ClockifyStart @bind-Value=_clockifyStart
+                Locale=@_issuer?.Locale TimeZone=@_issuer?.TimeZone Errors=_errors Required/>
+                <DateTimeBox For=@nameof(_clockifyEnd) Label=@_t.ClockifyEnd @bind-Value=_clockifyEnd
+                Locale=@_issuer?.Locale TimeZone=@_issuer?.TimeZone Errors=_errors Required/>
+                @if(_clockifyItems.Any())
+                {
+                    <div class="mb-2">
+                        <span>@_t.ClockifyItems <b>@_clockifyItems?.Count</b>,</span>
+                        <span>@_t.ClockifyHours <b>@_issuer?.Formats.Display(_clockifyItems?.Sum(i => i.Quantity))</b></span>
+                    </div>
+                }
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary ms-2" @onclick=ClockifyLoad>@_t.ClockifyLoad</button>
+                @if(_isDraft)
+                {
+                    <button type="button" class="btn btn-primary ms-2" @onclick=ClockifyAdd>@_t.Add</button>
+                }
+                <button type="button" class="btn btn-outline-danger ms-2" @onclick=CloseClockify>@_t.Close</button>
+            </div>
+        }
     </div>
     <div class=col-md-7>
         <div class=table-responsive>
@@ -78,8 +101,8 @@
                         <th class="text-end price">@_t.TablePrice</th>
                         <th class="text-end price">@_t.TableTotal</th>
                         <th class=d-grid>
-                            <button class="btn btn-sm btn-outline-primary" disabled=@(!IsDraft) @onclick=SaveInvoiceItems>
-                                @_t.Save
+                            <button class="btn btn-sm btn-danger" disabled=@(!_isDraft) @onclick=ClearInvoiceItems>
+                                @_t.Clear
                             </button>
                         </th>
                     </tr>
@@ -89,20 +112,19 @@
                         {
                             <tr>
                                 <td>
-                                    <input class="form-control form-control-sm" @bind=item.Title placeholder=@_t.TableTitle disabled=@(!IsDraft) />
+                                    <input class="form-control form-control-sm @(item.IsValid() ? "":"is-invalid")" @bind=item.Title placeholder=@_t.TableTitle disabled=@(!_isDraft) />
                                 </td>
                                 <td class="qty">
-                                    <input class="form-control form-control-sm text-end" @bind=item.Quantity @bind:culture=issuer?.Formats.Culture placeholder=@_t.TableQty disabled=@(!IsDraft) />
+                                    <input class="form-control form-control-sm text-end" @bind=item.Quantity @bind:culture=_issuer?.Formats.Culture placeholder=@_t.TableQty disabled=@(!_isDraft) @onblur=CalculateTotals />
                                 </td>
                                 <td class="price">
-                                    <input class="form-control form-control-sm text-end" @bind=item.Price @bind:culture=issuer?.Formats.Culture placeholder=@_t.TablePrice disabled=@(!IsDraft) />
+                                    <input class="form-control form-control-sm text-end" @bind=item.Price @bind:culture=_issuer?.Formats.Culture placeholder=@_t.TablePrice disabled=@(!_isDraft) @onblur=CalculateTotals />
                                 </td>
                                 <td class="price">
-                                    <input class="form-control form-control-sm text-end" @bind=item.Total @bind:culture=issuer?.Formats.Culture placeholder=@_t.TableTotal
-                                        disabled />
+                                    <input class="form-control form-control-sm text-end" value=@_issuer?.Formats.Display(item.Total) placeholder=@_t.TableTotal disabled />
                                 </td>
                                 <td class=d-grid>
-                                    <button class="btn btn-sm btn-outline-danger" disabled=@(!IsDraft) @onclick="()=>RemoveItemClicked(item)">
+                                    <button class="btn btn-sm btn-outline-danger" disabled=@(!_isDraft) @onclick="()=>RemoveItemClicked(item)">
                                         @_t.Remove
                                     </button>
                                 </td>
@@ -112,17 +134,17 @@
                     <tfoot>
                         <tr class=table-info>
                             <td></td>
-                            <td class="text-end">@issuer?.Formats.Display(_invoice.QuantityTotal)</td>
-                            <td class=text-end>@issuer?.Formats.Display(1,4)</td>
-                            <td class=text-end>@issuer?.Formats.Display(_invoice.Total)</td>
+                            <td class="text-end">@_issuer?.Formats.Display(_invoice.QuantityTotal)</td>
+                            <td class=text-end>@_issuer?.Formats.Display(1,4)</td>
+                            <td class=text-end>@_issuer?.Formats.Display(_invoice.Total)</td>
                             <td class=text-end>@_invoice.Currency?.Tag</td>
                         </tr>
                         @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
                         {
                             <tr class=table-info>
                                 <td colspan=2></td>
-                                <td class=text-end>@issuer?.Formats.Display(_invoice.DisplayRate,4)</td>
-                                <td class=text-end>@issuer?.Formats.Display(_invoice.DisplayTotal)</td>
+                                <td class=text-end>@_issuer?.Formats.Display(_invoice.DisplayRate,4)</td>
+                                <td class=text-end>@_issuer?.Formats.Display(_invoice.DisplayTotal)</td>
                                 <td class=text-end>@_invoice.DisplayCurrency?.Tag</td>
                             </tr>
                         }
@@ -130,29 +152,29 @@
                         {
                             <tr class=table-info>
                                 <td colspan=2></td>
-                                <td class=text-end>@issuer?.Formats.Display(_invoice.IssuerRate,4)</td>
-                                <td class=text-end>@issuer?.Formats.Display(_invoice.IssuerTotal)</td>
+                                <td class=text-end>@_issuer?.Formats.Display(_invoice.IssuerRate,4)</td>
+                                <td class=text-end>@_issuer?.Formats.Display(_invoice.IssuerTotal)</td>
                                 <td class=text-end>@_invoice.IssuerCurrency?.Tag</td>
                             </tr>
                         }
                         <tr class=table-primary>
                             <td>
-                                <input class="form-control form-control-sm" disabled=@(!IsDraft) @bind=_item.Title placeholder=@_t.TableTitle />
+                                <input class="form-control form-control-sm" disabled=@(!_isDraft) @bind=_item.Title placeholder=@_t.TableTitle />
                             </td>
                             <td class="qty">
-                                <input class="form-control form-control-sm text-end" @bind=_item.Quantity @bind:culture=issuer?.Formats.Culture
-                                    placeholder=@_t.TableQty disabled=@(!IsDraft) />
+                                <input class="form-control form-control-sm text-end" @bind=_item.Quantity @bind:culture=_issuer?.Formats.Culture
+                                    placeholder=@_t.TableQty disabled=@(!_isDraft) />
                             </td>
                             <td class="price">
-                                <input class="form-control form-control-sm text-end" @bind=_item.Price @bind:culture=issuer?.Formats.Culture
-                                    placeholder=@_t.TablePrice disabled=@(!IsDraft) />
+                                <input class="form-control form-control-sm text-end" @bind=_item.Price @bind:culture=_issuer?.Formats.Culture
+                                    placeholder=@_t.TablePrice disabled=@(!_isDraft) />
                             </td>
                             <td class="price">
-                                <input class="form-control form-control-sm text-end" @bind=_item.Total @bind:culture=issuer?.Formats.Culture placeholder=@_t.TableTotal
+                                <input class="form-control form-control-sm text-end" value=@_issuer?.Formats.Display(_item.Quantity*_item.Price) placeholder=@_t.TableTotal
                                     disabled />
                             </td>
                             <td class=d-grid>
-                                <button class="btn btn-sm btn-outline-success" disabled=@(!IsDraft) @onclick=AddItemClicked>
+                                <button class="btn btn-sm btn-outline-success" disabled=@(!_isDraft) @onclick=AddItemClicked>
                                     @_t.Add
                                 </button>
                             </td>

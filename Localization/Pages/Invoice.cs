@@ -14,10 +14,16 @@ namespace tonkica.Localization
         string InvoicePublished { get; }
         string InvoiceNote { get; }
         string Clockify { get; }
+        string ClockifyStart { get; }
+        string ClockifyEnd { get; }
+        string ClockifyHours { get; }
+        string ClockifyItems { get; }
+        string ClockifyLoad { get; }
         string TableTitle { get; }
         string TableQty { get; }
         string TablePrice { get; }
         string TableTotal { get; }
+        string ValidationCannotBeInTheFuture { get; }
     }
     public class Invoice_en : Standard_en, IInvoice
     {
@@ -32,11 +38,17 @@ namespace tonkica.Localization
         public string InvoiceStatus => "Status";
         public string InvoicePublished => "Published";
         public string InvoiceNote => "Note";
-        public string Clockify => "Load clockify";
+        public string Clockify => "Clockify";
+        public string ClockifyStart => "Start";
+        public string ClockifyEnd => "End";
+        public string ClockifyHours => "Hours:";
+        public string ClockifyItems => "Items:";
+        public string ClockifyLoad => "Load";
         public string TableTitle => "Title";
         public string TableQty => "Qty";
         public string TablePrice => "Price";
         public string TableTotal => "Total";
+        public string ValidationCannotBeInTheFuture => "Cannot be in the future";
     }
     public class Invoice_hr : Standard_hr, IInvoice
     {
@@ -51,10 +63,16 @@ namespace tonkica.Localization
         public string InvoiceStatus => "Stanje";
         public string InvoicePublished => "Izdano";
         public string InvoiceNote => "Napomena";
-        public string Clockify => "Učitaj clockify";
+        public string Clockify => "Clockify";
+        public string ClockifyStart => "Od";
+        public string ClockifyEnd => "Do";
+        public string ClockifyHours => "Sati:";
+        public string ClockifyItems => "Stavki:";
+        public string ClockifyLoad => "Učitaj";
         public string TableTitle => "Stavka";
         public string TableQty => "Kol";
         public string TablePrice => "Cijena";
         public string TableTotal => "Ukupno";
+        public string ValidationCannotBeInTheFuture => "Ne može biti u budućnosti";
     }
 }

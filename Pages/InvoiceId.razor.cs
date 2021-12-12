@@ -18,19 +18,24 @@ namespace tonkica.Pages
         [Inject] private CurrencyRatesClient Rates { get; set; } = null!;
         [Inject] private ClockifyClient Clockify { get; set; } = null!;
         [Parameter] public int Id { get; set; }
-        private List<Currency> _currencies = new();
-        private Dictionary<int, string> _currenciesD = new();
-        private List<Issuer> _issuers = new();
-        private Dictionary<int, string> _issuersD = new();
-        private List<Client> _clients = new();
-        private Dictionary<int, string> _clientsD = new();
-        private readonly Dictionary<int, string> _statusesD = new();
-        private Invoice? _invoice;
-        private InvoiceEditModel? _edit;
-        private InvoiceItem _item = null!;
-        private Dictionary<string, string>? _errors;
-        private bool IsDraft { get; set; }
-        private readonly IInvoice _t = LocalizationFactory.Invoice();
+        List<Currency> _currencies = new();
+        Dictionary<int, string> _currenciesD = new();
+        List<Issuer> _issuers = new();
+        Dictionary<int, string> _issuersD = new();
+        List<Client> _clients = new();
+        Dictionary<int, string> _clientsD = new();
+        readonly Dictionary<int, string> _statusesD = new();
+        Issuer? _issuer;
+        Invoice? _invoice;
+        InvoiceEditModel? _edit;
+        InvoiceItem _item = null!;
+        bool _clockifyOpen;
+        DateTimeOffset? _clockifyStart;
+        DateTimeOffset? _clockifyEnd;
+        List<InvoiceItem> _clockifyItems = new();
+        Dictionary<string, string>? _errors;
+        bool _isDraft;
+        readonly IInvoice _t = LocalizationFactory.Invoice();
 
         protected override async Task OnInitializedAsync()
         {
@@ -55,20 +60,21 @@ namespace tonkica.Pages
 
             if (_invoice != null)
             {
-                IsDraft = _invoice.Status == (int)InvoiceStatus.Draft;
+                _isDraft = _invoice.Status == (int)InvoiceStatus.Draft;
                 _edit = new InvoiceEditModel(_invoice);
-                _item = new InvoiceItem(string.Empty)
-                {
-                    InvoiceId = _invoice.Id
-                };
+                _item = new InvoiceItem(string.Empty) { InvoiceId = _invoice.Id };
+                _issuer = _issuers.Single(i => i.Id == _edit.IssuerId);
             }
+
+            _clockifyEnd = DateTime.UtcNow;
+            _clockifyStart = new DateTime(_clockifyEnd.Value.Year, _clockifyEnd.Value.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         }
         private async Task<EventCallback<EventArgs>> SaveClicked()
         {
             if (_edit == null || _invoice == null)
                 return default;
 
-            _errors = _edit!.Validate();
+            _errors = _edit!.Validate(_t);
             if (_errors != null)
                 return default;
 
@@ -101,22 +107,44 @@ namespace tonkica.Pages
             }
 
             await Rates.CalculateRates(_invoice);
-
-            _invoice.Total = _invoice.Items!.Sum(i => i.Total);
-            _invoice.DisplayTotal = _invoice.Total * _invoice.DisplayRate;
-            _invoice.IssuerTotal = _invoice.Total * _invoice.IssuerRate;
+            CalculateTotals();
 
             await Db.SaveChangesAsync();
             _edit = new InvoiceEditModel(_invoice);
-            IsDraft = _invoice.Status == (int)InvoiceStatus.Draft;
+            _isDraft = _invoice.Status == (int)InvoiceStatus.Draft;
             return default;
         }
-        private async Task ClockifyClicked()
+        private void CalculateTotals()
         {
-            if (string.IsNullOrWhiteSpace(_invoice?.Issuer?.ClockifyUrl))
-                return;
+            foreach (var item in _invoice!.Items)
+                item.Total = item.Price * item.Quantity;
 
-            var entries = await Clockify.GetDefaultTimeEntries(_invoice.Issuer.ClockifyUrl);
+            _invoice.QuantityTotal = _invoice.Items.Sum(i => i.Quantity);
+            _invoice.Total = _invoice.Items.Sum(i => i.Total);
+            _invoice.DisplayTotal = _invoice.Total * _invoice.DisplayRate;
+            _invoice.IssuerTotal = _invoice.Total * _invoice.IssuerRate;
+        }
+        private void CloseClockify() => _clockifyOpen = false;
+        private void ClockifyOpen()
+        {
+            _clockifyItems.Clear();
+            _clockifyOpen = true;
+        }
+        private async Task ClockifyLoad()
+        {
+            var errors = new Dictionary<string, string>();
+            if (!_clockifyStart.HasValue)
+                errors.Add(nameof(_clockifyStart), _t.ValidationRequired);
+            if (!_clockifyEnd.HasValue)
+                errors.Add(nameof(_clockifyEnd), _t.ValidationRequired);
+
+            if (errors.Any())
+            {
+                _errors = errors;
+                return;
+            }
+
+            var entries = await Clockify.GetDefaultTimeEntries(_invoice!.Issuer!.ClockifyUrl!, _clockifyStart!.Value.UtcDateTime, _clockifyEnd!.Value.UtcDateTime);
             var groups = entries.GroupBy(e => e.Description);
 
             foreach (var group in groups)
@@ -124,51 +152,46 @@ namespace tonkica.Pages
                 var ts = TimeSpan.FromSeconds(group.Sum(e => e.Interval.Duration));
                 var item = new InvoiceItem(group.Key)
                 {
-                    InvoiceId = _invoice.Id,
+                    InvoiceId = _invoice!.Id,
                     Price = _invoice?.Client?.ContractRate ?? 0,
                     Quantity = (decimal)ts.TotalHours,
                 };
-                _invoice!.Items?.Add(item);
+                _clockifyItems.Add(item);
             }
-
-            await SaveInvoiceItems();
         }
-        private async Task SaveInvoiceItems()
+        private void ClockifyAdd()
         {
-            if (_invoice == null || _invoice.Items == null)
+            foreach (var item in _clockifyItems)
+                _invoice!.Items?.Add(item);
+        }
+        private void ClearInvoiceItems()
+        {
+            if (_invoice == null)
                 return;
 
-            foreach (var item in _invoice.Items)
-                item.Total = item.Price * item.Quantity;
-
-            _invoice.QuantityTotal = _invoice.Items.Sum(i => i.Quantity);
-            _invoice.Total = _invoice.Items.Sum(i => i.Total);
-            _invoice.DisplayTotal = _invoice.Total * _invoice.DisplayRate;
-            _invoice.IssuerTotal = _invoice.Total * _invoice.IssuerRate;
-
-            await Db.SaveChangesAsync();
+            _invoice.Items.Clear();
+            CalculateTotals();
         }
 
-        private async Task AddItemClicked()
+        private void AddItemClicked()
         {
-            if (_invoice == null || _invoice.Items == null)
+            if (_invoice == null)
                 return;
 
             _invoice.Items.Add(_item);
-            await SaveInvoiceItems();
-
+            CalculateTotals();
             _item = new InvoiceItem(string.Empty)
             {
                 InvoiceId = _invoice.Id
             };
         }
-        private async void RemoveItemClicked(InvoiceItem item)
+        private void RemoveItemClicked(InvoiceItem item)
         {
-            if (_invoice == null || _invoice.Items == null)
+            if (_invoice == null)
                 return;
 
             _invoice.Items.Remove(item);
-            await SaveInvoiceItems();
+            CalculateTotals();
         }
     }
 }

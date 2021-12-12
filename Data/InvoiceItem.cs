@@ -14,6 +14,8 @@ namespace tonkica.Data
         public decimal Price { get; set; }
         public decimal Total { get; set; }
 
+        public bool IsValid() => !string.IsNullOrWhiteSpace(Title);
+
         public Invoice? Invoice { get; set; }
     }
 }
