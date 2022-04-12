@@ -19,7 +19,9 @@ else
         <h4>&nbsp;</h4>
         <p>
             @_t?.Delivered: @_invoice.Client?.Formats.Display(_invoice.Published, false, false) <br>
-            @_t?.DueBy: @_invoice.Client?.Formats.Display(_invoice.Published?.AddDays((double)_invoice.Client.DueInDays), false, false)
+            @_t?.DueBy:
+            @_invoice.Client?.Formats.Display(_invoice.Published?.AddDays((double)_invoice.Client.DueInDays), false,
+            false)
         </p>
     </div>
     <div class="col-auto">
@@ -55,22 +57,31 @@ else
     </thead>
     <tbody>
         @{
-            var symbol = _invoice.Currency?.Symbol;
-            for (int i = 0; i < _invoice.Items!.Count; i++)
-            {        
-                var item = _invoice.Items!.ElementAt(i);
+                var symbol = _invoice.Currency?.Symbol;
+                for (int i = 0; i < _invoice.Items!.Count; i++)
+                {
+                    var item = _invoice.Items!.ElementAt(i);
+                    <tr>
+                        <td>@(i + 1).</td>
+                        <td>@item!.Title</td>
+                        <td class="text-end">@_invoice.Client?.Formats.Display(item!.Price,2) @symbol</td>
+                        <td class="text-end">@_invoice.Client?.Formats.Display(item!.Quantity,2)</td>
+                        <td class="text-end">@_invoice.Client?.Formats.Display(item!.Total,2) @symbol</td>
+                    </tr>
+                }
                 <tr>
-                    <td>@(i + 1).</td>
-                    <td>@item!.Title</td>
-                    <td class="text-end">@_invoice.Client?.Formats.Display(item!.Price,2) @symbol</td>
-                    <td class="text-end">@_invoice.Client?.Formats.Display(item!.Quantity,2)</td>
-                    <td class="text-end">@_invoice.Client?.Formats.Display(item!.Total,2) @symbol</td>
+                    <td></td>
+                    <td></td>
+                    <td class="text-end">@_t?.Total</td>
+                    <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.QuantityTotal,2)</td>
+                    <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.Total,2) @symbol</td>
                 </tr>
             }
-        }
         </tbody>
     </table>
-    <div class="row mt-4">
+    @if (_displayCurrencies)
+    {
+        <div class="row mt-4">
     <div class="col"></div>
     <div class="col-5">
         <table class="table table-print">
@@ -82,30 +93,26 @@ else
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td class="text-center">@_invoice!.Currency?.Tag</td>
-                    <td class="text-end">@_invoice.Client?.Formats.Display(1,0)</td>
-                    <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.Total,2)</td>
-                </tr>
                 @if (_invoice.DisplayCurrencyId != _invoice.CurrencyId)
-                    {
-                        <tr>
-                            <td class="text-center">@_invoice.DisplayCurrency?.Tag</td>
-                            <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.DisplayRate)</td>
-                            <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.DisplayTotal,2)</td>
-                        </tr>
-                    }
-                    @if (_invoice.IssuerCurrencyId != _invoice.DisplayCurrencyId)
-                    {
-                        <tr>
-                            <td class="text-center">@_invoice.IssuerCurrency?.Tag</td>
-                            <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.IssuerRate)</td>
-                            <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.IssuerTotal,2)</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                        {
+                            <tr>
+                                <td class="text-center">@_invoice.DisplayCurrency?.Tag</td>
+                                <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.DisplayRate,4)</td>
+                                <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.DisplayTotal,2)</td>
+                            </tr>
+                        }
+                        @if (_invoice.IssuerCurrencyId != _invoice.DisplayCurrencyId)
+                        {
+                            <tr>
+                                <td class="text-center">@_invoice.IssuerCurrency?.Tag</td>
+                                <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.IssuerRate,4)</td>
+                                <td class="text-end">@_invoice.Client?.Formats.Display(_invoice.IssuerTotal,2)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    }
     <div class=multiline><b>@_t?.Note: </b>@_invoice.Note</div>
 }

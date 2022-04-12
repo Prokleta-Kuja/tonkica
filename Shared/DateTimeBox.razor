@@ -3,8 +3,8 @@
 <div class="mb-3">
     <label for="@For" class="form-label">@Label @(Required ? "*":"")</label>
     <div class="input-group @_errorClass">
-        <input type="datetime" class="form-control @_errorClass" id="@For" placeholder=@PlaceHolder
-            @bind=_local @onblur=Update @bind:culture=_ci required=@Required @ref=Input>
+        <input type="datetime" class="form-control @_errorClass" id="@For" placeholder=@PlaceHolder @bind=InputValue
+            @bind:culture=_ci required=@Required @ref=Input>
         <button class="btn btn-outline-secondary" title=@_t.Today type="button" @onclick=Today>📆</button>
         <button class="btn btn-outline-danger" title=@_t.Clear type="button" @onclick=Clear>⨉</button>
     </div>
@@ -16,7 +16,7 @@
     }
 </div>
 
-@code{
+@code {
     const string DEFAULT_LOCALE = "hr-HR";
     const string DEFAULT_TZ = "Europe/Zagreb";
     private bool _isError => Errors != null && Errors.ContainsKey(For);
@@ -25,6 +25,7 @@
     CultureInfo _ci = null!;
     TimeZoneInfo _tz = null!;
     DateTime? _local;
+    DateTime? InputValue { get => _local; set { _ = UpdateAsync(value); } }
     readonly IStandard _t = LocalizationFactory.Standard();
     [Parameter] public string For { get; set; } = null!;
     [Parameter] public string Label { get; set; } = null!;
@@ -38,7 +39,7 @@
     [Parameter] public bool AutoFocus { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender && AutoFocus)
+        if (firstRender && AutoFocus)
             await Input.FocusAsync();
     }
     protected override void OnInitialized()
@@ -49,10 +50,10 @@
         catch (Exception) { _tz = TimeZoneInfo.FindSystemTimeZoneById(DEFAULT_TZ); }
 
         if (Value.HasValue)
-            _local = TimeZoneInfo.ConvertTimeFromUtc(Value.Value.UtcDateTime,_tz);
+            _local = TimeZoneInfo.ConvertTimeFromUtc(Value.Value.UtcDateTime, _tz);
     }
-    
-    private async Task Update()
+
+    private async Task UpdateAsync(DateTime? value)
     {
         if (_isError)
             Errors!.Remove(For);
@@ -60,6 +61,7 @@
         if (!ValueChanged.HasDelegate)
             return;
 
+        _local = value;
         if (!_local.HasValue)
             await ValueChanged.InvokeAsync(null);
         else
@@ -69,14 +71,6 @@
             await ValueChanged.InvokeAsync(dto);
         }
     }
-    private async Task Clear()
-    {
-        _local = null;
-        await Update();
-    } 
-    private async Task Today() 
-    {
-        _local = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _tz);
-        await Update();
-    } 
+    private async Task Clear() => await UpdateAsync(null);
+    private async Task Today() => await UpdateAsync(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _tz));
 }

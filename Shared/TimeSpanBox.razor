@@ -1,11 +1,7 @@
 <div class="mb-3">
     <label for="@For" class="form-label">@Label @(Required ? "*":"")</label>
-    <select @ref=Input class="form-select @(_isError ? "is-invalid":"")" @bind=SelectValue required=@Required>
-        @foreach (var item in Items)
-        {
-            <option value="@item.Key">@item.Value</option>
-        }
-    </select>
+    <input class="form-control @_errorClass" id="@For" placeholder=@PlaceHolder @bind=@InputValue required=@Required
+        @ref=Input>
     @if (_isError)
     {
         <div class="invalid-feedback">
@@ -16,23 +12,23 @@
 
 @code {
     private bool _isError => Errors != null && Errors.ContainsKey(For);
+    private string _errorClass => _isError ? "is-invalid" : string.Empty;
+    private TimeSpan? InputValue { get => Value; set { _ = UpdateAsync(value); } }
     private ElementReference Input;
-    private int SelectValue { get => Value; set { _ = UpdateAsync(value); } }
     [Parameter] public string For { get; set; } = null!;
     [Parameter] public string Label { get; set; } = null!;
-    [Parameter] public int Value { get; set; }
-    [Parameter] public EventCallback<int> ValueChanged { get; set; }
+    [Parameter] public TimeSpan? Value { get; set; }
+    [Parameter] public EventCallback<TimeSpan?> ValueChanged { get; set; }
     [Parameter] public bool Required { get; set; }
-    [Parameter] public Dictionary<int, string> Items { get; set; } = null!;
-    [Parameter]
-    public Dictionary<string, string>? Errors { get; set; }
+    [Parameter] public string? PlaceHolder { get; set; } = "00:00:00";
+    [Parameter] public Dictionary<string, string>? Errors { get; set; }
     [Parameter] public bool AutoFocus { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && AutoFocus)
             await Input.FocusAsync();
     }
-    private async Task UpdateAsync(int value)
+    private async Task UpdateAsync(TimeSpan? value)
     {
         if (_isError)
             Errors!.Remove(For);

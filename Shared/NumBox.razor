@@ -2,8 +2,8 @@
 
 <div class="mb-3">
     <label for="@For" class="form-label">@Label @(Required ? "*":"")</label>
-        <input class="form-control @_errorClass" id="@For" placeholder=@PlaceHolder @bind=@Value
-            @onblur=Update @bind:culture=_ci required=@Required @ref=Input>
+    <input class="form-control @_errorClass" id="@For" placeholder=@PlaceHolder @bind=@InputValue @bind:culture=_ci
+        required=@Required @ref=Input>
     @if (_isError)
     {
         <div class="invalid-feedback">
@@ -12,12 +12,13 @@
     }
 </div>
 
-@code{
+@code {
     const string DEFAULT_LOCALE = "hr-HR";
     const string DEFAULT_TZ = "Europe/Zagreb";
     private bool _isError => Errors != null && Errors.ContainsKey(For);
     private string _errorClass => _isError ? "is-invalid" : string.Empty;
     private ElementReference Input;
+    private decimal? InputValue { get => Value; set { _ = UpdateAsync(value); } }
     CultureInfo _ci = null!;
     [Parameter] public string For { get; set; } = null!;
     [Parameter] public string Label { get; set; } = null!;
@@ -30,7 +31,7 @@
     [Parameter] public bool AutoFocus { get; set; }
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender && AutoFocus)
+        if (firstRender && AutoFocus)
             await Input.FocusAsync();
     }
     protected override void OnInitialized()
@@ -38,7 +39,7 @@
         try { _ci = CultureInfo.GetCultureInfo(Locale ?? DEFAULT_LOCALE); }
         catch (Exception) { _ci = CultureInfo.GetCultureInfo(DEFAULT_LOCALE); }
     }
-    private async Task Update()
+    private async Task UpdateAsync(decimal? value)
     {
         if (_isError)
             Errors!.Remove(For);
@@ -46,9 +47,6 @@
         if (!ValueChanged.HasDelegate)
             return;
 
-        if (Value.HasValue)
-            await ValueChanged.InvokeAsync(null);
-
-        await ValueChanged.InvokeAsync(Value);
+        await ValueChanged.InvokeAsync(value);
     }
 }

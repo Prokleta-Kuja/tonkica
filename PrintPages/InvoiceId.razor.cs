@@ -12,6 +12,7 @@ namespace tonkica.PrintPages
         [Parameter] public int Id { get; set; }
         private Invoice? _invoice;
         private IPrint? _t;
+        private bool _displayCurrencies;
 
         protected override async Task OnInitializedAsync()
         {
@@ -27,8 +28,13 @@ namespace tonkica.PrintPages
                 .Include(x => x.Account)
                 .SingleOrDefaultAsync(x => x.Id == Id);
 
-            if (_invoice != null && _invoice.Client != null)
-                _t = LocalizationFactory.Print(_invoice.Client.Locale);
+
+            if (_invoice != null)
+            {
+                _displayCurrencies = _invoice.DisplayCurrencyId != _invoice.CurrencyId || _invoice.IssuerCurrencyId != _invoice.DisplayCurrencyId;
+                if (_invoice.Client != null)
+                    _t = LocalizationFactory.Print(_invoice.Client.Locale);
+            }
         }
     }
 }

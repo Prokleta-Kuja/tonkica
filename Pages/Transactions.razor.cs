@@ -31,7 +31,7 @@ namespace tonkica.Pages
         private Dictionary<int, string> _accountsD = new();
         private List<TransactionCategory> Categories { get; set; } = null!;
         private Dictionary<int, string> _categoriesD = new();
-        private Params _params = new(TransactionCol.Date, true);
+        private readonly Params _params = new(TransactionCol.Date, true);
         private List<Transaction> _list = new();
         private TransactionCreateModel? _create;
         private TransactionEditModel? _edit;
