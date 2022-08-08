@@ -101,7 +101,7 @@ namespace tonkica.Pages
 
             if (_edit.DisplayCurrencyId != _invoice.Account!.CurrencyId)
             {
-                var newAccount = await Db.Accounts.FirstOrDefaultAsync(x => x.CurrencyId == _edit.DisplayCurrencyId);
+                var newAccount = await Db.Accounts.FirstOrDefaultAsync(x => x.CurrencyId == _edit.DisplayCurrencyId && x.IssuerId == _edit.IssuerId);
                 if (newAccount != null)
                     _invoice.Account = newAccount;
             }
