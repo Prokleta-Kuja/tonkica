@@ -18,6 +18,7 @@ namespace tonkica.Models
         public string? IssuedByEmployee { get; set; }
         public string? TimeZone { get; set; }
         public string? Locale { get; set; }
+        public string? LogoFileName { get; set; }
 
         public IssuerEditModel(Issuer i)
         {
@@ -30,6 +31,7 @@ namespace tonkica.Models
             IssuedByEmployee = i.IssuedByEmployee;
             TimeZone = i.TimeZone;
             Locale = i.Locale;
+            LogoFileName = i.LogoFileName;
         }
 
         public Dictionary<string, string>? Validate(IIssuers translation)

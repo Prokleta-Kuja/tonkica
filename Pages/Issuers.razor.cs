@@ -58,6 +58,7 @@ namespace tonkica.Pages
             issuer.ClockifyUrl = _create.ClockifyUrl;
             issuer.TimeZone = _create.TimeZone!;
             issuer.Locale = _create.Locale!;
+            issuer.LogoFileName = _create.LogoFileName;
 
             Db.Issuers.Add(issuer);
             await Db.SaveChangesAsync();
@@ -88,6 +89,7 @@ namespace tonkica.Pages
             issuer.ClockifyUrl = _edit.ClockifyUrl;
             issuer.TimeZone = _edit.TimeZone!;
             issuer.Locale = _edit.Locale!;
+            issuer.LogoFileName = _edit.LogoFileName;
 
             await Db.SaveChangesAsync();
             _edit = null;

@@ -18,6 +18,7 @@ namespace tonkica.Localization
         string IssuerLocale { get; }
         string IssuerLocaleInfo { get; }
         string IssuerClockify { get; }
+        string IssuerLogoFileName { get; }
         string TableName { get; }
         string TableContact { get; }
         string TableCurrency { get; }
@@ -41,6 +42,7 @@ namespace tonkica.Localization
         public string IssuerLocale => "Locale";
         public string IssuerLocaleInfo => "hr-HR";
         public string IssuerClockify => "Clockify detailed url";
+        public string IssuerLogoFileName => "Logo file name";
         public string TableName => "Name";
         public string TableContact => "Contact Info";
         public string TableCurrency => "Currency";
@@ -64,6 +66,7 @@ namespace tonkica.Localization
         public string IssuerLocale => "Lokalitet";
         public string IssuerLocaleInfo => "hr-HR";
         public string IssuerClockify => "Detaljna Clockify poveznica";
+        public string IssuerLogoFileName => "Naziv logo datoteke";
         public string TableName => "Naziv";
         public string TableContact => "Kontakt Podaci";
         public string TableCurrency => "Valuta";

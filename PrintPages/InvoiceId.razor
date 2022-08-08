@@ -25,9 +25,12 @@ else
         </p>
     </div>
     <div class="col-auto">
-        <img class=float-right src="images/logo.svg">
+        @if (!string.IsNullOrWhiteSpace(_invoice.Issuer?.LogoFileName))
+            {
+                <img class=float-right src="images/@_invoice.Issuer?.LogoFileName">
+            }
+        </div>
     </div>
-</div>
     <div class="row mt-4">
     <div class="col">
         <h5 class="border-bottom">@_t?.IssuedTo</h5>

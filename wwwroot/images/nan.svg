@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="32.826492mm"
+   height="23.283333mm"
+   viewBox="0 0 32.826492 23.283333"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (ef4d3fba62, 2022-07-19, custom)"
+   sodipodi:docname="nan2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="5.6568542"
+     inkscape:cx="37.034718"
+     inkscape:cy="52.237514"
+     inkscape:window-width="2560"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg5" />
+  <defs
+     id="defs2" />
+  <path
+     d="M 32.826493,23.275017 V 0 H 27.327148 L 18.994793,14.220535 V 0.0555492 h -5.38825 V 23.275017 H 19.217 L 27.493796,9.2766801 V 23.275017 Z"
+     style="font-size:77.448px;font-family:Dhurjati;-inkscape-font-specification:'Dhurjati, Normal';opacity:1;fill:#000000;stroke-width:0.011558"
+     id="Nright" />
+  <path
+     d="M 0,23.283333 V 0.00830864 H 5.4993476 L 13.831695,14.228845 V 0.06385778 h 5.388248 V 23.283333 H 13.609502 L 5.3327008,9.2849896 V 23.283333 Z"
+     style="font-size:77.448px;font-family:Dhurjati;-inkscape-font-specification:'Dhurjati, Normal';opacity:1;fill:#000000;stroke-width:0.011558"
+     id="Nleft" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.0596px;font-family:Dhurjati;-inkscape-font-specification:'Dhurjati, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.0889909;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     x="12.638898"
+     y="21.529018"
+     id="a"><tspan
+       sodipodi:role="line"
+       id="tspan2010"
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.0889899;stroke-opacity:1"
+       x="12.638898"
+       y="21.529018">a</tspan></text>
+</svg>

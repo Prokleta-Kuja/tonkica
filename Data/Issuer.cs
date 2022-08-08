@@ -29,6 +29,7 @@ namespace tonkica.Data
         public string TimeZone { get; set; } = "Europe/Zagreb";
         public string Locale { get; set; } = "hr-HR";
         public string IssuedByEmployee { get; set; }
+        public string? LogoFileName { get; set; }
 
         public Currency? Currency { get; set; }
         public ICollection<Account> Accounts { get; set; } = null!;
