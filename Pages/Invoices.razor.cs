@@ -20,23 +20,23 @@ namespace tonkica.Pages
         [Inject] private AppDbContext Db { get; set; } = null!;
         [Inject] private CurrencyRatesClient Rates { get; set; } = null!;
         [Inject] private NavigationManager NavManager { get; set; } = null!;
-        private const string QUERY_YEAR = "year";
-        private readonly int _defaultYear = DateTime.UtcNow.Year;
-        private int _currentYear;
-        private const string QUERY_MONTH = "month";
-        private readonly int _defaultMonth = DateTime.UtcNow.Month;
-        private int? _currentMonth;
-        private QueryStepper? StepperYear { get; set; }
-        private List<Issuer> _issuers = new();
-        private Dictionary<int, string> _issuersD = new();
-        private List<Client> _clients = new();
-        private Dictionary<int, string> _clientsD = new();
-        private List<Account> _accounts = new();
-        private Params _params = new(InvoiceCol.Published, true);
-        private List<Invoice> _list = new();
-        private InvoiceCreateModel? _create;
-        private Dictionary<string, string>? _errors;
-        private readonly IInvoices _t = LocalizationFactory.Invoices();
+        const string QUERY_YEAR = "year";
+        readonly int _defaultYear = DateTime.UtcNow.Year;
+        int _currentYear;
+        const string QUERY_MONTH = "month";
+        readonly int _defaultMonth = DateTime.UtcNow.Month;
+        int? _currentMonth;
+        QueryStepper? StepperYear { get; set; }
+        List<Issuer> _issuers = new();
+        Dictionary<int, string> _issuersD = new();
+        List<Client> _clients = new();
+        Dictionary<int, string> _clientsD = new();
+        List<Account> _accounts = new();
+        readonly Params _params = new(InvoiceCol.Published, true);
+        List<Invoice> _list = new();
+        InvoiceCreateModel? _create;
+        Dictionary<string, string>? _errors;
+        readonly IInvoices _t = LocalizationFactory.Invoices();
 
         protected override async Task OnInitializedAsync()
         {
@@ -165,10 +165,11 @@ namespace tonkica.Pages
             if (!_clientsD.Any())
                 _clientsD = await Db.Clients.ToDictionaryAsync(i => i.Id, i => i.Name);
 
-            _create = new InvoiceCreateModel();
-
-            _create.IssuerId = _issuersD.FirstOrDefault().Key;
-            _create.ClientId = _clientsD.FirstOrDefault().Key;
+            _create = new InvoiceCreateModel
+            {
+                IssuerId = _issuersD.FirstOrDefault().Key,
+                ClientId = _clientsD.FirstOrDefault().Key
+            };
         }
         private void CancelClicked() { _create = null; _errors = null; }
         private async Task<EventCallback<EventArgs>> SaveClicked()
@@ -180,11 +181,13 @@ namespace tonkica.Pages
             if (_errors != null)
                 return default;
 
-            var invoice = new Invoice();
-            invoice.SequenceNumber = _create.SequenceNumber;
-            invoice.Subject = _create.Subject!;
-            invoice.IssuerId = _create.IssuerId;
-            invoice.ClientId = _create.ClientId;
+            var invoice = new Invoice
+            {
+                SequenceNumber = _create.SequenceNumber,
+                Subject = _create.Subject!,
+                IssuerId = _create.IssuerId,
+                ClientId = _create.ClientId
+            };
 
             var issuer = _issuers.Single(x => x.Id == _create.IssuerId);
             var client = _clients.Single(x => x.Id == _create.ClientId);
@@ -194,17 +197,17 @@ namespace tonkica.Pages
             invoice.IssuerCurrency = issuer.Currency;
             invoice.Note = client.DefaultInvoiceNote;
 
-            var displayAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.DisplayCurrency?.Id);
+            var displayAccount = _accounts.FirstOrDefault(accountQuery);
             if (displayAccount != null)
                 invoice.Account = displayAccount;
             else
             {
-                var contractAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.Currency?.Id);
+                var contractAccount = _accounts.FirstOrDefault(accountQuery);
                 if (contractAccount != null)
                     invoice.Account = contractAccount;
                 else
                 {
-                    var issuerAccount = _accounts.FirstOrDefault(a => a.CurrencyId == invoice.IssuerCurrency?.Id);
+                    var issuerAccount = _accounts.FirstOrDefault(accountQuery);
                     if (issuerAccount != null)
                         invoice.Account = issuerAccount;
                     else
@@ -220,6 +223,10 @@ namespace tonkica.Pages
 
             NavManager.NavigateTo(C.Routes.InvoiceFor(invoice.Id));
             return default;
+
+            bool accountQuery(Account a) =>
+                a.CurrencyId == invoice.DisplayCurrency?.Id &&
+                a.IssuerId == invoice.IssuerId;
         }
     }
 }

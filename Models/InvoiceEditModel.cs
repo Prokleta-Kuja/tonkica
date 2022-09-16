@@ -14,12 +14,13 @@ namespace tonkica.Models
         public int IssuerId { get; set; }
         public int ClientId { get; set; }
         public int CurrencyId { get; set; }
+        public int AccountId { get; set; }
         public int DisplayCurrencyId { get; set; }
         public int IssuerCurrencyId { get; set; }
         public DateTimeOffset? Published { get; set; }
         public int Status { get; set; }
         public string? Note { get; set; }
-        private Invoice _original;
+        readonly Invoice _original;
 
         public InvoiceEditModel(Invoice i)
         {
@@ -29,6 +30,7 @@ namespace tonkica.Models
             IssuerId = i.IssuerId;
             ClientId = i.ClientId;
             CurrencyId = i.CurrencyId;
+            AccountId = i.AccountId;
             DisplayCurrencyId = i.DisplayCurrencyId;
             IssuerCurrencyId = i.IssuerCurrencyId;
             Published = i.Published;
@@ -41,6 +43,7 @@ namespace tonkica.Models
             IssuerId != _original.IssuerId ||
             ClientId != _original.ClientId ||
             CurrencyId != _original.CurrencyId ||
+            AccountId != _original.AccountId ||
             DisplayCurrencyId != _original.DisplayCurrencyId ||
             IssuerCurrencyId != _original.IssuerCurrencyId ||
             Published != _original.Published ||
@@ -63,6 +66,9 @@ namespace tonkica.Models
 
             if (ClientId <= 0)
                 errors.Add(nameof(ClientId), translation.ValidationRequired);
+
+            if (AccountId <= 0)
+                errors.Add(nameof(AccountId), translation.ValidationRequired);
 
             if (Published.HasValue && Published.Value > DateTimeOffset.UtcNow)
                 errors.Add(nameof(Published), translation.ValidationCannotBeInTheFuture);

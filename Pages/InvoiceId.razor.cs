@@ -24,6 +24,8 @@ namespace tonkica.Pages
         Dictionary<int, string> _issuersD = new();
         List<Client> _clients = new();
         Dictionary<int, string> _clientsD = new();
+        List<Account> _accounts = new();
+        Dictionary<int, string> _accountsD = new();
         readonly Dictionary<int, string> _statusesD = new();
         Issuer? _issuer;
         Invoice? _invoice;
@@ -32,7 +34,7 @@ namespace tonkica.Pages
         bool _clockifyOpen;
         DateTimeOffset? _clockifyStart;
         DateTimeOffset? _clockifyEnd;
-        List<InvoiceItem> _clockifyItems = new();
+        readonly List<InvoiceItem> _clockifyItems = new();
         Dictionary<string, string>? _errors;
         bool _isDraft;
         readonly IInvoice _t = LocalizationFactory.Invoice();
@@ -53,9 +55,11 @@ namespace tonkica.Pages
             _clients = await Db.Clients.ToListAsync();
             _clientsD = _clients.ToDictionary(x => x.Id, x => x.Name);
 
+            _accounts = await Db.Accounts.ToListAsync();
+            _accountsD = _accounts.ToDictionary(x => x.Id, x => x.Name);
+
             _invoice = await Db.Invoices
                 .Include(x => x.Items)
-                .Include(x => x.Account)
                 .SingleOrDefaultAsync(x => x.Id == Id);
 
             if (_invoice != null)
@@ -93,18 +97,12 @@ namespace tonkica.Pages
             _invoice.Subject = _edit.Subject!;
             _invoice.IssuerId = _edit.IssuerId;
             _invoice.ClientId = _edit.ClientId;
+            _invoice.AccountId = _edit.AccountId;
             _invoice.Note = _edit.Note;
 
             _invoice.Currency = _currencies.First(c => c.Id == _edit.CurrencyId);
             _invoice.DisplayCurrency = _currencies.First(c => c.Id == _edit.DisplayCurrencyId);
             _invoice.IssuerCurrency = _currencies.First(c => c.Id == _edit.IssuerCurrencyId);
-
-            if (_edit.DisplayCurrencyId != _invoice.Account!.CurrencyId)
-            {
-                var newAccount = await Db.Accounts.FirstOrDefaultAsync(x => x.CurrencyId == _edit.DisplayCurrencyId && x.IssuerId == _edit.IssuerId);
-                if (newAccount != null)
-                    _invoice.Account = newAccount;
-            }
 
             await Rates.CalculateRates(_invoice);
             CalculateTotals();

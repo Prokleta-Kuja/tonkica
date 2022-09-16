@@ -42,6 +42,12 @@
                 </div>
                 <div class="row">
                     <div class="col">
+                        <Dropdown For=@nameof(InvoiceEditModel.AccountId) Label=@_t.InvoiceDisplayAccount
+                            @bind-Value=_edit.AccountId Errors=_errors Required Items=_accountsD />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
                         <Dropdown For=@nameof(InvoiceEditModel.Status) Label=@_t.InvoiceStatus @bind-Value=_edit.Status Errors=_errors
                             Required Items=_statusesD />   
                     </div>

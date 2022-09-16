@@ -10,6 +10,7 @@ namespace tonkica.Localization
         string InvoiceCurrency { get; }
         string InvoiceDisplayCurrency { get; }
         string InvoiceIssuerCurrency { get; }
+        string InvoiceDisplayAccount { get; }
         string InvoiceStatus { get; }
         string InvoicePublished { get; }
         string InvoiceNote { get; }
@@ -35,6 +36,7 @@ namespace tonkica.Localization
         public string InvoiceCurrency => "Invoice Currency";
         public string InvoiceDisplayCurrency => "Display Currency";
         public string InvoiceIssuerCurrency => "Issuer Currency";
+        public string InvoiceDisplayAccount => "Display bank account";
         public string InvoiceStatus => "Status";
         public string InvoicePublished => "Published";
         public string InvoiceNote => "Note";
@@ -60,6 +62,7 @@ namespace tonkica.Localization
         public string InvoiceCurrency => "Valuta računa";
         public string InvoiceDisplayCurrency => "Valuta za prikaz";
         public string InvoiceIssuerCurrency => "Valuta izdavača";
+        public string InvoiceDisplayAccount => "Prikaži bankovni račun";
         public string InvoiceStatus => "Stanje";
         public string InvoicePublished => "Izdano";
         public string InvoiceNote => "Napomena";
