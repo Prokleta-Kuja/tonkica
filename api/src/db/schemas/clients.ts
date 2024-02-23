@@ -6,8 +6,8 @@ export const clients = pgTable("clients", {
   name: text("name").notNull(),
   info: text("info").notNull(),
   currency: text("currency").notNull(),
-  rate: bigint("rate", { mode: "bigint" }), //TODO: multiply/divide by 1 000 000
-  daysDue: smallint("days_due"),
+  rate: bigint("rate", { mode: "bigint" }).notNull(), //TODO: multiply/divide by 1 000 000
+  daysDue: smallint("days_due").notNull(),
   tz: text("tz").notNull().default("America/New_York"),
   locale: text("locale").notNull().default("en-US"),
 });
