@@ -7,11 +7,12 @@
     "check": "tsc -p tsconfig.json --noEmit",
     "dev": "tsx watch --tsconfig tsconfig.json ./src/main.ts",
     "migration": "drizzle-kit generate:pg --schema ./src/db/schemas/index.ts --out ./src/db/migrations",
-    "push": "drizzle-kit push:pg --driver pg --schema ./src/db/schemas/index.ts --connectionString 'postgres://postgres:postgres@db:5432/tonkica' --verbose"
+    "push": "drizzle-kit push:pg --driver pg --schema ./src/db/schemas/index.ts --connectionString 'postgres://postgres:postgres@db:5432/tonkica' --verbose",
+    "recreate": "tsx --tsconfig tsconfig.json ./src/db/recreateDb.ts && npm run push"
   },
   "devDependencies": {
     "@fastify/http-proxy": "9.4.0",
-    "@types/node": "20.11.19",
+    "@types/node": "20.11.20",
     "drizzle-kit": "0.20.14",
     "tsx": "4.7.1",
     "typescript": "5.3.3"
@@ -21,7 +22,7 @@
     "@fastify/swagger": "8.14.0",
     "@fastify/swagger-ui": "3.0.0",
     "dotenv": "16.4.5",
-    "drizzle-orm": "0.29.3",
+    "drizzle-orm": "0.29.4",
     "drizzle-zod": "0.5.1",
     "fastify": "4.26.1",
     "fastify-zod-openapi": "1.1.0",

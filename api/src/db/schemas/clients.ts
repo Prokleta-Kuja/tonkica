@@ -1,4 +1,4 @@
-import { bigint, pgTable, serial, smallint, text } from "drizzle-orm/pg-core";
+import { numeric, pgTable, serial, smallint, text } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const clients = pgTable("clients", {
@@ -6,11 +6,11 @@ export const clients = pgTable("clients", {
   name: text("name").notNull(),
   info: text("info").notNull(),
   currency: text("currency").notNull(),
-  rate: bigint("rate", { mode: "bigint" }).notNull(), //TODO: multiply/divide by 1 000 000
+  rate: numeric("rate", { precision: 15, scale: 6 }).notNull(),
   daysDue: smallint("days_due").notNull(),
   tz: text("tz").notNull().default("America/New_York"),
   locale: text("locale").notNull().default("en-US"),
 });
 
-export const insertIssuerSchema = createInsertSchema(clients);
-export const selectIssuerSchema = createSelectSchema(clients);
+export const insertClientSchema = createInsertSchema(clients);
+export const selectClientSchema = createSelectSchema(clients);

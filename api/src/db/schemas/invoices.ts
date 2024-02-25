@@ -1,10 +1,10 @@
 import {
-  bigint,
   integer,
   pgTable,
   serial,
   text,
   timestamp,
+  numeric,
 } from "drizzle-orm/pg-core";
 import { issuers } from "./issuers";
 import { clients } from "./clients";
@@ -26,7 +26,7 @@ export const invoices = pgTable("invoices", {
   subject: text("subject").notNull(),
   currency: text("currency").notNull(),
   displayCurrency: text("display_currency").notNull(),
-  displayRate: bigint("display_rate", { mode: "bigint" }).notNull(),
+  displayRate: numeric("display_rate", { precision: 15, scale: 6 }).notNull(),
   published: timestamp("published").notNull(),
   paid: timestamp("paid"),
   note: text("note"),

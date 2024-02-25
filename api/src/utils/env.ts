@@ -6,7 +6,8 @@ const envSchema = z.object({
     .string()
     .toLowerCase()
     .transform((x) => x === "true" || x === "1")
-    .pipe(z.boolean().default(false)),
+    .pipe(z.boolean().default(false))
+    .default("0"),
   DATABASE_URL: z
     .string()
     .default(
