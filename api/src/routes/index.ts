@@ -1,19 +1,46 @@
 import { FastifyInstance } from "fastify";
 
+export const tags = {
+  bankAccount: "BankAccount",
+  client: "Client",
+  invoice: "Invoice",
+  invoiceItem: "InvoiceItem",
+  issuer: "Issuer",
+  task: "Task",
+  taskTime: "TaskTime",
+} as const;
+
 const routePrefix = {
   api: "api",
   bankAccounts: "bank-accounts",
+  clients: "clients",
+  invoices: "invoices",
+  issuers: "issuers",
+  tasks: "tasks",
 } as const;
 
 const params = {
   id: ":id",
+  id2: ":id2",
 } as const;
 
 export const routes = {
-  users: `/${routePrefix.api}/${routePrefix.bankAccounts}`,
-  user: `/${routePrefix.api}/${routePrefix.bankAccounts}/${params.id}`,
+  bankAccounts: `/${routePrefix.api}/${routePrefix.bankAccounts}`,
+  bankAccount: `/${routePrefix.api}/${routePrefix.bankAccounts}/${params.id}`,
+  clients: `/${routePrefix.api}/${routePrefix.clients}`,
+  client: `/${routePrefix.api}/${routePrefix.clients}/${params.id}`,
+  invoices: `/${routePrefix.api}/${routePrefix.invoices}`,
+  invoice: `/${routePrefix.api}/${routePrefix.invoices}/${params.id}`,
+  invoiceItems: `/${routePrefix.api}/${routePrefix.invoices}/${params.id}/items`,
+  invoiceItem: `/${routePrefix.api}/${routePrefix.invoices}/${params.id}/items/${params.id2}`,
+  issuers: `/${routePrefix.api}/${routePrefix.issuers}`,
+  issuer: `/${routePrefix.api}/${routePrefix.issuers}/${params.id}`,
+  tasks: `/${routePrefix.api}/${routePrefix.tasks}`,
+  task: `/${routePrefix.api}/${routePrefix.tasks}/${params.id}`,
+  taskTimes: `/${routePrefix.api}/${routePrefix.tasks}/${params.id}/times`,
+  taskTime: `/${routePrefix.api}/${routePrefix.tasks}/${params.id}/times/${params.id2}`,
 } as const;
 
 export const allRoutes = async (fastify: FastifyInstance, options: Object) => {
-  //registerAuthRoutes(fastify, options);
+  //registerBankAccountRoutes(fastify, options);
 };
