@@ -48,7 +48,7 @@ export const ensureDevData = async () => {
       City 12345
       United States of America`,
       currency: Currency.USD,
-      rate: (125).toFixed(6),
+      rate: 125,
       daysDue: 15,
       tz: "America/New_York",
       locale: "en-US",
@@ -62,7 +62,7 @@ export const ensureDevData = async () => {
       City 12345
       Germany`,
       currency: Currency.EUR,
-      rate: (95.75).toString(),
+      rate: 95.75,
       daysDue: 15,
       tz: "Europe/Berlin",
       locale: "de-DE",
@@ -139,7 +139,7 @@ export const ensureDevData = async () => {
       subject: "Services rendered in January",
       currency: Currency.EUR,
       displayCurrency: Currency.USD,
-      displayRate: (1.0834).toString(),
+      displayRate: 1.0834,
       published: new Date(),
       note: "Exempt from VAT pursuant to Article 17, paragraph 1 of the Croatian VAT Act.",
     };
@@ -150,9 +150,9 @@ export const ensureDevData = async () => {
       id: 1,
       invoiceId: 1,
       title: "First task",
-      quantity: (6).toString(),
-      price: (125).toString(),
-      total: (6 * 125).toString(),
+      quantity: 6,
+      price: 125,
+      total: 6 * 125,
     };
     iitem1 = insertInvoiceItemSchema.parse(iitem1);
 
@@ -160,9 +160,9 @@ export const ensureDevData = async () => {
       id: 2,
       invoiceId: 1,
       title: "Manual task",
-      quantity: (6.75).toString(),
-      price: (125.79).toString(),
-      total: (6.75 * 125.79).toString(),
+      quantity: 6.75,
+      price: 125.79,
+      total: 6.75 * 125.79,
     };
     iitem2 = insertInvoiceItemSchema.parse(iitem2);
 
