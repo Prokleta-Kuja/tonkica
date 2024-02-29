@@ -95,6 +95,7 @@ namespace tonkica.Services
 
             i.DisplayRate = 1;
             i.IssuerRate = 1;
+            await Task.CompletedTask;
         }
         public Task<IEnumerable<CurrencyRate>> GetLatestRatesAsync(IEnumerable<string> currencies, CancellationToken cancellationToken = default)
         {
