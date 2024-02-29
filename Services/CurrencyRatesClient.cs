@@ -62,35 +62,39 @@ namespace tonkica.Services
 
             var tags = new HashSet<string> { i.Currency.Tag, i.DisplayCurrency.Tag, i.IssuerCurrency.Tag, };
 
-            var rates = i.Published.HasValue
-                ? await GetRatesForDateAsync(i.Published.Value, tags)
-                : await GetLatestRatesAsync(tags);
+            // Faking HNB API v2 je krepao...
+            // var rates = i.Published.HasValue
+            //     ? await GetRatesForDateAsync(i.Published.Value, tags)
+            //     : await GetLatestRatesAsync(tags);
 
-            var contractRate = rates.FirstOrDefault(x => x.Currency == i.Currency.Tag);
-            var displayRate = rates.FirstOrDefault(x => x.Currency == i.DisplayCurrency.Tag);
-            var issuerRate = rates.FirstOrDefault(x => x.Currency == i.IssuerCurrency.Tag);
+            // var contractRate = rates.FirstOrDefault(x => x.Currency == i.Currency.Tag);
+            // var displayRate = rates.FirstOrDefault(x => x.Currency == i.DisplayCurrency.Tag);
+            // var issuerRate = rates.FirstOrDefault(x => x.Currency == i.IssuerCurrency.Tag);
 
-            if (contractRate == null) // Contract is in HRK
-            {
-                i.DisplayRate = displayRate == null ? 1 : displayRate.AverageRate / displayRate.Unit;
-                i.IssuerRate = issuerRate == null ? 1 : issuerRate.AverageRate / issuerRate.Unit;
-            }
-            else
-            {
-                if (displayRate == null)
-                    i.DisplayRate = contractRate.AverageRate / contractRate.Unit;
-                else if (displayRate.Currency == contractRate.Currency)
-                    i.DisplayRate = 1;
-                else
-                    i.DisplayRate = (contractRate.AverageRate / contractRate.Unit) / (displayRate.AverageRate / displayRate.Unit);
+            // if (contractRate == null) // Contract is in HRK
+            // {
+            //     i.DisplayRate = displayRate == null ? 1 : displayRate.AverageRate / displayRate.Unit;
+            //     i.IssuerRate = issuerRate == null ? 1 : issuerRate.AverageRate / issuerRate.Unit;
+            // }
+            // else
+            // {
+            //     if (displayRate == null)
+            //         i.DisplayRate = contractRate.AverageRate / contractRate.Unit;
+            //     else if (displayRate.Currency == contractRate.Currency)
+            //         i.DisplayRate = 1;
+            //     else
+            //         i.DisplayRate = (contractRate.AverageRate / contractRate.Unit) / (displayRate.AverageRate / displayRate.Unit);
 
-                if (issuerRate == null)
-                    i.IssuerRate = contractRate.AverageRate / contractRate.Unit;
-                else if (issuerRate.Currency == contractRate.Currency)
-                    i.IssuerRate = 1;
-                else
-                    i.IssuerRate = (contractRate.AverageRate / contractRate.Unit) / (issuerRate.AverageRate / issuerRate.Unit);
-            }
+            //     if (issuerRate == null)
+            //         i.IssuerRate = contractRate.AverageRate / contractRate.Unit;
+            //     else if (issuerRate.Currency == contractRate.Currency)
+            //         i.IssuerRate = 1;
+            //     else
+            //         i.IssuerRate = (contractRate.AverageRate / contractRate.Unit) / (issuerRate.AverageRate / issuerRate.Unit);
+            // }
+
+            i.DisplayRate = 1;
+            i.IssuerRate = 1;
         }
         public Task<IEnumerable<CurrencyRate>> GetLatestRatesAsync(IEnumerable<string> currencies, CancellationToken cancellationToken = default)
         {
