@@ -1,6 +1,6 @@
 import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { clients } from "./clients";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 
 export const tasks = pgTable("tasks", {
   id: serial("id").primaryKey(),
@@ -12,3 +12,4 @@ export const tasks = pgTable("tasks", {
 });
 
 export const insertTaskSchema = createInsertSchema(tasks);
+export const selectTaskSchema = createSelectSchema(tasks)

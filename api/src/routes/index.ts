@@ -1,4 +1,11 @@
 import { FastifyInstance } from "fastify";
+import { registerBankAccountRoutes } from "./bankAccounts";
+import { registerClientRoutes } from "./clients";
+import { registerInvoiceItemRoutes } from "./invoiceItems";
+import { registerInvoiceRoutes } from "./invoices";
+import { registerIssuerRoutes } from "./issuers";
+import { registerTaskRoutes } from "./tasks";
+import { registerTaskTimeRoutes } from "./taskTimes";
 
 export const tags = {
   bankAccount: "BankAccount",
@@ -42,5 +49,11 @@ export const routes = {
 } as const;
 
 export const allRoutes = async (fastify: FastifyInstance, options: Object) => {
-  //registerBankAccountRoutes(fastify, options);
+  registerBankAccountRoutes(fastify, options);
+  registerClientRoutes(fastify, options)
+  registerInvoiceItemRoutes(fastify, options)
+  registerInvoiceRoutes(fastify, options)
+  registerIssuerRoutes(fastify, options)
+  registerTaskRoutes(fastify, options)
+  registerTaskTimeRoutes(fastify, options)
 };

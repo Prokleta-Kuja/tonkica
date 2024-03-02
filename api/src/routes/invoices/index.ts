@@ -5,6 +5,10 @@ import { z } from "zod";
 import { extendZodWithOpenApi } from "zod-openapi";
 import { getListSchema, getpaginationQuerySchema } from "../schemas";
 import { FastifyInstance } from "fastify";
+import { create } from "./create";
+import { get } from "./get";
+import { getAll } from "./getAll";
+import { update } from "./update";
 
 extendZodWithOpenApi(z);
 export const invoiceCreateSchema = z
@@ -74,5 +78,8 @@ export const registerInvoiceRoutes = async (
   fastify: FastifyInstance,
   options: Object
 ) => {
+  create(fastify, options);
+  get(fastify, options);
   getAll(fastify, options);
+  update(fastify, options);
 };

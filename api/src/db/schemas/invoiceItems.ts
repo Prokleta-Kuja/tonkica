@@ -1,6 +1,6 @@
 import { integer, pgTable, serial, text } from "drizzle-orm/pg-core";
 import { invoices } from "./invoices";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { numericNumber } from "@db/numericNumber";
 import { z } from "zod";
 
@@ -20,3 +20,4 @@ export const insertInvoiceItemSchema = createInsertSchema(invoiceItems, {
   price: z.number(),
   total: z.number(),
 });
+export const selectInvoiceItemSchema = createSelectSchema(invoiceItems)

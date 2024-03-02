@@ -2,7 +2,7 @@ import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { issuers } from "./issuers";
 import { clients } from "./clients";
 import { bankAccounts } from "./bankAccounts";
-import { createInsertSchema } from "drizzle-zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { numericNumber } from "@db/numericNumber";
 import { z } from "zod";
 
@@ -30,3 +30,4 @@ export const invoices = pgTable("invoices", {
 export const insertInvoiceSchema = createInsertSchema(invoices, {
   displayRate: z.number(),
 });
+export const selectInvoiceSchema = createSelectSchema(invoices)

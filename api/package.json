@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@fastify/http-proxy": "9.4.0",
-    "@types/node": "20.11.20",
+    "@types/node": "20.11.24",
     "drizzle-kit": "0.20.14",
     "tsx": "4.7.1",
     "typescript": "5.3.3"
@@ -28,6 +28,6 @@
     "fastify-zod-openapi": "1.1.0",
     "postgres": "3.4.3",
     "zod": "3.22.4",
-    "zod-openapi": "2.13.0"
+    "zod-openapi": "2.14.0"
   }
 }

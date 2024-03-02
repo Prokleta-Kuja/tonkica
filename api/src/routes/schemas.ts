@@ -1,10 +1,18 @@
-import z from "zod";
+import { nameof } from "@utils/index";
+import z, { ZodError } from "zod";
 import { extendZodWithOpenApi } from "zod-openapi";
 
 extendZodWithOpenApi(z);
 export const idParamSchema = z.object({
   id: z.number(),
 });
+export const idParamError = new ZodError([
+  {
+    code: "custom",
+    path: [nameof<z.infer<typeof idParamSchema>>("id")],
+    message: "Invalid id",
+  },
+]);
 
 export const getpaginationQuerySchema = <T extends z.ZodTypeAny>(
   orderBySchema: T
