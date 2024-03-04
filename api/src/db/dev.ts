@@ -5,7 +5,7 @@ import { Currency } from "@utils/currencies";
 import { clients, insertClientSchema } from "./schemas/clients";
 import { insertIssuerSchema, issuers } from "./schemas/issuers";
 import { insertTaskSchema, tasks } from "./schemas/tasks";
-import { insertTaskTimeScheme, taskTimes } from "./schemas/taskTimes";
+import { insertTaskTimeSchema, taskTimes } from "./schemas/taskTimes";
 import { insertInvoiceSchema, invoices } from "./schemas/invoices";
 import { insertInvoiceItemSchema, invoiceItems } from "./schemas/invoiceItems";
 
@@ -114,20 +114,20 @@ export const ensureDevData = async () => {
     task2 = insertTaskSchema.parse(task2);
 
     // Task times
-    let time1: z.infer<typeof insertTaskTimeScheme> = {
+    let time1: z.infer<typeof insertTaskTimeSchema> = {
       id: 1,
       taskId: 1,
       start: new Date(),
       durationMs: 2 * 60 * 60 * 1000, // 2hrs
     };
-    time1 = insertTaskTimeScheme.parse(time1);
-    let time2: z.infer<typeof insertTaskTimeScheme> = {
+    time1 = insertTaskTimeSchema.parse(time1);
+    let time2: z.infer<typeof insertTaskTimeSchema> = {
       id: 2,
       taskId: 1,
       start: new Date(),
       durationMs: 4 * 60 * 60 * 1000, // 4hrs
     };
-    time2 = insertTaskTimeScheme.parse(time2);
+    time2 = insertTaskTimeSchema.parse(time2);
 
     // Invoices
     let invoice1: z.infer<typeof insertInvoiceSchema> = {
