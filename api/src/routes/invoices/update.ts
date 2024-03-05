@@ -4,7 +4,7 @@ import {
   FastifyZodOpenApiTypeProvider,
 } from "fastify-zod-openapi";
 import { routes, tags } from "..";
-import { badRequestSchema, idParamSchema } from "../schemas";
+import { badRequestSchema, idParamSchema, notFoundSchema } from "../schemas";
 import { ZodError, z } from "zod";
 import { db } from "@db/index";
 import { count, eq } from "drizzle-orm";
@@ -26,6 +26,7 @@ export const update = async (fastify: FastifyInstance, _options: Object) => {
       response: {
         200: invoiceSchema,
         400: badRequestSchema,
+        404: notFoundSchema,
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async (req, res) => {

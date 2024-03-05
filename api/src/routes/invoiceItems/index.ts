@@ -5,7 +5,7 @@ import { extendZodWithOpenApi } from "zod-openapi";
 import { getListSchema, getpaginationQuerySchema } from "../schemas";
 import { FastifyInstance } from "fastify";
 import { create } from "./create";
-import { get } from "./get";
+import { remove } from "./remove";
 import { getAll } from "./getAll";
 import { update } from "./update";
 
@@ -31,16 +31,18 @@ export const invoiceItemSchema = z
     title: z.string().min(2).max(64),
     quantity: z.number(),
     price: z.number(),
+    total: z.number(),
   })
   .openapi({ ref: "InvoiceItemUpdate" });
 
 export const invoiceItemOrderBy = z
-  .enum(["title", "quantity", "price", "total"])
+  .enum(["id", "title", "quantity", "price", "total"])
   .openapi({ ref: "InvoiceItemOrderBy" });
 export const invoiceitemOrderByMapping: Record<
   z.infer<typeof invoiceItemOrderBy>,
   PgColumn
 > = {
+  id: invoiceItems.id,
   title: invoiceItems.title,
   quantity: invoiceItems.quantity,
   price: invoiceItems.price,
@@ -55,7 +57,7 @@ export const registerInvoiceItemRoutes = async (
   options: Object
 ) => {
   create(fastify, options);
-  get(fastify, options);
   getAll(fastify, options);
   update(fastify, options);
+  remove(fastify, options);
 };

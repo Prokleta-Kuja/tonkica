@@ -4,7 +4,7 @@ import {
   FastifyZodOpenApiTypeProvider,
 } from "fastify-zod-openapi";
 import { routes, tags } from "..";
-import { badRequestSchema, idParamSchema } from "../schemas";
+import { badRequestSchema, idParamSchema, notFoundSchema } from "../schemas";
 import { z } from "zod";
 import { db } from "@db/index";
 import { eq } from "drizzle-orm";
@@ -25,6 +25,7 @@ export const update = async (fastify: FastifyInstance, _options: Object) => {
       response: {
         200: clientSchema,
         400: badRequestSchema,
+        404: notFoundSchema,
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async (req, res) => {
@@ -57,9 +58,9 @@ export const update = async (fastify: FastifyInstance, _options: Object) => {
         if (updatedDbResults.length > 1)
           throw new Error("Update affected multiple records");
 
-        const updatedDbResult = clientSchema.parse(updatedDbResults[0])
+        const updatedDbResult = clientSchema.parse(updatedDbResults[0]);
         res.code(200).send(updatedDbResult);
-      })
+      });
     },
   });
 };
