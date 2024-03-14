@@ -1,7 +1,7 @@
-export { bankAccounts } from "./bankAccounts";
-export { clients } from "./clients";
-export { invoiceItems } from "./invoiceItems";
-export { invoices } from "./invoices";
-export { issuers } from "./issuers";
-export { tasks } from "./tasks";
-export { taskTimes } from "./taskTimes";
+export { bankAccounts, bankAccountsRelations } from "./bankAccounts";
+export { clients, clientsRelations } from "./clients";
+export { invoiceItems, invoiceItemsRelations } from "./invoiceItems";
+export { invoices, invoicesRelations } from "./invoices";
+export { issuers, issuersRelations } from "./issuers";
+export { tasks, tasksRelations } from "./tasks";
+export { taskTimes, taskTimesRelations } from "./taskTimes";
