@@ -1,5 +1,8 @@
+import { relations } from "drizzle-orm";
 import { pgTable, serial, text } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { bankAccounts } from "./bankAccounts";
+import { invoices } from "./invoices";
 
 export const issuers = pgTable("issuers", {
   id: serial("id").primaryKey(),
@@ -13,4 +16,8 @@ export const issuers = pgTable("issuers", {
 });
 
 export const insertIssuerSchema = createInsertSchema(issuers);
-export const selectIssuerSchema = createSelectSchema(issuers)
+export const selectIssuerSchema = createSelectSchema(issuers);
+export const issuersRelations = relations(issuers, ({ many }) => ({
+  bankAccounts: many(bankAccounts),
+  invoices: many(invoices),
+}));

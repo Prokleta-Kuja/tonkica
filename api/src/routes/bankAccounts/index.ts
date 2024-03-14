@@ -16,6 +16,7 @@ export const bankAccountCreateSchema = z
     name: z.string().min(2).max(64),
     info: z.string().min(2).max(256),
     currency: currencySchema,
+    issuerId: z.number().gt(0),
   })
   .openapi({ ref: "BankAccountCreate" });
 

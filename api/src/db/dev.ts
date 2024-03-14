@@ -19,27 +19,6 @@ export const ensureDevData = async () => {
   console.info("Inserting dev data");
 
   await db.transaction(async (tx) => {
-    // Bank accounts
-    let bankUS: z.infer<typeof insertBankAccountSchema> = {
-      id: 1,
-      name: "US Bank Account",
-      currency: Currency.USD,
-      info: `Account USD
-    Routing no: 123
-    `,
-    };
-    bankUS = insertBankAccountSchema.parse(bankUS);
-
-    let bankEU: z.infer<typeof insertBankAccountSchema> = {
-      id: 2,
-      name: "Belgian Bank Account",
-      currency: Currency.EUR,
-      info: `Account EUR
-    IBAN EU1234
-    `,
-    };
-    bankEU = insertBankAccountSchema.parse(bankEU);
-
     // Clients
     let clientUS: z.infer<typeof insertClientSchema> = {
       id: 1,
@@ -95,6 +74,29 @@ export const ensureDevData = async () => {
       invoicedBy: "Person B",
     };
     issuerB = insertIssuerSchema.parse(issuerB);
+
+    // Bank accounts
+    let bankUS: z.infer<typeof insertBankAccountSchema> = {
+      id: 1,
+      issuerId: issuerA.id ?? 0,
+      name: "US Bank Account",
+      currency: Currency.USD,
+      info: `Account USD
+    Routing no: 123
+    `,
+    };
+    bankUS = insertBankAccountSchema.parse(bankUS);
+
+    let bankEU: z.infer<typeof insertBankAccountSchema> = {
+      id: 2,
+      issuerId: issuerA.id ?? 0,
+      name: "Belgian Bank Account",
+      currency: Currency.EUR,
+      info: `Account EUR
+    IBAN EU1234
+    `,
+    };
+    bankEU = insertBankAccountSchema.parse(bankEU);
 
     // Tasks
     let task1: z.infer<typeof insertTaskSchema> = {
