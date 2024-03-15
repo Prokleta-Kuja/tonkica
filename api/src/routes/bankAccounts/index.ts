@@ -25,12 +25,15 @@ export const bankAccountUpdateSchema = z
     name: z.string().min(2).max(64),
     info: z.string().min(2).max(256),
     currency: currencySchema,
+    issuerId: z.number().gt(0),
   })
   .openapi({ ref: "BankAccountUpdate" });
 
 export const bankAccountSchema = z
   .object({
     id: z.number(),
+    issuerId: z.number(),
+    issuerName: z.string().min(2).max(64),
     name: z.string().min(2).max(64),
     info: z.string().min(2).max(256),
     currency: currencySchema,

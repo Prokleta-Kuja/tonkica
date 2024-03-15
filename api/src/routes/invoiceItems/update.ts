@@ -4,17 +4,16 @@ import {
   FastifyZodOpenApiTypeProvider,
 } from "fastify-zod-openapi";
 import { routes, tags } from "..";
-import { badRequestSchema, idParamSchema, notFoundSchema } from "../schemas";
-import { ZodError, z } from "zod";
+import { badRequestSchema, id2ParamSchema, notFoundSchema } from "../schemas";
+import { z } from "zod";
 import { db } from "@db/index";
-import { count, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { invoiceItemSchema, invoiceItemUpdateSchema } from ".";
-import { bankAccounts, clients, invoices, issuers } from "@db/schemas";
+import { invoices } from "@db/schemas";
 import {
   invoiceItems,
   selectInvoiceItemSchema,
 } from "@db/schemas/invoiceItems";
-import { nameof } from "@utils/index";
 
 export const update = async (fastify: FastifyInstance, _options: Object) => {
   fastify.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
@@ -24,7 +23,7 @@ export const update = async (fastify: FastifyInstance, _options: Object) => {
       operationId: "update",
       description: "Update Invoice Item",
       tags: [tags.invoice],
-      params: idParamSchema,
+      params: id2ParamSchema,
       body: invoiceItemUpdateSchema,
       response: {
         200: invoiceItemSchema,
@@ -35,8 +34,10 @@ export const update = async (fastify: FastifyInstance, _options: Object) => {
     handler: async (req, res) => {
       const dbResults = await db
         .select()
-        .from(invoices)
-        .where(eq(invoices.id, req.params.id))
+        .from(invoiceItems)
+        .where(
+          and(eq(invoices.id, req.params.id), eq(invoiceItems, req.params.id2))
+        )
         .limit(2);
 
       if (dbResults.length !== 1) return res.code(404).send();

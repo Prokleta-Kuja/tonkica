@@ -7,42 +7,42 @@ import { routes, tags } from "..";
 import { db } from "@db/index";
 import { and, asc, desc, count, ilike, or, SQL, eq } from "drizzle-orm";
 import {
-  bankAccountOrderByMapping,
-  bankAccountsSchema,
-  bankAccountsQuerySchema,
-  bankAccountSchema,
+  tasktimeOrderByMapping,
+  taskTimesSchema,
+  taskTimesQuerySchema,
+  taskTimeSchema,
 } from ".";
-import { bankAccounts, issuers } from "@db/schemas";
+import { taskTimes, tasks } from "@db/schemas";
 
 export const getAll = async (fastify: FastifyInstance, _options: Object) => {
   fastify.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
     method: "GET",
-    url: routes.bankAccounts,
+    url: routes.taskTimes,
     schema: {
       operationId: "getAll",
-      description: "Get all Bank Accounts",
-      tags: [tags.bankAccount],
-      querystring: bankAccountsQuerySchema,
+      description: "Get all Task Times",
+      tags: [tags.taskTime],
+      querystring: taskTimesQuerySchema,
       response: {
-        200: bankAccountsSchema,
+        200: taskTimesSchema,
       },
     } satisfies FastifyZodOpenApiSchema,
     handler: async (req, res) => {
-      const orderCol = bankAccountOrderByMapping[req.query.orderBy ?? "name"];
+      const orderCol = tasktimeOrderByMapping[req.query.orderBy ?? "start"];
 
       const term = req.query.term?.trim();
       const search: (SQL | undefined)[] = [];
-      if (term)
-        term.split(" ").forEach((t) => {
-          t = `%${t}%`;
-          search.push(or(ilike(bankAccounts.name, t)));
-        });
+      // if (term)
+      //   term.split(" ").forEach((t) => {
+      //     t = `%${t}%`;
+      //     search.push(or(ilike(taskTimes., t)));
+      //   });
 
       const where = and(...search);
 
       const [{ total }] = await db
         .select({ total: count() })
-        .from(bankAccounts)
+        .from(taskTimes)
         .where(where);
 
       const results =
@@ -50,13 +50,12 @@ export const getAll = async (fastify: FastifyInstance, _options: Object) => {
           ? []
           : await db
               .select({
-                id: bankAccounts.id,
-                issuerName: issuers.name,
-                name: bankAccounts.name,
-                currency: bankAccounts.currency,
+                taskTitle: tasks.title,
+                start: taskTimes.start,
+                durationMs: taskTimes.durationMs,
               })
-              .from(bankAccounts)
-              .innerJoin(issuers, eq(issuers.id, bankAccounts.issuerId))
+              .from(taskTimes)
+              .innerJoin(tasks, eq(tasks.id, taskTimes.taskId))
               .where(where)
               .orderBy(req.query.orderAsc ? asc(orderCol) : desc(orderCol))
               .limit(req.query.size)
@@ -68,7 +67,7 @@ export const getAll = async (fastify: FastifyInstance, _options: Object) => {
         orderBy: req.query.orderBy,
         orderAsc: req.query.orderAsc,
         total,
-        items: results.map((r) => bankAccountSchema.parse(r)),
+        items: results.map((r) => taskTimeSchema.parse(r)),
       });
     },
   });

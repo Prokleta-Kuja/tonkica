@@ -5,26 +5,27 @@ import {
 } from "fastify-zod-openapi";
 import { routes, tags } from "..";
 import { badRequestSchema, idParamSchema, notFoundSchema } from "../schemas";
-import { ZodError, z } from "zod";
+import { z } from "zod";
 import { db } from "@db/index";
 import { eq } from "drizzle-orm";
-import { bankAccountSchema, bankAccountUpdateSchema } from ".";
-import { bankAccounts, issuers } from "@db/schemas";
-import { selectBankAccountSchema } from "@db/schemas/bankAccounts";
+import { taskSchema, taskUpdateSchema } from ".";
+import { clients, tasks } from "@db/schemas";
+import { selectTaskSchema } from "@db/schemas/tasks";
 import { nameof } from "@utils/index";
+import { ZodError } from "zod";
 
 export const update = async (fastify: FastifyInstance, _options: Object) => {
   fastify.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
     method: "PUT",
-    url: routes.bankAccount,
+    url: routes.task,
     schema: {
       operationId: "update",
-      description: "Update Bank Account",
-      tags: [tags.bankAccount],
+      description: "Update Task",
+      tags: [tags.task],
       params: idParamSchema,
-      body: bankAccountUpdateSchema,
+      body: taskUpdateSchema,
       response: {
-        200: bankAccountSchema,
+        200: taskSchema,
         400: badRequestSchema,
         404: notFoundSchema,
       },
@@ -32,43 +33,42 @@ export const update = async (fastify: FastifyInstance, _options: Object) => {
     handler: async (req, res) => {
       const dbResults = await db
         .select()
-        .from(bankAccounts)
-        .where(eq(bankAccounts.id, req.params.id))
+        .from(tasks)
+        .where(eq(tasks.id, req.params.id))
         .limit(2);
 
       if (dbResults.length !== 1) return res.code(404).send();
       const [dbResult] = dbResults;
 
-      const issuer = await db.query.issuers.findFirst({
-        where: eq(issuers.id, req.body.issuerId),
+      const client = await db.query.issuers.findFirst({
+        where: eq(clients.id, req.body.clientId),
       });
-      if (!issuer)
+      if (!client)
         throw new ZodError([
           {
             code: "custom",
-            path: [nameof<z.infer<typeof bankAccountUpdateSchema>>("issuerId")],
-            message: "Invalid issuer",
+            path: [nameof<z.infer<typeof taskUpdateSchema>>("clientId")],
+            message: "Invalid client",
           },
         ]);
 
-      const entryUpdate: Partial<z.infer<typeof selectBankAccountSchema>> = {
-        name: req.body.name,
-        info: req.body.info,
-        currency: req.body.currency,
+      const entryUpdate: Partial<z.infer<typeof selectTaskSchema>> = {
+        title: req.body.title,
+        clientId: req.body.clientId,
       };
 
       await db.transaction(async (tx) => {
         const updatedDbResults = await tx
-          .update(bankAccounts)
+          .update(tasks)
           .set(entryUpdate)
-          .where(eq(bankAccounts.id, dbResult.id))
+          .where(eq(tasks.id, dbResult.id))
           .returning();
 
         if (updatedDbResults.length > 1)
           throw new Error("Update affected multiple records");
 
-        const updatedDbResult = bankAccountSchema.parse(updatedDbResults[0]);
-        res.code(200).send({ ...updatedDbResult, issuerName: issuer.name });
+        const updatedDbResult = taskSchema.parse(updatedDbResults[0]);
+        res.code(200).send({ ...updatedDbResult, clientName: client.name });
       });
     },
   });

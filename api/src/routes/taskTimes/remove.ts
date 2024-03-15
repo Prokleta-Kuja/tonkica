@@ -7,16 +7,16 @@ import { routes, tags } from "..";
 import { emptySchema, id2ParamSchema, notFoundSchema } from "../schemas";
 import { db } from "@db/index";
 import { and, eq } from "drizzle-orm";
-import { invoiceItems, invoices } from "@db/schemas";
+import { taskTimes, tasks } from "@db/schemas";
 
 export const remove = async (fastify: FastifyInstance, _options: Object) => {
   fastify.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
     method: "DELETE",
-    url: routes.invoiceItem,
+    url: routes.taskTime,
     schema: {
       operationId: "delete",
-      description: "Delete Invoice Item",
-      tags: [tags.invoice],
+      description: "Delete Task Time",
+      tags: [tags.taskTime],
       params: id2ParamSchema,
       response: {
         204: emptySchema,
@@ -25,11 +25,11 @@ export const remove = async (fastify: FastifyInstance, _options: Object) => {
     } satisfies FastifyZodOpenApiSchema,
     handler: async (req, res) => {
       const dbResults = await db
-        .delete(invoiceItems)
+        .delete(taskTimes)
         .where(
-          and(eq(invoices.id, req.params.id), eq(invoiceItems, req.params.id2))
+          and(eq(tasks.id, req.params.id), eq(taskTimes.id, req.params.id2))
         )
-        .returning({ id: invoiceItems.id });
+        .returning({ id: taskTimes.id });
 
       if (dbResults.length !== 1) return res.code(404).send();
 
