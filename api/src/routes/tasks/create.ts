@@ -43,6 +43,7 @@ export const create = async (fastify: FastifyInstance, _options: Object) => {
       let newEntry: z.infer<typeof insertTaskSchema> = {
         title: req.body.title,
         clientId: client.id,
+        created:new Date()
       };
       newEntry = insertTaskSchema.parse(newEntry);
       const dbResults = await db.insert(tasks).values(newEntry).returning();

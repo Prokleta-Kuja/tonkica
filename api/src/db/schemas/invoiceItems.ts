@@ -27,7 +27,11 @@ export const insertInvoiceItemSchema = createInsertSchema(invoiceItems, {
   price: z.number(),
   total: z.number(),
 });
-export const selectInvoiceItemSchema = createSelectSchema(invoiceItems);
+export const selectInvoiceItemSchema = createSelectSchema(invoiceItems, {
+  quantity: z.number(),
+  price: z.number(),
+  total: z.number(),
+});
 export const invoiceItemsRelations = relations(invoiceItems, ({ one }) => ({
   invoice: one(invoices, {
     fields: [invoiceItems.invoiceId],

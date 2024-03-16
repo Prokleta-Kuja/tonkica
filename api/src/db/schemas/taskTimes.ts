@@ -16,8 +16,8 @@ export const taskTimes = pgTable(
     taskId: integer("task_id")
       .references(() => tasks.id)
       .notNull(),
-    start: timestamp("start"),
-    durationMs: integer("duration"), // miliseconds - diff between two dates
+    start: timestamp("start").notNull(),
+    durationMs: integer("duration").notNull(), // miliseconds - diff between two dates
   },
   (t) => ({
     taskIdIdx: index("task_times_task_id_idx").on(t.taskId),

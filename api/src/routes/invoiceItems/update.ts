@@ -14,6 +14,7 @@ import {
   invoiceItems,
   selectInvoiceItemSchema,
 } from "@db/schemas/invoiceItems";
+import { dbRound } from "@utils/index";
 
 export const update = async (fastify: FastifyInstance, _options: Object) => {
   fastify.withTypeProvider<FastifyZodOpenApiTypeProvider>().route({
@@ -47,6 +48,7 @@ export const update = async (fastify: FastifyInstance, _options: Object) => {
         title: req.body.title,
         quantity: req.body.quantity,
         price: req.body.price,
+        total: dbRound(req.body.quantity * req.body.price),
       };
 
       await db.transaction(async (tx) => {

@@ -19,7 +19,7 @@ export const tasks = pgTable(
       .references(() => clients.id)
       .notNull(),
     title: text("title").notNull(),
-    created: timestamp("created"),
+    created: timestamp("created").notNull(),
   },
   (t) => ({
     clientIdIdx: index("tasks_client_id_idx").on(t.clientId),

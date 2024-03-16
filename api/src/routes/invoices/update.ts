@@ -95,8 +95,8 @@ export const update = async (fastify: FastifyInstance, _options: Object) => {
         displayCurrency: req.body.displayCurrency,
         displayRate: req.body.displayRate,
         published: req.body.published,
-        paid: req.body.paid,
-        note: req.body.note,
+        paid: req.body.paid ?? null,
+        note: req.body.note ?? null,
       };
 
       await db.transaction(async (tx) => {
